@@ -1,5 +1,3 @@
-.mainHead {float: center;}
+.bottomMenu { text-align: left; }
 
-.contact {float: center;}
-
-.homeButton {float: center;}
+body { text-align: center; }
