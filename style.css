@@ -1,5 +1,5 @@
 div {
-    background-color: lightgray;
+    background-color: black;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 15px;
@@ -9,7 +9,7 @@ div {
 }
 
 p {
-    color: black;
+    color: white;
     font-family: 'Montserrat', sans-serif;
 }
 
