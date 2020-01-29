@@ -15,5 +15,5 @@ p {
 
 body {
     text-align: center;
-    background-image: "https://hollikill.github.io/background.png";
+    background-image: url("background.png");
 }
