@@ -15,7 +15,9 @@ div {
 }
 
 p {
-    color: darkgray;
+    color: black;
+
+    font-family: 'Montserrat', sans-serif;
 }
 
 body {
