@@ -1,3 +1,5 @@
 .bottomMenu { text-align: left; }
 
-body { text-align: center; }
+div { background-color: black; padding-left: 50px; padding-right: 50px; padding-top: 15px; padding-bottom: 15px; }
+
+body { text-align: center; background-color: #292b00;}
