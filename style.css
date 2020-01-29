@@ -1,5 +1,7 @@
 .bottomMenu { text-align: left; }
 
-div { background-color: black; padding-left: 50px; padding-right: 50px; padding-top: 15px; padding-bottom: 15px; float: center; color: white; }
+div { background-color: lightgray; padding-left: 50px; padding-right: 50px; padding-top: 15px; padding-bottom: 15px; float: center; color: white; }
+
+p { color: white; }
 
 body { text-align: center; background-color: #292b00; }
