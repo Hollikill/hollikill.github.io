@@ -15,6 +15,29 @@ p {
     font-family: 'Montserrat', sans-serif;
 }
 
+h1 {
+    color: white;
+}
+h2 {
+    color: white;
+}
+h3 {
+    color: white;
+}
+h4 {
+    color: white;
+}
+h5 {
+    color: white;
+}
+h6 {
+    color: white;
+}
+
+a {
+    color: gray;
+}
+
 body {
     text-align: center;
     background-image: url("background.png");
