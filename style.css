@@ -1,9 +1,6 @@
 .basicBox {
+    color: white;
     background-color: black;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 15px;
-    padding-bottom: 15px;
     margin: 0 auto;
     margin-top: 5%;
     margin-bottom: 1%;
@@ -11,31 +8,34 @@
     border-color: #252525;
 }
 
+div {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
 p {
-    color: white;
     font-family: 'Montserrat', sans-serif;
 }
 
 h1 {
     font-family: 'Merriweather', serif;
-    color: white;
 }
 h2 {
     font-family: 'Merriweather', serif;
-    color: white;
 }
 h3 {
     font-family: 'Merriweather', serif;
-    color: white;
 }
 h4 {
-    color: white;
+    font-family: 'Montserrat', sans-serif;
 }
 h5 {
-    color: white;
+    font-family: 'Montserrat', sans-serif;
 }
 h6 {
-    color: white;
+    font-family: 'Montserrat', sans-serif;
 }
 
 a {
