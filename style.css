@@ -1,4 +1,4 @@
-div {
+.basicBox {
     background-color: black;
     padding-left: 10px;
     padding-right: 10px;
@@ -42,7 +42,7 @@ a {
     color: gray;
 }
 
-body {
+.woodTile {
     text-align: center;
     background-image: url("background.png");
 }
