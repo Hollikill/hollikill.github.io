@@ -5,7 +5,7 @@
     margin-top: 5%;
     margin-bottom: 1%;
     border-style: solid;
-    border-color: #252525;
+    border-color: #444;
 }
 
 div {
@@ -44,5 +44,5 @@ a {
 
 .woodTile {
     text-align: center;
-    background-image: url("background.png");
+    background-color: #242428;
 }
