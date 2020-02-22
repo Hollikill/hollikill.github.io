@@ -2,4 +2,4 @@
 
 My personal webpage, designed by me
 
-Honestly, just go [here](hollikill.github.io)
+Honestly, just go [here](https://hollikill.github.io)
