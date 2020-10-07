@@ -1,14 +1,12 @@
 .basicBox {
+    width: 50%;
     color: white;
-    background-color: black;
+    background-color: #52EB8C;
     margin: 0 auto;
     margin-top: 5%;
     margin-bottom: 1%;
     border-style: solid;
-    border-color: #444;
-}
-
-div {
+    border-color: #189E4B;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 15px;
@@ -16,33 +14,33 @@ div {
 }
 
 p {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Varela Round', sans-serif; font-size: 20px; color: #1c0806;
 }
 
 h1 {
-    font-family: 'Merriweather', serif;
+    font-family: 'Alfa Slab One', cursive; color: #111; font-size: 600%;
 }
 h2 {
-    font-family: 'Merriweather', serif;
+    font-family: 'Alfa Slab One', cursive; color: #111;
 }
 h3 {
-    font-family: 'Merriweather', serif;
+    font-family: 'Alfa Slab One', cursive; color: #111;
 }
 h4 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Varela Round', sans-serif; color: #1c0806;
 }
 h5 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Varela Round', sans-serif; color: #1c0806;
 }
 h6 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Varela Round', sans-serif; color: #1c0806;
 }
 
 a {
-    color: gray;
+    color: #9E2D28;
 }
 
 .woodTile {
     text-align: center;
-    background-color: #242428;
+    background-color: #EB5B53;
 }
