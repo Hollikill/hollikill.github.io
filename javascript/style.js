@@ -1,7 +1,9 @@
 if (getCookie("style") != "light" && getCookie("style") != "dark") {
     swapStyleSheet("../css/light.css")
 }
-swapStyleSheet("../css/"+getCookie("style")+".css")
+else {
+    swapStyleSheet("../css/"+getCookie("style")+".css")
+}
 
 function switchStyle() {
     if (getCookie("style") == "light") {
