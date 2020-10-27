@@ -51,6 +51,11 @@ button {
     justify-content: left;
     z-index:-1;
 }
+.sidebysidenojust {
+    display:flex;
+    flex-wrap: nowrap;
+    z-index:-1;
+}
 
 .pageTitle {
     padding-bottom: 5%;
