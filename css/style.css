@@ -13,7 +13,7 @@ a {
     transition:0.3s;
     transition-timing-function: ease;
 }
-a:hover {color:var(--f);}
+a:hover {color:var(--l2);}
 
 h1 {font-size:70px;}
 h2 {font-size:35px;}
@@ -42,7 +42,7 @@ button {
     transition:0.3s;
     transition-timing-function: ease;
 }
-button:hover {color:var(--f);}
+button:hover {color:var(--l2);}
 
 .navLink {
     position: absolute;
