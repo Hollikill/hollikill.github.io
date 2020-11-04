@@ -8,14 +8,18 @@ body {
     font-family: 'Varela Round', sans-serif;
 }
 
-a {
+a{
     color:var(--l);
     transition:0.3s;
     transition-timing-function: ease;
 }
-a:hover {color:var(--l2);}
+a:hover {
+    color:var(--l2);
+}
 
-h1 {font-size:70px;}
+h1 {
+    font-size:70px;
+}
 h2 {font-size:35px;}
 
 h1,h2,h3,h4,h5,h6 {text-align: center;}
@@ -34,6 +38,7 @@ hr {
 }
 
 button {
+    border-radius: 15px;
     outline: none;
     color:var(--l);
     background-color:var(--b);
@@ -42,7 +47,10 @@ button {
     transition:0.3s;
     transition-timing-function: ease;
 }
-button:hover {color:var(--l2);}
+button:hover {
+    color:var(--l2);
+    background-color:var(--f2);
+}
 
 .navLink {
     position: absolute;
@@ -65,11 +73,26 @@ button:hover {color:var(--l2);}
 }
 
 .spoiler {
-    border-radius: 5px;
-    background-color: var(--f);
+    border-radius: 15px;
+    font-size: 85%;
+    padding-left:15px;
+    padding-right:15px;
+    background-color: var(--f2);
+    color: var(--f2);
     transition:0.3s;
     transition-timing-function: ease;
+    user-select: none;
 }
 .spoiler:hover {
-    background-color: var(--b);
+    font-size: 95%;
+    padding-left:0%;
+    padding-right:0%;
+    background-color: var(--f2);
+    color: var(--f);
+}
+.spoiler_clicked {
+    border-radius: 15px;
+    font-size: 95%;
+    background-color: var(--f2);
+    color: var(--f);
 }
