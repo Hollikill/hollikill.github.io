@@ -63,3 +63,13 @@ button:hover {color:var(--l2);}
 .pageTitle {
     padding-bottom: 5%;
 }
+
+.spoiler {
+    border-radius: 5px;
+    background-color: var(--f);
+    transition:0.3s;
+    transition-timing-function: ease;
+}
+.spoiler:hover {
+    background-color: var(--b);
+}
