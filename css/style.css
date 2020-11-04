@@ -85,14 +85,16 @@ button:hover {
 }
 .spoiler:hover {
     font-size: 95%;
-    padding-left:0%;
-    padding-right:0%;
+    padding-left:3px;
+    padding-right:3px;
     background-color: var(--f2);
     color: var(--f);
 }
 .spoiler_clicked {
     border-radius: 15px;
     font-size: 95%;
+    padding-left:3px;
+    padding-right:3px;
     background-color: var(--f2);
     color: var(--f);
 }
