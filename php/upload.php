@@ -1,5 +1,5 @@
 <?php
-//Base code ripped from example at https://www.w3schools.com/php/php_file_upload.asp, the modified to fit needs
+//Base code ripped from example at https://www.w3schools.com/php/php_file_upload.asp, then modified to fit needs
 
 $target_dir = "uploads/";
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
