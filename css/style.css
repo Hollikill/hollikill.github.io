@@ -19,6 +19,7 @@ a:hover {
 
 h1 {
     font-size:70px;
+    user-select: none;
 }
 h2 {font-size:35px;}
 
