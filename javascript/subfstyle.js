@@ -1,22 +1,22 @@
 if (getCookie("style") != "light" && getCookie("style") != "dark") {
-    swapStyleSheet("css/light.css")
+    swapStyleSheet("../css/light.css")
     document.cookie = "style=light";
 }
 else {
-    swapStyleSheet("css/"+getCookie("style")+".css")
+    swapStyleSheet("../css/"+getCookie("style")+".css")
 }
 
 function switchStyle() {
     if (getCookie("style") == "light") {
         document.cookie = "style=dark";
-        swapStyleSheet("css/"+getCookie("style")+".css")
+        swapStyleSheet("../css/"+getCookie("style")+".css")
     }
     else if (getCookie("style") == "dark"){
         document.cookie = "style=light";
-        swapStyleSheet("css/"+getCookie("style")+".css")
+        swapStyleSheet("../css/"+getCookie("style")+".css")
     }
     else {
-        swapStyleSheet("css/light.css")
+        swapStyleSheet("../css/light.css")
     }
 }
 

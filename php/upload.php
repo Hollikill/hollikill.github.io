@@ -35,4 +35,3 @@ if ($uploadOk == 0) {
     echo "There was an error uploading your file.";
   }
 }
-?>

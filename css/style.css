@@ -19,47 +19,48 @@ a:hover {
 
 h1 {
     font-size:70px;
-    user-select: none;
 }
 h2 {font-size:35px;}
 
-h1,h2,h3,h4,h5,h6 {text-align: center;}
+h1,h2,h3,h4,h5,h6 {text-align: center;user-select: none;}
 
 p {
     font-size: 25px;
 }
 
 hr {
-    border-style: groove;
+    border-style: solid;
     border-width: 1px;
-    color:var(--f);
+    color:var(--f2);
     width:90%;
     position:relative;
-    z-index:-1
+    z-index:-1;
 }
 
 button {
-    border-radius: 15px;
     outline: none;
     color:var(--l);
-    background-color:var(--b);
     font-family: 'Varela Round', sans-serif;
     border:none;
-    transition:0.3s;
-    transition-timing-function: ease;
 }
 button:hover {
     color:var(--l2);
-    background-color:var(--f2);
+    
 }
 
 .navLink {
-    position: absolute;
-    top:30%;
-    height:40%;
+    text-align:center;
     font-size:35px;
-    width:10%;
+    width:25%;
+    height:150%;
     text-decoration: none;
+    user-select: none;
+    transition:0.3s;
+    transition-timing-function: ease;
+    background-color:var(--b);
+}
+.navLink:hover {
+    background-color:var(--f2);
 }
 
 .sidebyside {
@@ -75,27 +76,19 @@ button:hover {
 
 .spoiler {
     border-radius: 15px;
-    font-size: 85%;
-    padding-left:15px;
-    padding-right:15px;
+    font-size: 0px;
+    padding: 18px 12px 6px 13px;
     background-color: var(--f2);
     color: var(--f2);
     transition:0.3s;
     transition-timing-function: ease;
     user-select: none;
 }
-.spoiler:hover {
-    font-size: 95%;
-    padding-left:3px;
-    padding-right:3px;
-    background-color: var(--f2);
-    color: var(--f);
-}
 .spoiler_clicked {
     border-radius: 15px;
     font-size: 95%;
-    padding-left:3px;
-    padding-right:3px;
+    padding: 0% 10px 0% 10px;
     background-color: var(--f2);
     color: var(--f);
+    user-select: none;
 }
