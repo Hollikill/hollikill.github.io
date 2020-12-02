@@ -6,6 +6,7 @@ body {
     background-color: var(--b);
     color: var(--f);
     font-family: 'Varela Round', sans-serif;
+    line-height: 1.5;
 }
 
 a{
