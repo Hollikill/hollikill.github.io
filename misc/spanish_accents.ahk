@@ -93,6 +93,6 @@ convert(letter) {
 	return % letters[2*current +1]
 }
 
-esc::
+~esc::
 reload ; restart the program
 return
