@@ -12,6 +12,7 @@ Gui, Help:Font, s30, Sitka Text ; set font
 Gui, Help:Add, Text,, a --> á	A --> Á`ne --> é	E --> É`ni --> í	I --> Í`no --> ó	O --> Ó`nu --> ú	U --> Ú`nn --> ñ	N --> Ñ`n1 --> ¡	! --> ¡`n/ --> ¿	? --> ¿
 Gui, Help:Font, s10 caaaaaa, Sitka Text ; set font
 Gui, Help:Add, Link, -E0x200, Code adapted from a post by <a href="https://autohotkey.com/board/topic/544-accent-hotkey-script/?p=461213">maestrith</a>`nsource code <a href="https://hollikill.net/misc/spanish_accents.ahk">here</a>
+Gui, Help:Add, Link, grestartaccentpicker, if you are having keyboard shortcut issues, try <a>restarting the program</a>
 
 RETURN
 
@@ -25,6 +26,10 @@ else {
 	send, % convert(key)
 }
 tooltip, ; disable the tooptip
+return
+
+restartaccentpicker:
+reload
 return
 
 on:
@@ -92,7 +97,3 @@ convert(letter) {
 	}
 	return % letters[2*current +1]
 }
-
-~esc::
-reload ; restart the program
-return
