@@ -1,0 +1,11 @@
+Sort of Building/Upgrade which halves boost degredation with every purchase
+
+A upgrade which gives you a permanet boost for the longest you've idled without clicking
+
+A minigame with something to do while waiting. Possibly gives another currency?
+
+A currency that will let you buy faster time. Could be gained through a minigame?
+
+An upgrade for a toggle to disable rate numbers in exchange for.
+
+An upgrade for a menu that lets you overclock machines, which might make them break; or underclock to increase meta-generation.
