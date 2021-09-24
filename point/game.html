@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="click.js"></script>
+    <link rel="stylesheet" type="text/css" href="click.css"/>
+</head>
+<body>
+    <h1>Point Game</h1>
+    <hr>
+    <br><br>
+    <div class="main">
+        <div class="category" id="statcat">
+            <p style="display:inline;" id="pcountholder">Point Count: <span id="pcount">DNE</span><span id="pgen1rate" class="ul1">DNE</span><span id="pgen2rate" class="ul2">DNE</span></p>
+            <br class="ul1">
+            <p class="ul1">Point Generators: <span id="pgen1count">DNE</span></p>
+            <br class="ul2">
+            <p class="ul2">PG Assembly Lines: <span id="pgen2count">DNE</span></p>
+        </div>
+        <div class="category" id="clcat">
+            <button id="pclick" onclick="PChange(1)">Click me for points</button>
+        </div>
+        <div class="category" id="gencat">
+            <button class = "ul1" onclick="PGenBuy(0, 1, 1.01)">Buy pGen (<span id="pgen1cost">DNE</span>)</button>
+            <button class = "ul2" onclick="PGenBuy(1, 1, 1.02)">Buy PGA (<span id="pgen2cost">DNE</span>)</button>
+        </div>
+        <div class="category" id=researchcat>
+            <div id="metagen0" class="ul2">
+                <button onclick="UnlockBuy('metagen0', 5000)">Unlock Meta-Generation (5000)</button>
+                <br>
+                Why produce points when you could be making more point makers?
+                <br>
+                (+0.05 buildings of previous tier /s)
+            </div>
+            <div id="metagen1" class="ul3">
+                <button onclick="UnlockBuy('metagen1', 15000)">Upgrade Meta-Generation (15000)</button>
+                <br>
+                Direct points are overrated.
+                <br>
+                (Halve point generation per building tier, but double total meta-generation.)
+            </div>
+        </div>
+    </div>
+</body>
+</html>
