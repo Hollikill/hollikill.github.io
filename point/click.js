@@ -75,13 +75,13 @@ var GlobalLoop = function () {
 
     // progress rollover
     while (pointsprogress >= 1) {
-        pointsprogress = pointsprogress-1;
-        points = points + 1;
+        points = points + Math.round(pointsprogress)
+        pointsprogress = pointsprogress%1;
     }
     for (let i = 0; i < pgen.length; i++) {
         while (pgenprogress[i] >= 1) {
-            pgenprogress[i] = pgenprogress[i]-1;
-            pgen[i] = pgen[i] + 1;
+            pgen[i] = pgen[i] + Math.round(pgenprogress[i]);
+            pgenprogress[i] = pgenprogress[i]%1;
         }
     }
 
