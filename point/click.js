@@ -10,6 +10,12 @@ var unlockrate = 25;
 var points = 0;
 var pointsprogress = 0;
 
+// clicking mechanics
+var pointboostcurrent = 0;
+var pointboostmax = 1;
+var pointdegradationrate = 0.2;
+var pointdegradationprogress = 0;
+
 // buildables
 var pgen = [0, 0];
 var pgenprogress = [0, 0];
@@ -36,12 +42,26 @@ var GlobalLoop = function () {
         }
     }
     
+    // point boost calculations
+    if (pointboostcurrent > pointboostmax) {
+        pointboostmax = pointboostmax + 0.001;
+        pointboostcurrent = Math.min(pointboostmax,pointboostcurrent);
+    }
+    pointdegradationprogress = pointdegradationprogress + (deltams/1000)
+    if (pointdegradationprogress > pointboostmax) {
+        pointboostcurrent = pointboostcurrent - (deltams/1000)*pointdegradationrate;
+        if (pointboostcurrent < 0) {
+            pointboostcurrent = 0;
+        }
+    }
+
+    // generation step
     for (let i = 0; i < pgen.length; i++) {
         var unlockmult = 1;
         if (unlockkeys.includes("metagen1")) {
             unlockmult = unlockmult / Math.pow(2, i);
         }
-        points = points + (deltams/1000)*pgenrate[i]*pgen[i]*unlockmult;
+        points = points + (deltams/1000)*pgenrate[i]*pgen[i]*unlockmult*(pointboostcurrent+1);
     }
     if (unlockkeys.includes("metagen0")) {
         var metagenmult = .05;
@@ -53,6 +73,7 @@ var GlobalLoop = function () {
         }
     }
 
+    // progress rollover
     while (pointsprogress >= 1) {
         pointsprogress = pointsprogress-1;
         points = points + 1;
@@ -72,6 +93,7 @@ window.onload=setInterval(GlobalLoop, deltams);
 
 var UpdateText = function() {
     UpdatePoints();
+    UpdatePointBoost();
     for (let i = 0; i < pgen.length; i++) {
         UpdatePGen(i);
     }
@@ -92,6 +114,12 @@ var UpdatePoints = function() {
     ChangeNumber("pcount", points);
 }
 
+var UpdatePointBoost = function() {
+    ChangeNumber("pboost", (pointboostcurrent+1), 2);
+    ChangeNumber("pboostmax", (pointboostmax+1), 2);
+    ChangeNumber("pboostprog", pointdegradationprogress);
+}
+
 var UpdatePGen = function(x) {
     ChangeNumber("pgen"+(x+1)+"count", pgen[x]);
     ChangeNumber("pgen"+(x+1)+"cost", pgencost[x], 1);
@@ -99,7 +127,7 @@ var UpdatePGen = function(x) {
     if (unlockkeys.includes("metagen1")) {
         mult = mult / Math.pow(2, x)
     }
-    var temp = (" +"+(pgenrate[x]*pgen[x]*mult)+"/s");
+    var temp = (" +"+(pgenrate[x]*pgen[x]*mult).toFixed(0)+"/s");
     if (pgen[x] == 0 || pgenrate == 0 || mult == 0) {
         temp = "";
     }
@@ -114,10 +142,9 @@ var CreatePGen = function() {
     pgencostbase.push(pgencost[pgencostbase.length])
     pgenrate.push(Math.pow(15, pgenrate.length))
 
-    /// TODO: add stat cat update, add rate update, add buy button update
     var pgenbr = document.createElement("br");
     var pgenstat = document.createElement("p");
-    pgenstat.innerHTML = "PGA^"+(pgen.length-1)+": <span id='pgen"+pgen.length+"count'>DNE</span>";
+    pgenstat.innerHTML = "Point Factory MK["+(pgen.length-2)+"]: <span id='pgen"+pgen.length+"count'>DNE</span>";
     pgenstat.style.display = "inline";
     document.getElementById("statcat").appendChild(pgenbr);
     document.getElementById("statcat").appendChild(pgenstat);
@@ -136,6 +163,8 @@ var CreatePGen = function() {
 
 var PChange = function(x) {
     points = points + x;
+    pointdegradationprogress = 0;
+    pointboostcurrent = pointboostcurrent + 0.01;
 }
 
 var PGenBuy = function (x, amount, itr) {

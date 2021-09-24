@@ -3,6 +3,8 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+p {display: inline;}
+
 #pcount {font-weight: bold;}
 
 #pcount {color: lime;}

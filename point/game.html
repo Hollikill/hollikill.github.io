@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Point Game</title>
     <script src="click.js"></script>
     <link rel="stylesheet" type="text/css" href="click.css"/>
 </head>
 <body>
-    <h1>Point Game</h1>
+    <h1>A Game about Getting <i>a Lot</i> of Points</h1>
     <hr>
     <br><br>
     <div class="main">
         <div class="category" id="statcat">
-            <p style="display:inline;" id="pcountholder">Point Count: <span id="pcount">DNE</span><span id="pgen1rate" class="ul1">DNE</span><span id="pgen2rate" class="ul2">DNE</span></p>
+            <p style="display:inline;" id="pcountholder">Point Count: <span id="pcount">DNE</span><br><span id="pgen1rate" class="ul1">DNE</span><span id="pgen2rate" class="ul2">DNE</span></p>
+            <br>
             <br class="ul1">
             <p class="ul1">Point Generators: <span id="pgen1count">DNE</span></p>
             <br class="ul2">
@@ -22,6 +23,15 @@
         </div>
         <div class="category" id="clcat">
             <button id="pclick" onclick="PChange(1)">Click me for points</button>
+            <br>
+            <br>
+            <p>Current Boost: <span id="pboost">DNE</span>x</p>
+            <br>
+            <br>
+            <p>Max Boost: <span id="pboostmax">DNE</span>x</p>
+            <br>
+            <br>
+            <p>Seconds Since Click: <span id="pboostprog">DNE</span></p>
         </div>
         <div class="category" id="gencat">
             <button class = "ul1" onclick="PGenBuy(0, 1, 1.01)">Buy pGen (<span id="pgen1cost">DNE</span>)</button>
