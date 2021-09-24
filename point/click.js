@@ -97,6 +97,7 @@ var UpdateText = function() {
     for (let i = 0; i < pgen.length; i++) {
         UpdatePGen(i);
     }
+    UpdateTotalRate();
 }
 
 var ChangeText = function(id, x) {
@@ -123,15 +124,28 @@ var UpdatePointBoost = function() {
 var UpdatePGen = function(x) {
     ChangeNumber("pgen"+(x+1)+"count", pgen[x]);
     ChangeNumber("pgen"+(x+1)+"cost", pgencost[x], 1);
+    var temp = (" +"+(CalcPGenRate(x)).toFixed(0)+"/s");
+    if (pgen[x] == 0 || pgenrate[x] == 0) {
+        temp = "";
+    }
+    ChangeText("pgen"+(x+1)+"rate", temp)
+}
+
+var UpdateTotalRate = function() {
+    var totalrate = 0
+    for (let i = 0; i < pgen.length; i++) {
+        totalrate = totalrate + CalcPGenRate(i);
+    }
+    ChangeNumber("totalprate", totalrate)
+}
+
+var CalcPGenRate = function(x) {
     var mult = 1;
     if (unlockkeys.includes("metagen1")) {
         mult = mult / Math.pow(2, x)
     }
-    var temp = (" +"+(pgenrate[x]*pgen[x]*mult).toFixed(0)+"/s");
-    if (pgen[x] == 0 || pgenrate == 0 || mult == 0) {
-        temp = "";
-    }
-    ChangeText("pgen"+(x+1)+"rate", temp)
+    mult = mult * (1+pointboostcurrent)
+    return (pgenrate[x]*pgen[x]*mult);
 }
 
 var CreatePGen = function() {
@@ -151,6 +165,7 @@ var CreatePGen = function() {
 
     var pgenratetext = document.createElement("span");
     pgenratetext.id = "pgen"+pgen.length+"rate";
+    pgenratetext.classList = "pgenrate";
     pgenratetext.innerHTML = "DNE";
     document.getElementById("pcountholder").appendChild(pgenratetext);
 
@@ -164,7 +179,9 @@ var CreatePGen = function() {
 var PChange = function(x) {
     points = points + x;
     pointdegradationprogress = 0;
-    pointboostcurrent = pointboostcurrent + 0.01;
+    if (unlockkeys.includes("boost0")) {
+        pointboostcurrent = pointboostcurrent + 0.01;
+    }
 }
 
 var PGenBuy = function (x, amount, itr) {
@@ -181,5 +198,9 @@ var UnlockBuy = function (ulid, cost) {
         points = points - cost;
         unlockkeys.push(ulid);
         document.getElementById(ulid).style.display = "none";
+        var ulelements = document.getElementsByClassName(ulid);
+        for (let n of ulelements) {
+            n.style.display = "inline";
+        }
     }
 }

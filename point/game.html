@@ -14,7 +14,7 @@
     <br><br>
     <div class="main">
         <div class="category" id="statcat">
-            <p style="display:inline;" id="pcountholder">Point Count: <span id="pcount">DNE</span><br><span id="pgen1rate" class="ul1">DNE</span><span id="pgen2rate" class="ul2">DNE</span></p>
+            <p style="display:inline;" id="pcountholder">Point Count: <span id="pcount">DNE</span> +<span id="totalprate">DNE</span>/s<br><span id="pgen1rate" class="ul1">DNE</span><span id="pgen2rate" class="ul2">DNE</span></p>
             <br>
             <br class="ul1">
             <p class="ul1">Point Generators: <span id="pgen1count">DNE</span></p>
@@ -23,12 +23,9 @@
         </div>
         <div class="category" id="clcat">
             <button id="pclick" onclick="PChange(1)">Click me for points</button>
-            <br>
-            <br>
-            <p>Current Boost: <span id="pboost">DNE</span>x</p>
-            <br>
-            <br>
-            <p>Max Boost: <span id="pboostmax">DNE</span>x</p>
+            <br class="boost0">
+            <br class="boost0">
+            <p class="boost0">Current Boost: <span id="pboost">DNE</span>x / <span id="pboostmax">DNE</span>x</p>
             <br>
             <br>
             <p>Seconds Since Click: <span id="pboostprog">DNE</span></p>
@@ -38,12 +35,21 @@
             <button class = "ul2" onclick="PGenBuy(1, 1, 1.02)">Buy PGA (<span id="pgen2cost">DNE</span>)</button>
         </div>
         <div class="category" id=researchcat>
+            <div id="boost0" class="ul1">
+                <button onclick="UnlockBuy('boost0', 1000)">Unlock Boosting (1000)</button>
+                <br>
+                Gain the ability to amplify your generators through hard work and sweat.
+                <br>
+                (Unlocks Boosting)
+                <br>
+            </div>
             <div id="metagen0" class="ul2">
                 <button onclick="UnlockBuy('metagen0', 5000)">Unlock Meta-Generation (5000)</button>
                 <br>
                 Why produce points when you could be making more point makers?
                 <br>
                 (+0.05 buildings of previous tier /s)
+                <br>
             </div>
             <div id="metagen1" class="ul3">
                 <button onclick="UnlockBuy('metagen1', 15000)">Upgrade Meta-Generation (15000)</button>
