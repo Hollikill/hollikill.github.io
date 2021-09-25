@@ -1,5 +1,6 @@
-// prerequisite variables
-var deltams = 25;
+// global loop variables
+var deltams = 100;
+var last1sec = 0;
 
 // game progress
 var unlockStage = 0;
@@ -16,7 +17,13 @@ var pointboostmax = 1;
 var pointdegradationrate = 0.2;
 var pointdegradationprogress = 0;
 
+// unboost mechanics
 var unboostmax = 0;
+var unboosttime = 0;
+
+// statis mechanics
+var scaps = [];
+var slocked = false;
 
 // buildables
 var pgen = [];
@@ -27,8 +34,8 @@ var pgencostbase = [];
 var pgenrate = [];
 
 // text details
-var pgennames = ["Point Generator", "PG Assembly Line", "Point Condensator", "Stem Cell Growth Lab", "PCD Shrine", "Nanobot Mining Cluster", "Point Factort MK 1", "Nanobot Replication Chamber", "Codensation Synagogue", "Nanobot Dispersal Assembly", "Point Factory MK 2", "Nanobot Internal Condenser"]
-var pgenabbrs = ["pGen", "PGA", "PCD", "SCG", "CDS", "NC", "PFK1", "NRC", "CSG", "NDA", "PFK2", "NIC"]
+var pgennames = ["Point Generator", "PG Assembly Line", "Point Condensator", "Stem Cell Growth Lab", "Condenser Shrine", "Nanobot Mining Cluster", "Point Factort MK 1", "Nanobot Replication Chamber", "Codensation Synagogue", "Nanobot Dispersal Assembly", "Point Factory MK 2", "Nanobot Internal Condenser", "Hypercondenser Nanocluster", "Superdense Point Depositer", "Tension Generator", "Hypercondenser Supercube", "Point Factory MK 3", "Hyperdense Point Refractor", "4D Ubercondenser", "Alternate Nanobot Metastate", "Extradimensional UberCondenser", "Macro-alignment Compensator", "Uberdense Enigma Rotator", "Tension-Density Nanoweaver", "NanoExUCD Manager", "Hypertension Skimmer"];
+var pgenabbrs = ["pGen", "PGA", "PCD", "SCG", "CDS", "NC", "PFK1", "NRC", "CSG", "NDA", "PFK2", "NIC", "HCD", "SDD", "tGen", "HCD^2", "PFK3", "HDR", "HCD^3", "MTS", "HCD^4", "MAC", "UDR", "tWeaver", "NXM", "tSkim"];
 
 // unlocks
 var unlockkeys = [];
@@ -36,6 +43,7 @@ var unlockkeys = [];
 var GlobalLoop = function () {
     // unlock stages
     if (points > unlockreq) {
+        LogText("Surpassed Threshold Alpha-"+unlockStage);
         unlockStage = unlockStage + 1;
         unlockreq = unlockreq * unlockrate;
 
@@ -47,8 +55,16 @@ var GlobalLoop = function () {
         if (unlockStage == 2) {
             document.getElementById("pinstruct").remove();
         }
-        if (unlockStage == 4) {
+        if (unlockStage == 5) {
+            document.getElementById("pcount").classList.add("grainbow");
+        }
+        if (unlockStage == 13) {
+            document.getElementById("pcount").classList.remove("grainbow");
             document.getElementById("pcount").classList.add("unrainbow");
+        }
+        if (unlockStage == 24) {
+            document.getElementById("pcount").classList.remove("unrainbow");
+            document.getElementById("pcount").classList.add("rainbow");
         }
     }
     
@@ -58,25 +74,51 @@ var GlobalLoop = function () {
         pointboostcurrent = Math.min(pointboostmax,pointboostcurrent);
     }
     pointdegradationprogress = pointdegradationprogress + (deltams/1000)
+    var ubmult = 1;
+    if (unlockkeys.includes("unboost1") && unboosttime < unboostmax) {
+        ubmult = ubmult * Math.max(3, (unboostmax/100))
+    }
+    unboosttime = unboosttime + (deltams/1000)*ubmult;
     if (pointdegradationprogress > pointboostmax) {
-        pointboostcurrent = pointboostcurrent - (deltams/1000)*pointdegradationrate;
+        pointboostcurrent = pointboostcurrent - (deltams/1000)*pointdegradationrate*(1/Math.max(GetStatisMod(),0));
         if (pointboostcurrent < 0)
             pointboostcurrent = 0;
     }
-    if (pointdegradationprogress > unboostmax && unlockkeys.includes("unboost0"))
-        unboostmax = pointdegradationprogress;
+    if (unboosttime > unboostmax && unlockkeys.includes("unboost0"))
+        unboostmax = unboosttime;
 
-    if (GetBoost() > 10) {
+    // boost coloration
+    if (GetBoost() > 25) {
         document.getElementById("totalboost").classList.add("rainbow")
+        document.getElementById("totalboost").classList.remove("grainbow")
         document.getElementById("totalboost").classList.remove("unrainbow")
+    }
+    else if (GetBoost() > 10) {
+        document.getElementById("totalboost").classList.add("unrainbow")
+        document.getElementById("totalboost").classList.remove("grainbow")
+        document.getElementById("totalboost").classList.remove("rainbow")
     }
     else if (GetBoost() > 2.5) {
         document.getElementById("totalboost").classList.remove("rainbow")
-        document.getElementById("totalboost").classList.add("unrainbow")
+        document.getElementById("totalboost").classList.remove("unrainbow")
+        document.getElementById("totalboost").classList.add("grainbow")
     }
     else {
+        document.getElementById("totalboost").classList.remove("grainbow")
         document.getElementById("totalboost").classList.remove("unrainbow")
         document.getElementById("totalboost").classList.remove("rainbow")
+    }
+
+    // statis step
+    var d = new Date();
+    var n = d.getTime();
+    if (n > (last1sec+1000)) {
+        last1sec = n;
+
+        if (unlockkeys.includes("boost1")) {
+            if (slocked) DegradeStatis(0.002);
+            else StepStatis(35, 0.2);
+        }
     }
 
     // generation step
@@ -122,6 +164,7 @@ var UpdateText = function() {
         UpdatePGen(i);
     }
     UpdateTotalRate();
+    UpdateStatis();
 }
 
 var ChangeText = function(id, x) {
@@ -129,23 +172,56 @@ var ChangeText = function(id, x) {
 }
 
 var ChangeNumber = function(id, x) {
-    var tempnumeral = numeral(x).format('0,0.[00]a');
+    if (x > 100000000000000000000)
+        ChangeNumberExpo(id, x);
+    else {
+        var tempnumeral = numeral(x).format('0,0.[00]a');
+        if (tempnumeral != null)
+        document.getElementById(id).innerHTML = tempnumeral;
+    }
+}
+var ChangeNumberShort = function(id, x) {
+    if (x > 100000000000000000000)
+        ChangeNumberExpo(id, x);
+    else {
+        var tempnumeral = numeral(x).format('0,0a');
+        if (tempnumeral != null)
+        document.getElementById(id).innerHTML = tempnumeral;
+    }
+}
+var ChangeNumberLong = function(id, x) {
+    if (x > 100000000000000000000)
+        ChangeNumberExpo(id, x);
+    else {
+        var tempnumeral = numeral(x).format('0,0.0[0]');
+        if (tempnumeral != null)
+        document.getElementById(id).innerHTML = tempnumeral;
+    }
+}
+var ChangeNumberFixed = function(id, x, decimals) {
+    if (x > 100000000000000000000)
+        ChangeNumberExpo(id, x);
+    else {
+        var tempnumeral = x.toFixed(decimals)
+        if (tempnumeral != null)
+        document.getElementById(id).innerHTML = tempnumeral;
+    }
+}
+var ChangeNumberExpo = function (id, x) {
+    var tempnumeral = Number(x).toExponential(5);
     if (tempnumeral != null)
     document.getElementById(id).innerHTML = tempnumeral;
 }
-var ChangeNumberShort = function(id, x) {
-    var tempnumeral = numeral(x).format('0,0a');
-    document.getElementById(id).innerHTML = tempnumeral;
-}
+
 
 var UpdatePoints = function() {
-    ChangeNumberShort("pcount", points);
+    ChangeNumberLong("pcount", points);
 }
 
 var UpdatePointBoost = function() {
     ChangeNumber("pboost", (pointboostcurrent+1));
     ChangeNumber("pboostmax", (pointboostmax+1));
-    ChangeNumberShort("pboostprog", pointdegradationprogress);
+    ChangeNumberFixed("pboostprog", unboosttime, 0);
 
     // unboost stored here too
     ChangeNumber("unboost", 1+(unboostmax/300));
@@ -172,12 +248,31 @@ var UpdateTotalRate = function() {
     ChangeNumber("totalprate", totalrate)
 }
 
+var UpdateStatis = function () {
+    ChangeNumber("statismod", GetStatisMod());
+    for (var i = 0; i < scaps.length; i++) {
+        ChangeNumber("scap"+i, scaps[i])
+    }
+    ChangeNumberShort("statiscost", (100000000000*Math.pow(100, scaps.length)));
+    var locktext = "";
+    if (slocked) {
+        locktext = "Statis Locked";
+        document.getElementById("statisstate").classList.add("grainbow")
+        document.getElementById("statisstate").classList.remove("unrainbow")
+    } else {
+        locktext = "Statis Hypertension";
+        document.getElementById("statisstate").classList.add("unrainbow")
+        document.getElementById("statisstate").classList.remove("grainbow")
+    }
+    ChangeText("statisstate", locktext)
+}
+
 var CalcPGenRate = function(x) {
     var mult = 1;
     if (unlockkeys.includes("metagen1")) {
         mult = mult / Math.pow(2, x)
     }
-    mult = mult * (1+pointboostcurrent)
+    mult = mult * GetBoost();
     return (pgenrate[x]*pgen[x]*mult);
 }
 
@@ -210,8 +305,9 @@ var CreatePGen = function() {
 }
 
 var PChange = function(x) {
-    points = points + x;
+    points = points + (x*GetBoost());
     pointdegradationprogress = 0;
+    unboosttime = 0
     if (unlockkeys.includes("boost0")) {
         pointboostcurrent = pointboostcurrent + 0.01;
     }
@@ -247,6 +343,7 @@ var UnlockBuy = function (ulid, cost, type) {
             break;
     }
     if (canbuy) {
+        LogText("Bought "+ulid);
         unlockkeys.push(ulid);
         document.getElementById(ulid).style.display = "none";
         var ulelements = document.getElementsByClassName(ulid);
@@ -272,5 +369,76 @@ var ToggleAudio = function () {
     } else {
         audio.pause();
         document.getElementById("mute").innerHTML = "Play Music"
+    }
+}
+
+var logcolor = true;
+
+var LogText = async function(text) {
+    // create and format
+    var logtext = document.createElement("div");
+    logtext.innerHTML = text + "<br>";
+    logtext.classList.add("logtext");
+    var logcolor = logcolor;
+    if (logcolor) {
+        logcolor = false;
+        logtext.style.backgroundColor = "rgb(200, 200, 200)";
+    }
+    else {
+        logcolor = true;
+        logtext.style.backgroundColor = "lightgray";
+    }
+
+    // add to log
+    document.getElementById("logholder").prepend(logtext);
+
+    // fade-out
+    setTimeout( function() {
+        
+        setTimeout( function() {
+            logtext.remove();
+        }, 300000);
+    }, 5000);
+}
+
+var LockStatis = function() {
+    if (slocked) slocked = false;
+    else slocked = true;
+}
+
+var GetStatisMod  = function() {
+    var stotal = 0;
+    for (var s of scaps) {
+        stotal = stotal + s;
+    }
+    return (1+stotal)
+}
+
+var StepStatis = function(x, y) {
+    for (var i = 0; i < scaps.length; i++) {
+        scaps[i] = x*(Math.random()-y)
+    }
+}
+
+var DegradeStatis = function(x) {
+    for (var i = 0; i < scaps.length; i++) {
+        if (scaps[i] > 0) {
+            scaps[i] = scaps[i]-x;
+            if (scaps[i] < 0) scaps[i] = 0;
+        }
+        else if (scaps[i] < 0) {
+            scaps[i] = scaps[i]+x;
+            if (scaps[i] > 0) scaps[i] = 0;
+        }
+    }
+}
+
+var BuyStatis = function() {
+    cost = 100000000000*Math.pow(100, scaps.length);
+    if (points >= cost) {
+        points = points - cost;
+
+        document.getElementById("statisholder").innerHTML = document.getElementById("statisholder").innerHTML + "<p class='scap' id='scap"+scaps.length+"'></p><br>";
+        scaps.push(0);
     }
 }

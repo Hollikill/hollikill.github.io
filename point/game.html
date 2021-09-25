@@ -10,21 +10,54 @@
     <link rel="stylesheet" type="text/css" href="click.css"/>
 </head>
 <body>
-    <p id="version">Alpha 0.3.1</p>
+    <p id="version">Alpha 0.4.0 <a href="changelog.txt" target="blank" style="color:gray;">changelog</a></p>
     <button id="mute" onclick="ToggleAudio()">Toggle Music</button>
     <h1>A Game about Getting <i>a Lot</i> of Points</h1>
     <hr>
     <br><br>
     <div style="width:100%;text-align: center;">
-        <p><span id="pinstruct">Point Count: </span><span id="pcount">DNE</span> +<span id="totalprate">DNE</span>/s</p>
+        <div class="main">
+            <div class="pleft">
+                <p><span id="pinstruct">Point Count: </span><span id="pcount">DNE</span> +</p>
+            </div>
+            <div class="pright">
+                <p><span id="totalprate">DNE</span>/s</p>
+            </div>
+        </div>
     </div>
     <br><br>
     <div class="main">
-        <div class="category" id="statcat">
-            <p style="display:inline;" id="pgenrateholder"></p>
-            <br>
+        <div class="category ul1">
+            <div id="logformatter">
+                <div id="loginstruct">Data Log</div>
+                <div id="logholder">
+                </div>
+            </div>
+            <br><br>
+            <div id="statcat">
+                <p style="display:inline;" id="pgenrateholder"></p>
+                <br>
+            </div>
         </div>
         <div class="category" id="clcat">
+            <div class="boost1">
+                <div class="main">
+                    <div style="width:20%; padding: 0 5%">
+                        <div id="statisholder">
+    
+                        </div>
+                    </div>
+                    <div style="width:70%">
+                        <button onclick="LockStatis()">Actuate Statis</button>
+                        <br>
+                        <p>Statis Factor: <span id="statismod"></span></p>
+                        <br>
+                        <p id="statisstate">DNE</p>
+                        <br>
+                        <button onclick="BuyStatis()">Buy Statis Capacitor (<span id="statiscost">DNE</span>)</button>
+                    </div>
+                </div>
+            </div>
             <button id="pclick" onclick="PChange(1)">Click me for points</button>
             <br class="boost0">
             <br class="boost0">
@@ -34,7 +67,7 @@
             <p class="boost0">Current Boost: [<span id="pboost">DNE</span>x] / [<span id="pboostmax">DNE</span>x]</p>
             <br class="boost0">
             <br class="boost0">
-            <p class="boost0">Total Time Unboosted: <span id="pboostprog">DNE</span><span class="unboost0"> [<span id="unboost">DNE</span>x]</span></p>
+            <p class="boost0">Total Time Unboosted: <span id="pboostprog">DNE</span>s<span class="unboost0"> [<span id="unboost">DNE</span>x]</span></p>
         </div>
         <div class="category" id="gencat">
         </div>
@@ -47,10 +80,10 @@
                 (Unlocks Boosting)
                 <br></p>
             </div>
-            <div id="unboost0" class="ul2">
-                <button onclick="UnlockBuy('unboost0', 180, 1)">Unlock UnBoosting (180 seconds)</button>
+            <div id="unboost0" class="ul4">
+                <button onclick="UnlockBuy('unboost0', 180, 1)">Unlock UnBoosting (180s)</button>
                 <p><br>
-                Marinating the point button in exponential growth for long times has given it <span class="unrainbow">strange powers</span>.
+                Marinating the point button in exponential growth for long times has given it <span class="grainbow">strange powers</span>.
                 <br>
                 (Unlocks UnBoosting)
                 <br></p>
@@ -60,7 +93,7 @@
                 <p><br>
                 Why produce points when you could be making more point makers?
                 <br>
-                (+0.05 buildings of previous tier /s)
+                (Buildings automatically construct buildings of previous tiers, for free)
                 <br></p>
             </div>
             <div id="metagen1" class="ul3">
@@ -69,6 +102,22 @@
                 Direct points are overrated.
                 <br>
                 (Halve point generation per building tier, but double total meta-generation.)
+                <br></p>
+            </div>
+            <div id="boost1" class="ul7">
+                <button onclick="UnlockBuy('boost1', 10000000000, 0)">Upgrade Boost (10b)</button>
+                <p><br>
+                The fact that boost degrades over time is unfortunate. Maybe you could construct some sort of device to keep the button in statis?
+                <br>
+                (Unlocks boost statis capacitors, which slow down boost degradation)
+                <br></p>
+            </div>
+            <div id="unboost1" class="ul10">
+                <button onclick="UnlockBuy('unboost1', 300, 1)">Remember The Past (300s)</button>
+                <p><br>
+                You infuse the point button with essence of <span class="grainbow">unboost</span>.
+                <br>
+                (Gain time up to your best unboost faster)
                 <br></p>
             </div>
         </div>

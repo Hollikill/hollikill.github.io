@@ -1,6 +1,12 @@
 body {
     background-color: white;
     font-family: Arial, Helvetica, sans-serif;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 p {display: inline;}
 
@@ -13,12 +19,13 @@ p {display: inline;}
 button {
     width: 100%;
     margin: 1em 0;
+    height: 3em;
 }
 button:hover {
     border-color: red;
 }
 
-.ul1, .ul2, .ul3, .boost0, .unboost0 {
+.ul1, .ul2, .ul3, .boost0, .unboost0, .ul4, .boost1, .unboost1, .ul7, .ul10 {
     display: none;
 }
 
@@ -56,6 +63,14 @@ h1 {
     -webkit-text-fill-color: transparent;
     animation: rscroll 10s linear infinite;
 }
+.grainbow {
+    background-image:
+        linear-gradient(to right, black, white, black);
+    text-shadow: 1px 0px black;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: rscroll 10s linear infinite;
+}
 
 @keyframes rscroll {
     to {
@@ -75,4 +90,60 @@ h1 {
     position: absolute;
     top: 0em;
     left: 0.5em;
+}
+
+#logholder {
+    width: 100%;
+    max-height: 15em;
+    overflow: hidden;
+}
+
+#logformatter {
+    background-color: lightgray;
+    width: 100%;
+    height: 16.5em;
+    padding: 0.5em;
+}
+
+.logtext {
+    width: 100%;
+    padding: 0.2em;
+    font-style: italic;
+}
+
+.logtext:hover {
+    color: red;
+    text-shadow: 1px 1px black;
+}
+
+#loginstruct {
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    padding: 0.2em;
+}
+
+.pleft {
+    text-align: right;
+    width:50%;
+}
+
+.pright {
+    text-align: left;
+    width:50%;
+}
+
+#statisholder {
+    background-color: lightgray;
+    padding: 0.5em;
+    text-align: center;
+}
+
+.scap:hover {
+    color: cyan;
+    text-shadow: 1px 1px black;
+}
+
+#statismod {
+    font-weight: bold;
 }

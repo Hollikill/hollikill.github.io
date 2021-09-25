@@ -1,0 +1,20 @@
+0.4.0
+
+- added 2 unlocks
+- added a log
+- make the point count not jitter
+- added names for shit past tier... 13? idk
+- statis is cool!
+
+0.3.1
+
+- fixed a big memory leak error
+- added unboosting
+- fixed unlock scaling
+
+0.3.0
+
+- added version numbers
+- disabled natural meta-gen
+- added boosting
+- gave shit past tier 2 names
