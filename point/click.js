@@ -336,8 +336,8 @@ var UnlockBuy = function (ulid, cost, type) {
             }
             break;
         case 1:
-            if (pointdegradationprogress >= cost) {
-                pointdegradationprogress = pointdegradationprogress - cost;
+            if (unboosttime >= cost) {
+                unboosttime = unboosttime - cost;
                 canbuy = true;
             }
             break;
