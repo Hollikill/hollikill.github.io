@@ -4,7 +4,7 @@ var deltams = 25;
 // game progress
 var unlockStage = 0;
 var unlockreq = 10;
-var unlockrate = 25;
+var unlockrate = 20;
 
 // currency
 var points = 0;
@@ -185,9 +185,9 @@ var CreatePGen = function() {
     pgen.push(0);
     pgenprogress.push(0);
     pgenbought.push(0);
-    pgencost.push(100 * Math.pow(15, pgencost.length))
+    pgencost.push(100 * Math.pow(20, pgencost.length))
     pgencostbase.push(pgencost[pgencostbase.length])
-    pgenrate.push(Math.pow(15, pgenrate.length))
+    pgenrate.push(Math.pow(20, pgenrate.length))
 
     var pgenbr = document.createElement("br");
     var pgenstat = document.createElement("p");
