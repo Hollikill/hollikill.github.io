@@ -5,58 +5,71 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Point Game</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
     <script src="click.js"></script>
     <link rel="stylesheet" type="text/css" href="click.css"/>
 </head>
 <body>
+    <p id="version">Alpha 0.3.0</p>
+    <button id="mute" onclick="ToggleAudio()">Toggle Music</button>
     <h1>A Game about Getting <i>a Lot</i> of Points</h1>
     <hr>
     <br><br>
+    <div style="width:100%;text-align: center;">
+        <p><span id="pinstruct">Point Count: </span><span id="pcount">DNE</span> +<span id="totalprate">DNE</span>/s</p>
+    </div>
+    <br><br>
     <div class="main">
         <div class="category" id="statcat">
-            <p style="display:inline;" id="pcountholder">Point Count: <span id="pcount">DNE</span> +<span id="totalprate">DNE</span>/s<br><span id="pgen1rate" class="ul1">DNE</span><span id="pgen2rate" class="ul2">DNE</span></p>
+            <p style="display:inline;" id="pgenrateholder"></p>
             <br>
-            <br class="ul1">
-            <p class="ul1">Point Generators: <span id="pgen1count">DNE</span></p>
-            <br class="ul2">
-            <p class="ul2">PG Assembly Lines: <span id="pgen2count">DNE</span></p>
         </div>
         <div class="category" id="clcat">
             <button id="pclick" onclick="PChange(1)">Click me for points</button>
             <br class="boost0">
             <br class="boost0">
-            <p class="boost0">Current Boost: <span id="pboost">DNE</span>x / <span id="pboostmax">DNE</span>x</p>
-            <br>
-            <br>
-            <p>Seconds Since Click: <span id="pboostprog">DNE</span></p>
+            <p class="boost0">Total Boost: [<span id="totalboost">DNE</span>x]</p>
+            <br class="boost0">
+            <br class="boost0">
+            <p class="boost0">Current Boost: [<span id="pboost">DNE</span>x] / [<span id="pboostmax">DNE</span>x]</p>
+            <br class="boost0">
+            <br class="boost0">
+            <p class="boost0">Total Time Unboosted: <span id="pboostprog">DNE</span><span class="unboost0"> [<span id="unboost">DNE</span>x]</span></p>
         </div>
         <div class="category" id="gencat">
-            <button class = "ul1" onclick="PGenBuy(0, 1, 1.01)">Buy pGen (<span id="pgen1cost">DNE</span>)</button>
-            <button class = "ul2" onclick="PGenBuy(1, 1, 1.02)">Buy PGA (<span id="pgen2cost">DNE</span>)</button>
         </div>
         <div class="category" id=researchcat>
             <div id="boost0" class="ul1">
-                <button onclick="UnlockBuy('boost0', 1000)">Unlock Boosting (1000)</button>
-                <br>
+                <button onclick="UnlockBuy('boost0', 1000, 0)">Unlock Boosting (1000)</button>
+                <p><br>
                 Gain the ability to amplify your generators through hard work and sweat.
                 <br>
                 (Unlocks Boosting)
+                <br></p>
+            </div>
+            <div id="unboost0" class="ul2">
+                <button onclick="UnlockBuy('unboost0', 180, 1)">Unlock UnBoosting (180 seconds)</button>
+                <p><br>
+                Marinating the point button in exponential growth for long times has given it <span class="unrainbow">strange powers</span>.
                 <br>
+                (Unlocks UnBoosting)
+                <br></p>
             </div>
             <div id="metagen0" class="ul2">
-                <button onclick="UnlockBuy('metagen0', 5000)">Unlock Meta-Generation (5000)</button>
-                <br>
+                <button onclick="UnlockBuy('metagen0', 5000, 0)">Unlock Meta-Generation (5000)</button>
+                <p><br>
                 Why produce points when you could be making more point makers?
                 <br>
                 (+0.05 buildings of previous tier /s)
-                <br>
+                <br></p>
             </div>
             <div id="metagen1" class="ul3">
-                <button onclick="UnlockBuy('metagen1', 15000)">Upgrade Meta-Generation (15000)</button>
-                <br>
+                <button onclick="UnlockBuy('metagen1', 15000, 0)">Upgrade Meta-Generation (15000)</button>
+                <p><br>
                 Direct points are overrated.
                 <br>
                 (Halve point generation per building tier, but double total meta-generation.)
+                <br></p>
             </div>
         </div>
     </div>
