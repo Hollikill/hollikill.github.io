@@ -1,3 +1,11 @@
+0.4.3
+
+- ACTUALLY re-ordered the buying section
+- added a bunch more toggles
+- added 2 un-unlocks
+- music only plays after 10 points!
+- added settings, for those who want loud music and lots o' info
+
 0.4.2
 
 - re-ordered the buying section

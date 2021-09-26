@@ -37,6 +37,8 @@ var pgenrate = [];
 var logcolor = true;
 var ratesviewable = true;
 var logviewable = true;
+var rviewable = true;
+var statviewable = true;
 
 // text details
 var pgennames = ["Point Generator", "PG Assembly Line", "Point Condensator", "Stem Cell Growth Lab", "Condenser Shrine", "Nanobot Mining Cluster", "Point Factort MK 1", "Nanobot Replication Chamber", "Codensation Synagogue", "Nanobot Dispersal Assembly", "Point Factory MK 2", "Nanobot Internal Condenser", "Hypercondenser Nanocluster", "Superdense Point Depositer", "Tension Generator", "Hypercondenser Supercube", "Point Factory MK 3", "Hyperdense Point Refractor", "4D Ubercondenser", "Alternate Nanobot Metastate", "Extradimensional UberCondenser", "Macro-alignment Compensator", "Uberdense Enigma Rotator", "Tension-Density Nanoweaver", "NanoExUCD Manager", "Hypertension Skimmer", "7D Nanobot Refinery", "Nanobot Merging Cloud", "Macro-alignment Distributer", "Extradense Alignment Amplifier", "Nanobot Vortex Chamber", "Subsurface Tension Refiner", "Density Collecter", "Hyperspace Density Refractor", "Megatension Supernet Recaster", "Arbitration Alignment Machine"];
@@ -48,7 +50,7 @@ var unlockkeys = [];
 var GlobalLoop = function () {
     // unlock stages
     if (points > unlockreq) {
-        LogText("Surpassed Threshold Alpha-"+unlockStage);
+        LogText("log(self.threshold++);<br>self.threshold == "+unlockStage+";");
         unlockStage = unlockStage + 1;
 
         var ul = document.getElementsByClassName("ul"+unlockStage);
@@ -56,6 +58,14 @@ var GlobalLoop = function () {
             n.style.display = "inline";
         }
         CreatePGen();
+        if (unlockStage == 1) {
+            ToggleResearch();
+            ToggleLog();
+            ToggleRates();
+            AdjustMusic();
+            if (audio.paused == true)
+                ToggleAudio();
+        }
         if (unlockStage == 2) {
             document.getElementById("pinstruct").remove();
         }
@@ -65,10 +75,6 @@ var GlobalLoop = function () {
         if (unlockStage == 13) {
             document.getElementById("pcount").classList.remove("grainbow");
             document.getElementById("pcount").classList.add("unrainbow");
-        }
-        if (unlockStage == 24) {
-            document.getElementById("pcount").classList.remove("unrainbow");
-            document.getElementById("pcount").classList.add("rainbow");
         }
 
         unlockreq = (pgencostbase[pgencostbase.length-1])*2;
@@ -82,7 +88,7 @@ var GlobalLoop = function () {
     }
     pointdegradationprogress = pointdegradationprogress + (deltams/1000)
     var ubmult = 1;
-    if (unlockkeys.includes("unboost1") && unboosttime < unboostmax) {
+    if ((unlockkeys.includes("unboost1") && unboosttime < unboostmax) || unlockkeys.includes("unboost3")) {
         ubmult = ubmult * Math.max(3, (unboostmax/100))
     }
     unboosttime = unboosttime + (deltams/1000)*ubmult;
@@ -143,6 +149,9 @@ var GlobalLoop = function () {
             if (unlockkeys.includes("metagen2")) {
                 metagenmult = metagenmult * (1+Math.log10(GetBoost()))
             }
+        }
+        if (unlockkeys.includes("unboost2")) {
+            metagenmult = metagenmult * ubmult;
         }
         for (let i = 1; i < pgen.length; i++) {
             pgenprogress[i-1] = pgenprogress[i-1] + (deltams/1000)*pgen[i]*metagenmult;
@@ -265,6 +274,7 @@ var ToggleRates = function() {
             r.style.display = "inline";
         }
     }
+    CategoryViewCheck();
 }
 
 var UpdateTotalRate = function() {
@@ -313,7 +323,11 @@ var CreatePGen = function() {
 
     var pgenbr = document.createElement("br");
     var pgenstat = document.createElement("p");
-    pgenstat.innerHTML = pgennames[pgen.length-1]+": <span id='pgen"+pgen.length+"count'>DNE</span>";
+    var name = ""+pgennames[pgen.length-1];
+    if (name == "undefined") {
+        name = "Building["+(pgen.length)+"]";
+    }
+    pgenstat.innerHTML = name+": <span id='pgen"+pgen.length+"count'>DNE</span>";
     pgenstat.style.display = "inline";
     document.getElementById("statcat").appendChild(pgenbr);
     document.getElementById("statcat").appendChild(pgenstat);
@@ -325,9 +339,13 @@ var CreatePGen = function() {
     ToggleRates();
     ToggleRates();
 
+    var abbr = ""+pgenabbrs[pgen.length-1];
+    if (abbr == "undefined") {
+        abbr = "B-"+(pgen.length);
+    }
     var pgenbuybutton = document.createElement("div");
-    pgenbuybutton.innerHTML="<button onclick='PGenBuy("+(pgen.length-1)+", 1, "+(1+(pgen.length/100))+")' class='pgenbuy'>Buy "+pgenabbrs[pgen.length-1]+" (<span id='pgen"+pgen.length+"cost'>DNE</span>)</button>";
-    document.getElementById("gencat").appendChild(pgenbuybutton);
+    pgenbuybutton.innerHTML="<button onclick='PGenBuy("+(pgen.length-1)+", 1, "+(1+(pgen.length/100))+")' class='pgenbuy'>Buy "+abbr+" (<span id='pgen"+pgen.length+"cost'>DNE</span>)</button>";
+    document.getElementById("gencat").prepend(pgenbuybutton);
 }
 
 var PChange = function(x) {
@@ -369,13 +387,14 @@ var UnlockBuy = function (ulid, cost, type) {
             break;
     }
     if (canbuy) {
-        LogText("Bought "+ulid);
+        LogText("self.aquire("+ulid+");");
         unlockkeys.push(ulid);
         document.getElementById(ulid).remove()
         var ulelements = document.getElementsByClassName(ulid);
         for (let n of ulelements) {
             n.style.display = "inline";
         }
+        document.getElementById("rcompleted").prepend(document.getElementById(ulid+"holder"));
     }
 }
 
@@ -385,8 +404,9 @@ var GetBoost = function () {
 
 // bg audio loop
 var audio = new Audio('chill.mp3');
+var bgvolume = 0;
 audio.loop = true;
-audio.play();
+audio.volume = bgvolume;
 
 var ToggleAudio = function () {
     if (audio.paused) {
@@ -398,10 +418,17 @@ var ToggleAudio = function () {
     }
 }
 
+var AdjustMusic = function () {
+    bgvolume = bgvolume + 0.2;
+    if (bgvolume > 1) bgvolume = 0;
+    audio.volume = bgvolume;
+    ChangeNumber("volume", bgvolume)
+}
+
 var LogText = async function(text) {
     // create and format
     var logtext = document.createElement("div");
-    logtext.innerHTML = text + "<br>";
+    logtext.innerHTML = text + "<br><br>";
     logtext.classList.add("logtext");
     var logcolor = logcolor;
     if (logcolor) {
@@ -417,12 +444,9 @@ var LogText = async function(text) {
     document.getElementById("logholder").prepend(logtext);
 
     // fade-out
-    setTimeout( function() {
-        
-        setTimeout( function() {
-            logtext.remove();
-        }, 600000);
-    }, 5000);
+    /*setTimeout( function() {
+        logtext.remove();
+    }, 600000);*/
 }
 
 var ToggleLog = function() {
@@ -433,6 +457,47 @@ var ToggleLog = function() {
     else {
         logviewable = true;
         document.getElementById("log").style.display = "inline";
+    }
+    CategoryViewCheck();
+}
+
+var ToggleResearch = function() {
+    if (rviewable) {
+        rviewable = false;
+        document.getElementById("rcompleted").style.display = "none";
+    }
+    else {
+        rviewable = true;
+        document.getElementById("rcompleted").style.display = "inline";
+    }
+}
+
+var ToggleStats = function() {
+    if (statviewable) {
+        statviewable = false;
+        document.getElementById("statcat").style.display = "none";
+    }
+    else {
+        statviewable = true;
+        document.getElementById("statcat").style.display = "block";
+    }
+    CategoryViewCheck();
+}
+
+var CategoryViewCheck = function() {
+    var catsenabled = 4;
+    if (!statviewable && !ratesviewable && !logviewable) {
+        document.getElementById("statholder").style.display = "none";
+        catsenabled = catsenabled - 1;
+    }
+    else {
+        document.getElementById("statholder").style.display = "inline";
+    }
+    
+    // correct remaining cats width
+    var cats = document.getElementById("maincatholder").children;
+    for (var c of cats) {
+        c.style.width = ((100-(5*catsenabled))/catsenabled)+"%";
     }
 }
 
@@ -475,5 +540,21 @@ var BuyStatis = function() {
 
         document.getElementById("statisholder").innerHTML = document.getElementById("statisholder").innerHTML + "<p class='scap' id='scap"+scaps.length+"'></p><br>";
         scaps.push(0);
+    }
+}
+
+var ToggleNotify = function(x) {
+    var blur = document.getElementById("blur");
+    var notify = document.getElementById("notify"+x)
+    if (blur.style.display == "none") {
+        blur.style.display = "inline";
+        notify.style.display = "inline";
+    }
+    else {
+        blur.style.display = "none";
+        var notifys = document.getElementsByClassName("notify");
+        for (var n of notifys) {
+            n.style.display = "none";
+        }
     }
 }
