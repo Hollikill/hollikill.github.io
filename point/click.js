@@ -5,7 +5,7 @@ var last1sec = 0;
 // game progress
 var unlockStage = 0;
 var unlockreq = 10;
-var unlockrate = 20;
+var unlockrate = 15;
 
 // currency
 var points = 0;
@@ -33,9 +33,14 @@ var pgencost = [];
 var pgencostbase = [];
 var pgenrate = [];
 
+// UI details
+var logcolor = true;
+var ratesviewable = true;
+var logviewable = true;
+
 // text details
-var pgennames = ["Point Generator", "PG Assembly Line", "Point Condensator", "Stem Cell Growth Lab", "Condenser Shrine", "Nanobot Mining Cluster", "Point Factort MK 1", "Nanobot Replication Chamber", "Codensation Synagogue", "Nanobot Dispersal Assembly", "Point Factory MK 2", "Nanobot Internal Condenser", "Hypercondenser Nanocluster", "Superdense Point Depositer", "Tension Generator", "Hypercondenser Supercube", "Point Factory MK 3", "Hyperdense Point Refractor", "4D Ubercondenser", "Alternate Nanobot Metastate", "Extradimensional UberCondenser", "Macro-alignment Compensator", "Uberdense Enigma Rotator", "Tension-Density Nanoweaver", "NanoExUCD Manager", "Hypertension Skimmer"];
-var pgenabbrs = ["pGen", "PGA", "PCD", "SCG", "CDS", "NC", "PFK1", "NRC", "CSG", "NDA", "PFK2", "NIC", "HCD", "SDD", "tGen", "HCD^2", "PFK3", "HDR", "HCD^3", "MTS", "HCD^4", "MAC", "UDR", "tWeaver", "NXM", "tSkim"];
+var pgennames = ["Point Generator", "PG Assembly Line", "Point Condensator", "Stem Cell Growth Lab", "Condenser Shrine", "Nanobot Mining Cluster", "Point Factort MK 1", "Nanobot Replication Chamber", "Codensation Synagogue", "Nanobot Dispersal Assembly", "Point Factory MK 2", "Nanobot Internal Condenser", "Hypercondenser Nanocluster", "Superdense Point Depositer", "Tension Generator", "Hypercondenser Supercube", "Point Factory MK 3", "Hyperdense Point Refractor", "4D Ubercondenser", "Alternate Nanobot Metastate", "Extradimensional UberCondenser", "Macro-alignment Compensator", "Uberdense Enigma Rotator", "Tension-Density Nanoweaver", "NanoExUCD Manager", "Hypertension Skimmer", "7D Nanobot Refinery", "Nanobot Merging Cloud", "Macro-alignment Distributer", "Extradense Alignment Amplifier", "Nanobot Vortex Chamber", "Subsurface Tension Refiner", "Density Collecter", "Hyperspace Density Refractor", "Megatension Supernet Recaster", "Arbitration Alignment Machine"];
+var pgenabbrs = ["pGen", "PGA", "PCD", "SCG", "CDS", "NC", "PFK1", "NRC", "CSG", "NDA", "PFK2", "NIC", "HCD", "SDD", "tGen", "HCD^2", "PFK3", "HDR", "HCD^3", "MTS", "ExUCD", "MAC", "UDR", "tWeaver", "NXM", "tSkim", "NRF", "NMC", "MAD", "ExA2", "NVTXC", "tSubRef", "DC", "HDRF", "tCastnet", "ARBA"];
 
 // unlocks
 var unlockkeys = [];
@@ -45,7 +50,6 @@ var GlobalLoop = function () {
     if (points > unlockreq) {
         LogText("Surpassed Threshold Alpha-"+unlockStage);
         unlockStage = unlockStage + 1;
-        unlockreq = unlockreq * unlockrate;
 
         var ul = document.getElementsByClassName("ul"+unlockStage);
         for (let n of ul) {
@@ -66,6 +70,9 @@ var GlobalLoop = function () {
             document.getElementById("pcount").classList.remove("unrainbow");
             document.getElementById("pcount").classList.add("rainbow");
         }
+
+        unlockreq = (pgencostbase[pgencostbase.length-1])*2;
+        unlockrate = unlockrate + 1;
     }
     
     // point boost calculations
@@ -116,7 +123,7 @@ var GlobalLoop = function () {
         last1sec = n;
 
         if (unlockkeys.includes("boost1")) {
-            if (slocked) DegradeStatis(0.002);
+            if (slocked) DegradeStatis(0.01);
             else StepStatis(35, 0.2);
         }
     }
@@ -133,6 +140,9 @@ var GlobalLoop = function () {
         var metagenmult = .05;
         if (unlockkeys.includes("metagen1")) {
             metagenmult = metagenmult * 2
+            if (unlockkeys.includes("metagen2")) {
+                metagenmult = metagenmult * (1+Math.log10(GetBoost()))
+            }
         }
         for (let i = 1; i < pgen.length; i++) {
             pgenprogress[i-1] = pgenprogress[i-1] + (deltams/1000)*pgen[i]*metagenmult;
@@ -175,7 +185,7 @@ var ChangeNumber = function(id, x) {
     if (x > 100000000000000000000)
         ChangeNumberExpo(id, x);
     else {
-        var tempnumeral = numeral(x).format('0,0.[00]a');
+        var tempnumeral = numeral(x).format('0,0.0a');
         if (tempnumeral != null)
         document.getElementById(id).innerHTML = tempnumeral;
     }
@@ -193,7 +203,7 @@ var ChangeNumberLong = function(id, x) {
     if (x > 100000000000000000000)
         ChangeNumberExpo(id, x);
     else {
-        var tempnumeral = numeral(x).format('0,0.0[0]');
+        var tempnumeral = numeral(x).format('0,0.00');
         if (tempnumeral != null)
         document.getElementById(id).innerHTML = tempnumeral;
     }
@@ -208,7 +218,7 @@ var ChangeNumberFixed = function(id, x, decimals) {
     }
 }
 var ChangeNumberExpo = function (id, x) {
-    var tempnumeral = Number(x).toExponential(5);
+    var tempnumeral = Number(x).toExponential(2);
     if (tempnumeral != null)
     document.getElementById(id).innerHTML = tempnumeral;
 }
@@ -219,25 +229,42 @@ var UpdatePoints = function() {
 }
 
 var UpdatePointBoost = function() {
-    ChangeNumber("pboost", (pointboostcurrent+1));
-    ChangeNumber("pboostmax", (pointboostmax+1));
+    ChangeNumberLong("pboost", (pointboostcurrent+1));
+    ChangeNumberLong("pboostmax", (pointboostmax+1));
     ChangeNumberFixed("pboostprog", unboosttime, 0);
 
     // unboost stored here too
-    ChangeNumber("unboost", 1+(unboostmax/300));
+    ChangeNumberLong("unboost", 1+(unboostmax/300));
 
     // total boost spot
-    ChangeNumber("totalboost", GetBoost());
+    ChangeNumberFixed("totalboost", GetBoost(), 0);
 }
 
 var UpdatePGen = function(x) {
     ChangeNumber("pgen"+(x+1)+"count", pgen[x]);
     ChangeNumber("pgen"+(x+1)+"cost", pgencost[x]);
-    var temp = (" +"+(CalcPGenRate(x)).toFixed(0)+"/s");
+    var temp = CalcPGenRate(x);
     if (pgen[x] == 0 || pgenrate[x] == 0) {
-        temp = "";
+        temp = 0;
     }
-    ChangeText("pgen"+(x+1)+"rate", temp)
+    ChangeNumber("pgen"+(x+1)+"rate", temp)
+}
+
+var ToggleRates = function() {
+    if (ratesviewable) {
+        ratesviewable = false;
+        var rates = document.getElementsByClassName("pgenrate");
+        for (var r of rates) {
+            r.style.display = "none";
+        }
+    }
+    else {
+        ratesviewable = true;
+        var rates = document.getElementsByClassName("pgenrate");
+        for (var r of rates) {
+            r.style.display = "inline";
+        }
+    }
 }
 
 var UpdateTotalRate = function() {
@@ -280,9 +307,9 @@ var CreatePGen = function() {
     pgen.push(0);
     pgenprogress.push(0);
     pgenbought.push(0);
-    pgencost.push(100 * Math.pow(20, pgencost.length))
+    pgencost.push(100 * Math.pow(unlockrate, pgencost.length))
     pgencostbase.push(pgencost[pgencostbase.length])
-    pgenrate.push(Math.pow(20, pgenrate.length))
+    pgenrate.push(Math.pow(unlockrate, pgenrate.length))
 
     var pgenbr = document.createElement("br");
     var pgenstat = document.createElement("p");
@@ -292,15 +319,14 @@ var CreatePGen = function() {
     document.getElementById("statcat").appendChild(pgenstat);
 
     var pgenratetext = document.createElement("span");
-    pgenratetext.id = "pgen"+pgen.length+"rate";
     pgenratetext.classList = "pgenrate";
-    pgenratetext.innerHTML = "DNE";
+    pgenratetext.innerHTML = "+<p id='pgen"+pgen.length+"rate'>DNE</p>/s<br>";
     document.getElementById("pgenrateholder").appendChild(pgenratetext);
+    ToggleRates();
+    ToggleRates();
 
-    var pgenbuybr = document.createElement("br");
     var pgenbuybutton = document.createElement("div");
-    pgenbuybutton.innerHTML="<button onclick='PGenBuy("+(pgen.length-1)+", 1, 1.0"+pgen.length+")'>Buy "+pgenabbrs[pgen.length-1]+" (<span id='pgen"+pgen.length+"cost'>DNE</span>)</button>";
-    document.getElementById("gencat").appendChild(pgenbuybr);
+    pgenbuybutton.innerHTML="<button onclick='PGenBuy("+(pgen.length-1)+", 1, "+(1+(pgen.length/100))+")' class='pgenbuy'>Buy "+pgenabbrs[pgen.length-1]+" (<span id='pgen"+pgen.length+"cost'>DNE</span>)</button>";
     document.getElementById("gencat").appendChild(pgenbuybutton);
 }
 
@@ -345,7 +371,7 @@ var UnlockBuy = function (ulid, cost, type) {
     if (canbuy) {
         LogText("Bought "+ulid);
         unlockkeys.push(ulid);
-        document.getElementById(ulid).style.display = "none";
+        document.getElementById(ulid).remove()
         var ulelements = document.getElementsByClassName(ulid);
         for (let n of ulelements) {
             n.style.display = "inline";
@@ -372,8 +398,6 @@ var ToggleAudio = function () {
     }
 }
 
-var logcolor = true;
-
 var LogText = async function(text) {
     // create and format
     var logtext = document.createElement("div");
@@ -397,8 +421,19 @@ var LogText = async function(text) {
         
         setTimeout( function() {
             logtext.remove();
-        }, 300000);
+        }, 600000);
     }, 5000);
+}
+
+var ToggleLog = function() {
+    if (logviewable) {
+        logviewable = false;
+        document.getElementById("log").style.display = "none";
+    }
+    else {
+        logviewable = true;
+        document.getElementById("log").style.display = "inline";
+    }
 }
 
 var LockStatis = function() {

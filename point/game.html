@@ -8,9 +8,12 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
     <script src="click.js"></script>
     <link rel="stylesheet" type="text/css" href="click.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
-    <p id="version">Alpha 0.4.0 <a href="changelog.txt" target="blank" style="color:gray;">changelog</a></p>
+    <p id="version">Alpha 0.4.2 <a href="changelog.txt" target="blank" style="color:gray;">changelog</a></p>
     <button id="mute" onclick="ToggleAudio()">Toggle Music</button>
     <h1>A Game about Getting <i>a Lot</i> of Points</h1>
     <hr>
@@ -27,16 +30,25 @@
     </div>
     <br><br>
     <div class="main">
-        <div class="category ul1">
-            <div id="logformatter">
-                <div id="loginstruct">Data Log</div>
-                <div id="logholder">
-                </div>
+        <div class="category">
+            <div class="main">
+                <button onclick="ToggleRates()" class="ul1" style="width:48%; margin: 0 1%;">Toggle Rates</button>
+                <button onclick="ToggleLog()" class="ul1" style="width:48%; margin: 0 1%;">Toggle Data Log</button>
             </div>
-            <br><br>
-            <div id="statcat">
-                <p style="display:inline;" id="pgenrateholder"></p>
+            <br>
+            <div class="ul1" id="log">
+                <div id="logformatter">
+                    <div id="loginstruct">Data Log</div>
+                    <div id="logholder">
+                    </div>
+                </div>
                 <br>
+            </div>
+            <div id="statcat">
+                <div style="max-height: 15em;overflow: auto;">
+                    <p style="display:inline;" id="pgenrateholder"></p>
+                </div>
+                <br class="pgenrate">
             </div>
         </div>
         <div class="category" id="clcat">
@@ -72,53 +84,61 @@
         <div class="category" id="gencat">
         </div>
         <div class="category" id=researchcat>
-            <div id="boost0" class="ul1">
-                <button onclick="UnlockBuy('boost0', 1000, 0)">Unlock Boosting (1000)</button>
+            <div class="ul1">
+                <button onclick="UnlockBuy('boost0', 1000, 0)" id="boost0">Unlock Boosting (1000)</button>
                 <p><br>
                 Gain the ability to amplify your generators through hard work and sweat.
                 <br>
                 (Unlocks Boosting)
-                <br></p>
+                <br><br></p>
             </div>
-            <div id="unboost0" class="ul4">
-                <button onclick="UnlockBuy('unboost0', 180, 1)">Unlock UnBoosting (180s)</button>
+            <div class="ul4">
+                <button onclick="UnlockBuy('unboost0', 180, 1)" id="unboost0">Unlock UnBoosting (180s)</button>
                 <p><br>
                 Marinating the point button in exponential growth for long times has given it <span class="grainbow">strange powers</span>.
                 <br>
                 (Unlocks UnBoosting)
-                <br></p>
+                <br><br></p>
             </div>
-            <div id="metagen0" class="ul2">
-                <button onclick="UnlockBuy('metagen0', 5000, 0)">Unlock Meta-Generation (5000)</button>
+            <div class="ul2">
+                <button onclick="UnlockBuy('metagen0', 5000, 0)" id="metagen0">Unlock Meta-Generation (5000)</button>
                 <p><br>
                 Why produce points when you could be making more point makers?
                 <br>
                 (Buildings automatically construct buildings of previous tiers, for free)
-                <br></p>
+                <br><br></p>
             </div>
-            <div id="metagen1" class="ul3">
-                <button onclick="UnlockBuy('metagen1', 15000, 0)">Upgrade Meta-Generation (15000)</button>
+            <div class="ul3">
+                <button onclick="UnlockBuy('metagen1', 15000, 0)" id="metagen1">Upgrade Meta-Generation (15000)</button>
                 <p><br>
                 Direct points are overrated.
                 <br>
                 (Halve point generation per building tier, but double total meta-generation.)
-                <br></p>
+                <br><br></p>
             </div>
-            <div id="boost1" class="ul7">
-                <button onclick="UnlockBuy('boost1', 10000000000, 0)">Upgrade Boost (10b)</button>
+            <div class="ul7">
+                <button onclick="UnlockBuy('boost1', 10000000000, 0)" id="boost1">Upgrade Boost (10b)</button>
                 <p><br>
                 The fact that boost degrades over time is unfortunate. Maybe you could construct some sort of device to keep the button in statis?
                 <br>
                 (Unlocks boost statis capacitors, which slow down boost degradation)
-                <br></p>
+                <br><br></p>
             </div>
-            <div id="unboost1" class="ul10">
-                <button onclick="UnlockBuy('unboost1', 300, 1)">Remember The Past (300s)</button>
+            <div class="ul10">
+                <button onclick="UnlockBuy('unboost1', 300, 1)" id="unboost1">Remember The Past (300s)</button>
                 <p><br>
                 You infuse the point button with essence of <span class="grainbow">unboost</span>.
                 <br>
                 (Gain time up to your best unboost faster)
-                <br></p>
+                <br><br></p>
+            </div>
+            <div class="ul13">
+                <button onclick="UnlockBuy('metagen2', 100000000000000000000, 0)" id="metagen2">Check on the Meta-Generation (100,000,000t)</button>
+                <p><br>
+                Hack the meta-generation system with the boost channel. <span class="grainbow">You feel this is a choice you cannot unmake</span>.
+                <br>
+                (Multiply meta-generation by log10 of the boost)
+                <br><br></p>
             </div>
         </div>
     </div>

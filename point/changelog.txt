@@ -1,3 +1,11 @@
+0.4.2
+
+- re-ordered the buying section
+- added a toggle for rate indicators
+- added an unlock
+- added some info toggles
+- added names for #27-#36
+
 0.4.1
 
 - Patched buying with seconds

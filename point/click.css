@@ -1,6 +1,6 @@
 body {
     background-color: white;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'PT Mono', monospace;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -12,8 +12,9 @@ p {display: inline;}
 
 #pcount {font-weight: bold;}
 
-#pgen1rate, #pgen2rate, .pgenrate {
+.pgenrate {
     color: gray;
+    display: inline;
 }
 
 button {
@@ -25,7 +26,7 @@ button:hover {
     border-color: red;
 }
 
-.ul1, .ul2, .ul3, .boost0, .unboost0, .ul4, .boost1, .unboost1, .ul7, .ul10 {
+.ul1, .ul2, .ul3, .boost0, .unboost0, .ul4, .boost1, .unboost1, .ul7, .ul10, .ul13 {
     display: none;
 }
 
@@ -137,6 +138,8 @@ h1 {
     background-color: lightgray;
     padding: 0.5em;
     text-align: center;
+    overflow: auto;
+    height: 10em;
 }
 
 .scap:hover {
@@ -146,4 +149,9 @@ h1 {
 
 #statismod {
     font-weight: bold;
+}
+
+.pgenbuy {
+    height: 1.6em;
+    margin: 0.1em 0;
 }
