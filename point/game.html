@@ -15,7 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=PT+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
-    <p id="version">Alpha 0.4.4 <a href="changelog.txt" target="blank" style="color:gray;">changelog</a></p>
+    <p id="version">Alpha 0.4.5 <a href="changelog.txt" target="blank" style="color:gray;">changelog</a></p>
     <a onclick="ToggleNotify('tog')" class="ul1" id="opentog">Open Settings</a>
     <h1>A Game about Getting <i>a Lot</i> of Points</h1>
     <hr>
@@ -148,7 +148,7 @@
                     <br><br></p>
                 </div>
                 <div class="ul15" id="unboost2holder">
-                    <button onclick="UnlockBuy('unboost2', 3600, 1)" id="unboost2">Touch the Sun (3600s)</button>
+                    <button onclick="UnlockBuy('unboost2', 900, 1)" id="unboost2">Touch the Sun (900s)</button>
                     <p><br>
                     While working on the boost channel, you trip over something and knock yourself out. When you awake, a magnificent light floats before your eyes. Staring into the light of <span class="unrainbow">eternity</span>, you know there is no true obstacle in what you face now.
                     <br>
@@ -156,7 +156,7 @@
                     <br><br></p>
                 </div>
                 <div class="ul21" id="unboost3holder">
-                    <button onclick="UnlockBuy('unboost3', 4900, 1)" id="unboost3">Become Eternal (4900s)</button>
+                    <button onclick="UnlockBuy('unboost3', 1800, 1)" id="unboost3">Become Eternal (1800s)</button>
                     <p><br>
                     In the light of <span class="unrainbow">magnificence</span>, what is time but a perspective?
                     <br>
@@ -176,7 +176,7 @@
                     <p><br>
                     Turns out you can leave a rock on the button while you do other things, and the boost is none the wiser!
                     <br>
-                    (The delay before boost degradation is squared... still based on max boost, though)
+                    (The delay before boost degradation is doubled... still based on max boost, though)
                     <br><br></p>
                 </div>
             </div>
@@ -196,7 +196,7 @@
         <a onclick="ToggleResearch()" class="ul1">Toggle Old Research Descriptions</a><br>
         <a onclick="AdjustMusic()">Adjust the Volume (<span id="volume">DNE</span>)</a><br>
         <a onclick="ToggleAudio()" id="mute">Pause Music</a><br>
-        <a onclick="ChangeTempoColor(tempocolor+1)">Change Tempo UI Style [<span id="tempomode">DNE</span>]</a><br>
+        <a onclick="ChangeTempoColor(tempocolor+1)" class="boost2">Change Tempo UI Style [<span id="tempomode">DNE</span>]</a><br>
     </div>
 </body>
 </html>

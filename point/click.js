@@ -93,7 +93,7 @@ var GlobalLoop = function () {
     // point boost calculations
     var boostdelaymult = 1;
     if (unlockkeys.includes("boost3"))
-        boostdelaymult = boostdelaymult * pointboostmax;
+        boostdelaymult = boostdelaymult * 2;
     if (pointboostcurrent > pointboostmax) {
         pointboostmax = pointboostmax + 0.001;
         pointboostcurrent = Math.min(pointboostmax,pointboostcurrent);
@@ -146,7 +146,7 @@ var GlobalLoop = function () {
         }
 
         if (audio.ended) {
-            audio = new Audio('chill'+(Math.round(1+(4*Math.random())))+'.mp3');
+            audio = new Audio('chill'+(Math.floor(1+(4*Math.random())))+'.mp3');
             audio.volume = bgvolume;
             audio.play();
         }
@@ -407,7 +407,7 @@ var TriggerTempo = function () {
     var thisdelay = n - lastclick;
     if (lastclick == 0)
         thisdelay = 0;
-    if (thisdelay/1000 > pointboostmax*pointboostmax || !unlockkeys.includes("boost3") && thisdelay/1000 > pointboostmax) {
+    if (thisdelay/1000 > pointboostmax*2 || !unlockkeys.includes("boost3") && thisdelay/1000 > pointboostmax) {
         tempocount = 0;
         tempoavg = pointboostmax*500;
     }
@@ -417,7 +417,7 @@ var TriggerTempo = function () {
         if (!(thisdelay > tempoavg*(1+temporange) || thisdelay < tempoavg*(1-temporange)) && unlockkeys.includes("boost2")) {
             pointboostcurrent = pointboostcurrent + (pointboostmax/50);
             if (pointboostcurrent > pointboostmax)
-                pointboostmax = pointboostmax + (pointboostmax/500);
+                pointboostmax = pointboostmax + 0.001;
             tempocount = tempocount + 1;
         }
     }
