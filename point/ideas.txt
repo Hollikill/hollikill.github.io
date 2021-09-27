@@ -7,5 +7,3 @@ An upgrade for a toggle to disable ALL numbers in exchange for faster permaboost
 An upgrade for a menu that lets you overclock machines, which might make them break; or underclock to increase meta-generation.
 
 Hover green or red if you can buy stuff.
-
-Button to toggle old research descriptions.

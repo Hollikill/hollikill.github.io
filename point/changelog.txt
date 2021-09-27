@@ -1,3 +1,10 @@
+0.4.4
+
+- added a boost tempo system
+- added 2 tempo related unlocks
+- Patched the research system
+- Started to prepare for something big
+
 0.4.3
 
 - ACTUALLY re-ordered the buying section

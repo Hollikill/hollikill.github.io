@@ -17,6 +17,12 @@ var pointboostmax = 1;
 var pointdegradationrate = 0.2;
 var pointdegradationprogress = 0;
 
+// boost combo mechanics
+var tempoavg = 0;
+var lastclick = 0;
+var tempocount = 0;
+var temporange = 0.5;
+
 // unboost mechanics
 var unboostmax = 0;
 var unboosttime = 0;
@@ -39,6 +45,7 @@ var ratesviewable = true;
 var logviewable = true;
 var rviewable = true;
 var statviewable = true;
+var tempocolor = 0;
 
 // text details
 var pgennames = ["Point Generator", "PG Assembly Line", "Point Condensator", "Stem Cell Growth Lab", "Condenser Shrine", "Nanobot Mining Cluster", "Point Factort MK 1", "Nanobot Replication Chamber", "Codensation Synagogue", "Nanobot Dispersal Assembly", "Point Factory MK 2", "Nanobot Internal Condenser", "Hypercondenser Nanocluster", "Superdense Point Depositer", "Tension Generator", "Hypercondenser Supercube", "Point Factory MK 3", "Hyperdense Point Refractor", "4D Ubercondenser", "Alternate Nanobot Metastate", "Extradimensional UberCondenser", "Macro-alignment Compensator", "Uberdense Enigma Rotator", "Tension-Density Nanoweaver", "NanoExUCD Manager", "Hypertension Skimmer", "7D Nanobot Refinery", "Nanobot Merging Cloud", "Macro-alignment Distributer", "Extradense Alignment Amplifier", "Nanobot Vortex Chamber", "Subsurface Tension Refiner", "Density Collecter", "Hyperspace Density Refractor", "Megatension Supernet Recaster", "Arbitration Alignment Machine"];
@@ -65,6 +72,8 @@ var GlobalLoop = function () {
             AdjustMusic();
             if (audio.paused == true)
                 ToggleAudio();
+            TriggerTempo();
+            ChangeTempoColor(1);
         }
         if (unlockStage == 2) {
             document.getElementById("pinstruct").remove();
@@ -78,10 +87,13 @@ var GlobalLoop = function () {
         }
 
         unlockreq = (pgencostbase[pgencostbase.length-1])*2;
-        unlockrate = unlockrate + 1;
+        unlockrate = unlockrate + 2;
     }
     
     // point boost calculations
+    var boostdelaymult = 1;
+    if (unlockkeys.includes("boost3"))
+        boostdelaymult = boostdelaymult * pointboostmax;
     if (pointboostcurrent > pointboostmax) {
         pointboostmax = pointboostmax + 0.001;
         pointboostcurrent = Math.min(pointboostmax,pointboostcurrent);
@@ -92,7 +104,7 @@ var GlobalLoop = function () {
         ubmult = ubmult * Math.max(3, (unboostmax/100))
     }
     unboosttime = unboosttime + (deltams/1000)*ubmult;
-    if (pointdegradationprogress > pointboostmax) {
+    if (pointdegradationprogress > pointboostmax*boostdelaymult) {
         pointboostcurrent = pointboostcurrent - (deltams/1000)*pointdegradationrate*(1/Math.max(GetStatisMod(),0));
         if (pointboostcurrent < 0)
             pointboostcurrent = 0;
@@ -130,7 +142,7 @@ var GlobalLoop = function () {
 
         if (unlockkeys.includes("boost1")) {
             if (slocked) DegradeStatis(0.01);
-            else StepStatis(35, 0.2);
+            else StepStatis(50, 0.5);
         }
     }
 
@@ -184,6 +196,7 @@ var UpdateText = function() {
     }
     UpdateTotalRate();
     UpdateStatis();
+    UpdateTempo();
 }
 
 var ChangeText = function(id, x) {
@@ -286,22 +299,43 @@ var UpdateTotalRate = function() {
 }
 
 var UpdateStatis = function () {
-    ChangeNumber("statismod", GetStatisMod());
+    ChangeNumberLong("statismod", GetStatisMod());
     for (var i = 0; i < scaps.length; i++) {
         ChangeNumber("scap"+i, scaps[i])
     }
     ChangeNumberShort("statiscost", (100000000000*Math.pow(100, scaps.length)));
     var locktext = "";
     if (slocked) {
-        locktext = "Statis Locked";
+        locktext = "Statis Hypertension";
         document.getElementById("statisstate").classList.add("grainbow")
         document.getElementById("statisstate").classList.remove("unrainbow")
     } else {
-        locktext = "Statis Hypertension";
+        locktext = "Statis Flux";
         document.getElementById("statisstate").classList.add("unrainbow")
         document.getElementById("statisstate").classList.remove("grainbow")
     }
     ChangeText("statisstate", locktext)
+}
+ 
+var UpdateTempo = function() {
+    ChangeNumberLong("tempoavg", tempoavg/1000);
+    //ChangeNumberLong("tempocount", tempocount);
+    ChangeNumberLong("tempobonus", pointboostmax/50);
+
+    var d = new Date();
+    var n = d.getTime();
+    var thisdelay = n - lastclick;
+    if (tempoavg*(1-temporange) < thisdelay && thisdelay < tempoavg*(1+temporange))
+        if (tempocolor > 0)
+            document.getElementById("tempodelay").style.color = "green";
+        else
+            document.getElementById("tempodelay").style.color = "black";
+    else
+        if (tempocolor > 1)
+            document.getElementById("tempodelay").style.color = "red";
+        else
+            document.getElementById("tempodelay").style.color = "black";
+    ChangeNumberLong("tempodelay", (thisdelay/1000));
 }
 
 var CalcPGenRate = function(x) {
@@ -355,6 +389,38 @@ var PChange = function(x) {
     if (unlockkeys.includes("boost0")) {
         pointboostcurrent = pointboostcurrent + 0.01;
     }
+    if (unlockkeys.includes("boost2")) {
+        alert("tempo");
+        TriggerTempo();
+    }
+}
+
+var TriggerTempo = function () {
+    var d = new Date();
+    var n = d.getTime();
+    var thisdelay = n - lastclick;
+    if (lastclick == 0)
+        thisdelay = 0;
+    if (thisdelay/1000 > pointboostmax*pointboostmax || !unlockkeys.includes("boost3") && thisdelay/1000 > pointboostmax) {
+        tempocount = 0;
+        tempoavg = pointboostmax*500;
+    }
+    else {
+        tempoavg = (tempoavg*(tempocount/(tempocount+1))) + (thisdelay/(tempocount+1));
+
+        if (!(thisdelay > tempoavg*(1+temporange) || thisdelay < tempoavg*(1-temporange)) && unlockkeys.includes("boost2")) {
+            pointboostcurrent = pointboostcurrent + (pointboostmax/50);
+            if (pointboostcurrent > pointboostmax)
+                pointboostmax = pointboostmax + (pointboostmax/500);
+            tempocount = tempocount + 1;
+        }
+    }
+    lastclick = n;
+}
+
+var ChangeTempoColor = function (x) {
+    tempocolor = x%3;
+    ChangeNumber("tempomode", tempocolor);
 }
 
 var PGenBuy = function (x, amount, itr) {
@@ -394,7 +460,7 @@ var UnlockBuy = function (ulid, cost, type) {
         for (let n of ulelements) {
             n.style.display = "inline";
         }
-        document.getElementById("rcompleted").prepend(document.getElementById(ulid+"holder"));
+        document.getElementById("rcompleted").appendChild(document.getElementById(ulid+"holder"));
     }
 }
 

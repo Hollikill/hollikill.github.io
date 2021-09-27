@@ -7,6 +7,7 @@
     <title>Point Game</title>
     <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
     <script src="https://github.com/Patashu/break_infinity.js/releases/download/v1.2.0/break_infinity.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="click.js"></script>
     <link rel="stylesheet" type="text/css" href="click.css"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=PT+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
-    <p id="version">Alpha 0.4.3 <a href="changelog.txt" target="blank" style="color:gray;">changelog</a></p>
+    <p id="version">Alpha 0.4.4 <a href="changelog.txt" target="blank" style="color:gray;">changelog</a></p>
     <a onclick="ToggleNotify('tog')" class="ul1" id="opentog">Open Settings</a>
     <h1>A Game about Getting <i>a Lot</i> of Points</h1>
     <hr>
@@ -70,15 +71,21 @@
                 <br><hr>
             </div>
             <button id="pclick" onclick="PChange(1)">Click me for points</button>
-            <br class="boost0">
-            <br class="boost0">
+            <br class="boost0"><br class="boost0">
             <p class="boost0">Total Boost: [<span id="totalboost">DNE</span>x]</p>
-            <br class="boost0">
-            <br class="boost0">
+            <br class="boost0"><br class="boost0">
             <p class="boost0">Current Boost: [<span id="pboost">DNE</span>x] / [<span id="pboostmax">DNE</span>x]</p>
-            <br class="boost0">
-            <br class="boost0">
-            <p class="boost0">Total Time Unboosted: <span id="pboostprog">DNE</span>s<span class="unboost0"> [<span id="unboost">DNE</span>x]</span></p>
+            <br class="boost0"><br class="boost0">
+            <p class="boost0">Time Unboosted: <span id="pboostprog">DNE</span>s<span class="unboost0"> [<span id="unboost">DNE</span>x]</span></p>
+            <div class="boost2">
+                <br><br><hr><br>
+                <p>Current Average Tempo: <span id="tempoavg">DNE</span>s</p>
+                <br><br>
+                <p>Tempo Boost Bonus: [<span id="tempobonus">DNE</span>+]</p>
+                <br><br>
+                <p>Time Unclicked: <span id="tempodelay">DNE</span>s</p>
+                
+            </div>
         </div>
         <div class="category" id="gencat">
         </div>
@@ -148,12 +155,28 @@
                     (Multipy meta-generation by your unboost speed)
                     <br><br></p>
                 </div>
-                <div class="ul21">
-                    <button onclick="UnlockBuy('unboost3', 4900, 1)" id="unboost2">Become Eternal (4900s)</button>
+                <div class="ul21" id="unboost3holder">
+                    <button onclick="UnlockBuy('unboost3', 4900, 1)" id="unboost3">Become Eternal (4900s)</button>
                     <p><br>
                     In the light of <span class="unrainbow">magnificence</span>, what is time but a perspective?
                     <br>
                     (Unboost is not temporal)
+                    <br><br></p>
+                </div>
+                <div class="ul2" id="boost2holder">
+                    <button onclick="UnlockBuy('boost2', 15, 1)" id="boost2">Channel Flow (15s)</button>
+                    <p><br>
+                    Pressing the button repeatedly for a while seems to send you into a flow state.
+                    <br>
+                    (Pressing the button with a consistent tempo increases click power)
+                    <br><br></p>
+                </div>
+                <div class="ul2" id="boost3holder">
+                    <button onclick="UnlockBuy('boost3', 5000, 0)" id="boost3">Indiana Jones (5000)</button>
+                    <p><br>
+                    Turns out you can leave a rock on the button while you do other things, and the boost is none the wiser!
+                    <br>
+                    (The delay before boost degradation is squared... still based on max boost, though)
                     <br><br></p>
                 </div>
             </div>
@@ -171,8 +194,9 @@
         <a onclick="ToggleRates()" class="ul1">Toggle Rates</a><br>
         <a onclick="ToggleStats()" class="ul1">Toggle Building Counts</a><br>
         <a onclick="ToggleResearch()" class="ul1">Toggle Old Research Descriptions</a><br>
-        <a onclick="AdjustMusic()">Adjust the Volume (<span id="volume"></span>)</a><br>
+        <a onclick="AdjustMusic()">Adjust the Volume (<span id="volume">DNE</span>)</a><br>
         <a onclick="ToggleAudio()" id="mute">Pause Music</a><br>
+        <a onclick="ChangeTempoColor(tempocolor+1)">Change Tempo UI Style [<span id="tempomode">DNE</span>]</a><br>
     </div>
 </body>
 </html>
