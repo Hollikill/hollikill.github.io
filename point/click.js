@@ -396,6 +396,7 @@ var PChange = function(x) {
         pointboostcurrent = pointboostcurrent + 0.01;
     }
     if (unlockkeys.includes("boost2")) {
+        // THIS DOES NOT ALERT PLEASE
         TriggerTempo();
     }
 }
