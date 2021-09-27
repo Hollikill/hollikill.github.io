@@ -4,6 +4,7 @@
 - added 2 tempo related unlocks
 - Patched the research system
 - Started to prepare for something big
+- 3 new royalty-free music tracks!
 
 0.4.3
 

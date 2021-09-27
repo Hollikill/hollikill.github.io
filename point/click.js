@@ -144,6 +144,12 @@ var GlobalLoop = function () {
             if (slocked) DegradeStatis(0.01);
             else StepStatis(50, 0.5);
         }
+
+        if (audio.ended) {
+            audio = new Audio('chill'+(Math.round(1+(4*Math.random())))+'.mp3');
+            audio.volume = bgvolume;
+            audio.play();
+        }
     }
 
     // generation step
@@ -390,7 +396,6 @@ var PChange = function(x) {
         pointboostcurrent = pointboostcurrent + 0.01;
     }
     if (unlockkeys.includes("boost2")) {
-        alert("tempo");
         TriggerTempo();
     }
 }
@@ -446,7 +451,7 @@ var UnlockBuy = function (ulid, cost, type) {
             }
             break;
         case 1:
-            if (unboosttime >= cost) {
+            if (unboosttime >= cost && unlockkeys.includes("boost0")) {
                 unboosttime = unboosttime - cost;
                 canbuy = true;
             }
@@ -469,9 +474,8 @@ var GetBoost = function () {
 }
 
 // bg audio loop
-var audio = new Audio('chill.mp3');
+var audio = new Audio('chill1.mp3');
 var bgvolume = 0;
-audio.loop = true;
 audio.volume = bgvolume;
 
 var ToggleAudio = function () {
