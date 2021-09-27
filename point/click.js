@@ -56,7 +56,7 @@ var unlockkeys = [];
 
 var GlobalLoop = function () {
     // unlock stages
-    if (points > unlockreq) {
+    if ((points > unlockreq && unlockStage != 36 && unlockStage != 128) || (points > unlockreq && unlockkeys.includes("infinity0") && unlockStage != 128)) {
         LogText("log(self.threshold++);<br>self.threshold == "+unlockStage+";");
         unlockStage = unlockStage + 1;
 

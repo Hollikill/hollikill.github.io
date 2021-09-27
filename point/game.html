@@ -15,7 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=PT+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
-    <p id="version">Alpha 0.4.5 <a href="changelog.txt" target="blank" style="color:gray;">changelog</a></p>
+    <p id="version">Alpha 0.4.6 <a href="changelog.txt" target="blank" style="color:gray;">changelog</a></p>
     <a onclick="ToggleNotify('tog')" class="ul1" id="opentog">Open Settings</a>
     <h1>A Game about Getting <i>a Lot</i> of Points</h1>
     <hr>
@@ -179,6 +179,22 @@
                     (The delay before boost degradation is doubled... still based on max boost, though)
                     <br><br></p>
                 </div>
+                <div class="ul36" id="infinity0holder">
+                    <button onclick="UnlockBuy('infinity0', 1e+71, 0)" id="infinity0">Approach Infinity (1.00e+71)</button>
+                    <p><br>
+                    You have reached the end of your grand plan... but you feel something more calling out. You can't name it, but these buildings in your vision will bring you to the edge of infinity.
+                    <br>
+                    (Invent the end of Architectural Technology)
+                    <br><br></p>
+                </div>
+                <div class="ul128" id="infinity1holder">
+                    <button onclick="UnlockBuy('infinity1', 0, 0)" id="infinity1">Touch Infinity (Everything)</button>
+                    <p><br>
+                    This universe is full. You still feel something <span class="unrainbow">pulling you beyond</span>, though.
+                    <br>
+                    (<span class="unrainbow">Open your mind</span>)
+                    <br><br></p>
+                </div>
             </div>
             <div id="rcompleted">
                 <hr>
@@ -197,6 +213,10 @@
         <a onclick="AdjustMusic()">Adjust the Volume (<span id="volume">DNE</span>)</a><br>
         <a onclick="ToggleAudio()" id="mute">Pause Music</a><br>
         <a onclick="ChangeTempoColor(tempocolor+1)" class="boost2">Change Tempo UI Style [<span id="tempomode">DNE</span>]</a><br>
+    </div>
+    <div id="notifywon" class="notify">
+        <p>You've Won.</p>
+        <p>Wait for the next part in update 0.5.0</p>
     </div>
 </body>
 </html>

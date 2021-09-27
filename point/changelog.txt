@@ -1,3 +1,8 @@
+0.4.6
+
+- it comes
+- 2 new unlocks, but they are boring
+
 0.4.5
 
 - fixed music playing
