@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Point Game</title>
+
+    <!-- libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="break_eternity.js"></script>
+
+    <!-- references -->
+    <script src="loop.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <!-- font styling -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="title">
+        <h1 style="text-align: center;" id="titletext">A Desolate Void</h1>
+    </div>
+    <div id="startmenu">
+        <div style="text-align: center;">
+            <button onclick="LoadGamedata(0)">Import Save Code From Clipboard</button>
+            <button onclick="LoadGamedata(1)">Import Save Code Automatically</button>
+            <button onclick="LoadGamedata(2)">Start Anew</button>
+        </div>
+        <p id="version">Expirimental 5t.0 <a href="changelog.txt" target="blank" style="color:gray;">changelog</a></p>
+        <h3>vvv READ THIS vvv</h3>
+        <p>
+            Click and drag the white bars at the top of modules.
+            <br>
+            Use the buttons at the top to change tabs.
+        </p>
+    </div>
+    <div id="navbar"></div>
+    <div id="navcontent"></div>
+</body>
+</html>

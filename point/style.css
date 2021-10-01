@@ -1,0 +1,32 @@
+body {
+    font-family: 'PT Mono', monospace;
+    overflow: hidden;
+}
+
+#navbar {
+    margin: 0 0 1em;
+    padding: 0 0 0.5em;
+}
+
+#navbar {
+    justify-content: center;
+}
+
+.module {
+    position: absolute;
+    padding: 0.2em;
+    border: 1px solid black;
+    background-color: lightgray;
+    overflow: hidden;
+    max-height: 50%;
+    max-width: 50%;
+}
+
+.moduledrag {
+    width: 100%;
+    height: 0.5em;
+    background-color: white;
+    border: solid 1px black;
+    text-align: center;
+    user-select: none;
+}
