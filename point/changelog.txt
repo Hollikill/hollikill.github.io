@@ -1,3 +1,10 @@
+5t.1
+
+- Corrected the save mechanic in relation to generators
+- Changed the dragging system a little
+- Added notification boxes!
+- got the audio back working ♪
+
 5t.0
 
 - This is an expirimental release, find it at https://hollikill.net/point/testgame

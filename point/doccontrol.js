@@ -26,15 +26,10 @@ var AddModule = (tabid) => {
     container.classList.add("module");
     document.getElementById("navcontent").appendChild(container);
 
-    var containerheader = document.createElement("div");
-    containerheader.classList.add("moduledrag");
-    containerheader.textContent = "";
-    container.appendChild(containerheader);
-
     dragElement(container);
 
-    container.style.top = (Math.random()*100)+"%";
-    container.style.left = (Math.random()*100)+"%";
+    container.style.top = (Math.random()*45+20)+"%";
+    container.style.left = (Math.random()*45+20)+"%";
 
     return container;
 }
@@ -44,9 +39,12 @@ var Update = () => {
         ChangeNumber("pointcount", gamedata.points);
     }
     if (updateneeds.includes("buildbuy")) {
-        for (var i = 0; i < buildcount.length; i++) {
-            ChangeNumber("buildcost"+i, buildcost[i]);
+        var totalbought = new Decimal(0);
+        for (var i = 0; i < gamedata.buildcount.length; i++) {
+            ChangeNumber("buildcost"+i, gamedata.buildcost[i]);
+            totalbought = totalbought.plus(gamedata.buildbought[i]);
         }
+        ChangeNumber("purchase", totalbought);
     }
 
     if (gamedata.unlockkeys.includes("p10"))
@@ -69,7 +67,7 @@ var NavVisible = (bool) => {
 
 var Navbar = (tabid) => {
     for (var tab of document.getElementById("navcontent").children) {
-        if (tab.classList.contains(tabid)) {
+        if (tab.classList.contains(tabid) || tab.classList.contains("priority")) {
             tab.style.display = "block";
         }
         else {
@@ -83,7 +81,7 @@ var ChangeTitle = (newtitle) => {
 }
 
 var CreatePointButton = () => {
-    var container = AddModule("clicktab");
+    var container = AddModule("priority");
 
     var pointcounttext = document.createElement("span");
     pointcounttext.id = "pointcounttext";
@@ -124,7 +122,7 @@ var CreateBuildings = () => {
 }
 
 function CreatePPS () {
-    var container = AddModule("stattab");
+    var container = AddModule("clicktab");
 
     var instruct = document.createElement("span");
     instruct.textContent = "Points Per Second: ";
@@ -134,4 +132,24 @@ function CreatePPS () {
 
     container.appendChild(instruct);
     container.appendChild(ppscount);
+}
+
+function Notify (text) {
+    var container = AddModule("priority");
+
+    var textelement = document.createElement("span");
+    textelement.innerHTML = text;
+    container.appendChild(textelement);
+    container.appendChild(document.createElement("br"));
+    container.appendChild(document.createElement("br"));
+
+    var exitbutton = document.createElement("button");
+    exitbutton.setAttribute("onclick", "CloseNotify(this)");
+    exitbutton.textContent = "Close Notification"
+    exitbutton.style.width = "100%";
+    container.appendChild(exitbutton);
+}
+
+function CloseNotify (e) {
+    e.parentElement.remove();
 }
