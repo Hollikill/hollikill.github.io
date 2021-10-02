@@ -1,6 +1,7 @@
 body {
     font-family: 'PT Mono', monospace;
     overflow: hidden;
+    user-select: none;
 }
 
 #navbar {
