@@ -9,6 +9,10 @@ var loadgamepoints = 0;
 var gamedata = {
     points: new Decimal(0),
 
+    currentboost: new Decimal(0),
+    maxboost: new Decimal(1),
+    boosttime: new Decimal(0),
+
     stagekeys: [],
 
     buildcost: [],
@@ -18,6 +22,8 @@ var gamedata = {
 
     unlock_viewable: [],
     unlock_bought: [],
+
+    lasttime: 0,
 
     version: "5t.1",
 }
@@ -54,6 +60,13 @@ var LoadGamedata = (mode) => {
         gamedata.buildbought.push(new Decimal(savecode.buildbought[i]));
     }
 
+    gamedata.unlock_viewable = savecode.unlock_viewable;
+    gamedata.unlock_bought = savecode.unlock_bought;
+
+    for (var ulid of gamedata.unlock_bought) {
+        TriggerUnlock(ulid);
+    }
+
     HideElementID("startmenu");
     NavVisible(true);
     ChangeTitle("A Game about Getting a Lot of Points");
@@ -71,6 +84,10 @@ var SaveGamedata = () => {
 var PointButton = () => {
     gamedata.points = gamedata.points.plus(1);
     updateneeds.push("points");
+    if (gamedata.unlock_bought.includes("boost"))
+        gamedata.currentboost = gamedata.currentboost.add(0.01);
+    gamedata.boosttime = new Decimal(0);
+    
 }
 
 // this holds everything but functions and global variables
@@ -82,13 +99,16 @@ $.getScript("format.js", function() {
 $(function() {
 
 CreatePointButton();
-Notify("alert", "You can [ click + drag ] to re-arragne all these boxes!<br><br>Have fun playing!");
+Notify("alert", "You can [ right-click + drag ] to re-arragne all these boxes!<br><br>Have fun playing!");
 NavVisible(false);
 
 // this is the global loop
 setInterval(function () {
 
-    gamedata.points = gamedata.points.plus(BuildStep(deltams));
+    var delay = GetTime();
+    SetTime();
+
+    gamedata.points = gamedata.points.plus(BuildStep(delay));
     updateneeds.push("points")
 
     if (!gamedata.stagekeys.includes("p10") && gamedata.points >= 10) {
@@ -119,16 +139,22 @@ setInterval(function () {
         }
     }
 
+    if (gamedata.unlock_bought.includes("boost"))
+        gamedata.boosttime = gamedata.boosttime.plus(delay/1000);
+
     CheckUnlockVisable();
+
+    ValidateBoost();
 
     Update();
 
 }, deltams);
 
 setInterval(function () {
-    if (gamedata.stagekeys.includes("p10"))
+    if (gamedata.stagekeys.includes("p10")) {
         SaveGamedata();
         RefreshNewsfeed();
+    }
 }, 15000);
 
 });
@@ -186,6 +212,8 @@ function BuildStep(deltams) {
         }
     }
 
+    total = total.times(GetBoost());
+
     return total;
 }
 
@@ -201,7 +229,7 @@ function CheckUnlockVisable() {
                 visible = false;
         }
         if (ul.timereq != null) {
-            if (gamedata.points.compare(ul.timereq) < 0)
+            if (gamedata.boosttime.compare(ul.timereq) < 0)
                 visible = false;
         }
 
@@ -231,6 +259,51 @@ function BuyUnlock (id, e) {
             gamedata.unlock_bought.push(ul.id);
             e.textContent = "Bought";
             e.setAttribute("onclick", "");
+            TriggerUnlock(ul.id);
         }
     }
+}
+
+function TriggerUnlock (id) {
+    switch (id) {
+        case "boost":
+            CreateBoost();
+            Notify("alert2", "Boosting system aquired!<br><br>To use the system, simply press the point button repeatedly in quick succcession.<br><br>You can monitor your boost stats in the boost module.<br>All production is multiplied by the total boost.");
+            break;
+    }
+}
+
+function GetBoost () {
+    var boostmult = new Decimal(1);
+
+    boostmult = boostmult.times(gamedata.currentboost.add(1));
+
+    return new Decimal(boostmult);
+}
+
+function ValidateBoost () {
+    if (gamedata.currentboost.compare(gamedata.maxboost) > 0) {
+        gamedata.maxboost = gamedata.maxboost.add(0.001);
+        gamedata.currentboost = gamedata.maxboost;
+    }
+
+    if (gamedata.boosttime > 1) {
+        gamedata.currentboost = gamedata.currentboost.minus((deltams/1000)*(0.2));
+        if (gamedata.currentboost.compare(0) < 0)
+            gamedata.currentboost = new Decimal(0); 
+    }
+}
+
+function SetTime () {
+    var d = new Date();
+    var n = d.getTime();
+    gamedata.lasttime = new Decimal(n);
+}
+
+function GetTime () {
+    var d = new Date();
+    var n = d.getTime();
+    var delay = new Decimal(n).minus(gamedata.lasttime);
+
+    return delay;
 }

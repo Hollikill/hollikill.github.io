@@ -24,12 +24,13 @@ var AddModule = (tabid) => {
     var container = document.createElement("div");
     container.classList.add(tabid);
     container.classList.add("module");
+    container.setAttribute("oncontextmenu", "return false;");
     document.getElementById("navcontent").appendChild(container);
-
-    dragElement(container);
 
     container.style.top = (Math.random()*45+20)+"%";
     container.style.left = (Math.random()*45+20)+"%";
+
+    dragElement(container);
 
     return container;
 }
@@ -46,9 +47,15 @@ var Update = () => {
         }
         ChangeNumber("purchase", totalbought, 1);
     }
+    if (gamedata.unlock_bought.includes("boost")) {
+        ChangeNumber("currentboost", gamedata.currentboost.add(1), 2);
+        ChangeNumber("maxboost", gamedata.maxboost.add(1), 2);
+        ChangeNumber("boosttime", gamedata.boosttime);
+        ChangeNumber("totalboost", new Decimal(GetBoost()), 2);
+    }
 
     if (gamedata.stagekeys.includes("p10"))
-        ChangeNumber("statpps", BuildStep(1000));
+        ChangeNumber("statpps", BuildStep(1000).times(GetBoost()));
 
     updateneeds = [];
 }
@@ -94,6 +101,7 @@ var CreatePointButton = () => {
     var pointbutton = document.createElement("button");
     pointbutton.textContent = "Click me for points";
     pointbutton.addEventListener('click', PointButton);
+    pointbutton.style.fontSize = "200%";
 
     container.appendChild(pointcounttext);
     container.appendChild(pointcount);
@@ -199,6 +207,7 @@ function CreateAudioSettings () {
 
 function CreateNewsfeed() {
     var container = AddModule("stage0");
+    container.style.width = "40em";
 
     var titletext = document.createElement("span");
     titletext.style.fontWeight = "bold";
@@ -227,4 +236,60 @@ function RefreshNewsfeed() {
     }
 
     document.getElementById("newstext").innerHTML = applicable[Math.floor(applicable.length*Math.random())];
+}
+
+function CreateBoost() {
+    var container = AddModule("stage0");
+
+    var boosttext = document.createElement("span");
+    var boostval = document.createElement("span");
+    var boostmaxval = document.createElement("span");
+    var boosttimetext = document.createElement("span");
+    var boosttimeval = document.createElement("span");
+    var boosttotaltext = document.createElement("span");
+    var boosttotalval = document.createElement("span");
+
+    boostval.id = "currentboost";
+    boostmaxval.id = "maxboost";
+    boosttimeval.id = "boosttime";
+    boosttotalval.id = "totalboost";
+
+    boosttext.textContent = "Boost: ["
+    boosttext.append(boostval);
+    boosttext.innerHTML = boosttext.innerHTML + "/";
+    boosttext.append(boostmaxval);
+    boosttext.innerHTML = boosttext.innerHTML + "]x";
+
+    boosttimetext.textContent = "Unboosted Time: ";
+    boosttimetext.append(boosttimeval);
+    boosttimetext.innerHTML = boosttimetext.innerHTML + "s";
+
+    boosttotaltext.textContent = "Total Boost: [";
+    boosttotaltext.append(boosttotalval);
+    boosttotaltext.innerHTML = boosttotaltext.innerHTML + "]x";
+
+    container.append(boosttext);
+    container.append(document.createElement("br"));
+    container.append(boosttimetext);
+    container.append(document.createElement("br"));
+    container.append(boosttotaltext);
+}
+
+function CreateMetaSlider () {
+    var container = AddModule("stage0");
+
+    var focusslider = document.createElement("input");
+    focusslider.setAttribute("type", "range");
+    focusslider.setAttribute("min", "0");
+    focusslider.setAttribute("max", "100");
+
+    var focustext = document.createElement("span");
+    focustext.textContent = "Focus: ";
+    var focusval = document.createElement("span");
+    focusval.id = "focus";
+    focustext.appendChild(focusval);
+
+    container.append(focusslider);
+    container.append(document.createElement("br"));
+    container.append(focustext);
 }

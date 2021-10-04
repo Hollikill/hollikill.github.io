@@ -4,6 +4,8 @@ function dragElement(elmnt) {
   elmnt.onmousedown = dragMouseDown;
 
   function dragMouseDown(e) {
+    if (e.button == 0)
+        return;
     e = e || window.event;
     e.preventDefault();
     // get the mouse cursor position at startup:
