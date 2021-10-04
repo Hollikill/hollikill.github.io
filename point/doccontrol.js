@@ -44,10 +44,10 @@ var Update = () => {
             ChangeNumber("buildcost"+i, gamedata.buildcost[i]);
             totalbought = totalbought.plus(gamedata.buildbought[i]);
         }
-        ChangeNumber("purchase", totalbought);
+        ChangeNumber("purchase", totalbought, 1);
     }
 
-    if (gamedata.unlockkeys.includes("p10"))
+    if (gamedata.stagekeys.includes("p10"))
         ChangeNumber("statpps", BuildStep(1000));
 
     updateneeds = [];
@@ -66,6 +66,7 @@ var NavVisible = (bool) => {
 }
 
 var Navbar = (tabid) => {
+    curtab = tabid;
     for (var tab of document.getElementById("navcontent").children) {
         if (tab.classList.contains(tabid) || tab.classList.contains("priority")) {
             tab.style.display = "block";
@@ -81,7 +82,7 @@ var ChangeTitle = (newtitle) => {
 }
 
 var CreatePointButton = () => {
-    var container = AddModule("priority");
+    var container = AddModule("stage0");
 
     var pointcounttext = document.createElement("span");
     pointcounttext.id = "pointcounttext";
@@ -103,7 +104,7 @@ var CreatePointButton = () => {
 }
 
 var CreateBuildings = () => {
-    var container = AddModule("clicktab");
+    var container = AddModule("stage0");
 
     var purchasetext = document.createElement("span");
     purchasetext.id = "purchasetext";
@@ -122,20 +123,25 @@ var CreateBuildings = () => {
 }
 
 function CreatePPS () {
-    var container = AddModule("clicktab");
+    var container = AddModule("stage0");
 
     var instruct = document.createElement("span");
-    instruct.textContent = "Points Per Second: ";
+    instruct.textContent = "Points Per Second: +";
 
     var ppscount = document.createElement("span");
     ppscount.id = "statpps";
 
+    var persecondtext = document.createElement("span");
+    persecondtext.textContent = "/s";
+
     container.appendChild(instruct);
     container.appendChild(ppscount);
+    container.appendChild(persecondtext);
 }
 
-function Notify (text) {
+function Notify (type, text) {
     var container = AddModule("priority");
+    container.classList.add(type);
 
     var textelement = document.createElement("span");
     textelement.innerHTML = text;
@@ -152,4 +158,73 @@ function Notify (text) {
 
 function CloseNotify (e) {
     e.parentElement.remove();
+}
+
+function CreateUnlock (id, name, description, cost, costtype) {
+    var container = AddModule("stage0");
+
+    var buybutton = document.createElement("button");
+    buybutton.setAttribute("onclick", "BuyUnlock('"+id+"', this)");
+    buybutton.textContent = "Buy ("+cost.toString()+" "+costtype+")";
+
+    var unlockname = document.createElement("span");
+    unlockname.style.fontWeight = "bold";
+    unlockname.textContent = name+" ";
+
+    var descriptiontext = document.createElement("span");
+    descriptiontext.innerHTML = description;
+
+    container.appendChild(unlockname);
+    container.appendChild(buybutton);
+    container.appendChild(document.createElement("br"));
+    container.appendChild(descriptiontext);
+}
+
+function CreateAudioSettings () {
+    var container = AddModule("settings")
+
+    var togglebutton = document.createElement("button");
+    var volumebutton = document.createElement("button");
+
+    togglebutton.textContent = "Toggle Background Music";
+    volumebutton.textContent = "Adjust Music Volume";
+
+    togglebutton.setAttribute("onclick", "ToggleAudio()");
+    volumebutton.setAttribute("onclick", "AdjustMusic()");
+
+    container.appendChild(togglebutton);
+    container.appendChild(document.createElement("br"));
+    container.appendChild(volumebutton);
+}
+
+function CreateNewsfeed() {
+    var container = AddModule("stage0");
+
+    var titletext = document.createElement("span");
+    titletext.style.fontWeight = "bold";
+    titletext.textContent = "The Newsfeed"
+
+    var newstext = document.createElement("span");
+    newstext.id = "newstext";
+
+    container.appendChild(titletext);
+    container.appendChild(document.createElement("br"));
+    container.appendChild(newstext);
+}
+
+function RefreshNewsfeed() {
+    var applicable = [];
+    for (var line of newslines) {
+        switch (line.type) {
+            case "all":
+                applicable.push(line.text);
+                break;
+            case "point":
+                if (gamedata.points.compare(line.min) >= 0 && gamedata.points.compare(line.max) <= 0)
+                    applicable.push(line.text);
+                break;
+        }
+    }
+
+    document.getElementById("newstext").innerHTML = applicable[Math.floor(applicable.length*Math.random())];
 }

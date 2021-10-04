@@ -1,15 +1,24 @@
 var deltams = 100;
 
 var updateneeds = [];
+var curtab = "stage0";
+
+var loadgamepoints = 0;
 
 // object for storing savegame-relavent values
 var gamedata = {
     points: new Decimal(0),
-    unlockkeys: [],
+
+    stagekeys: [],
+
     buildcost: [],
     buildcostbase: [],
     buildcount: [],
     buildbought: [],
+
+    unlock_viewable: [],
+    unlock_bought: [],
+
     version: "5t.1",
 }
 
@@ -27,15 +36,16 @@ var LoadGamedata = (mode) => {
             var savecodejson = localStorage.getItem("savecodejson");
             break;
         case 2:
-            SaveGamedata();
-            LoadGamedata(1);
-            return;
+            var savecodejson = JSON.stringify(gamedata);
+            if (localStorage.getItem("savecodejson"))
+                Notify("warn", "If you play here you will override a save with "+JSON.parse(localStorage.getItem("savecodejson")).points+" points.<br>Reload the page to load the saved game.");
             break;
     }
 
     var savecode = JSON.parse(savecodejson);
 
     gamedata.points = new Decimal(savecode.points);
+    loadgamepoints = new Decimal(savecode.points);
 
     for (var i = 0; i < savecode.buildcost.length; i++) {
         gamedata.buildcost.push(new Decimal(savecode.buildcost[i]));
@@ -47,7 +57,11 @@ var LoadGamedata = (mode) => {
     HideElementID("startmenu");
     NavVisible(true);
     ChangeTitle("A Game about Getting a Lot of Points");
-    Notify("You can [ click + drag ] to re-arragne all these boxes!<br>Now, go make the UI feel yours.<br><br>This game saves autoamtically, but it WILL wipe save data<br>when you click 'start anew', so be cautious.<br><br>Have fun playing!");
+
+    audio.play();
+
+    CreateAudioSettings();
+    Navbar(curtab);
 }
 var SaveGamedata = () => {
     localStorage.setItem("savecodejson", JSON.stringify(gamedata));
@@ -60,12 +74,15 @@ var PointButton = () => {
 }
 
 // this holds everything but functions and global variables
+$.getScript("newstext.js", function() {
+$.getScript("unlocks.js", function() {
 $.getScript("drag.js", function() {
 $.getScript("doccontrol.js", function() {
 $.getScript("format.js", function() {
 $(function() {
 
 CreatePointButton();
+Notify("alert", "You can [ click + drag ] to re-arragne all these boxes!<br><br>Have fun playing!");
 NavVisible(false);
 
 // this is the global loop
@@ -74,8 +91,8 @@ setInterval(function () {
     gamedata.points = gamedata.points.plus(BuildStep(deltams));
     updateneeds.push("points")
 
-    if (!gamedata.unlockkeys.includes("p10") && gamedata.points >= 10) {
-        gamedata.unlockkeys.push("p10");
+    if (!gamedata.stagekeys.includes("p10") && gamedata.points >= 10) {
+        gamedata.stagekeys.push("p10");
 
         CreateBuildings();
 
@@ -85,24 +102,37 @@ setInterval(function () {
 
         CreatePPS();
 
-        Navbar("clicktab");
+        CreateNewsfeed();
+        RefreshNewsfeed();
+
+        Navbar("stage0");
+
+        if (loadgamepoints < 10)
+            Notify("alert", "Congrats on your first 10 points...<br><br>Now, your first goal should be to get some sort of automatic point production set up.<br>Namely, in the form of a building.<br><br>You can see in the the building module, there is a button to buy B-1, or building one, for 100 points. (in engineer notation)");
     }
-    if (gamedata.unlockkeys.includes("p10")) {
+    if (gamedata.stagekeys.includes("p10")) {
         if (gamedata.points.compare(gamedata.buildcost[gamedata.buildcost.length-1]*2) >= 0) {
             CreateBuild(gamedata.buildcount.length+1);
             updateneeds.push("buildbuy");
+
+            Notify("alert2", "New Building Unlocked!");
         }
     }
+
+    CheckUnlockVisable();
 
     Update();
 
 }, deltams);
 
 setInterval(function () {
-    if (gamedata.unlockkeys.includes("p10"))
+    if (gamedata.stagekeys.includes("p10"))
         SaveGamedata();
+        RefreshNewsfeed();
 }, 15000);
 
+});
+});
 });
 });
 });
@@ -157,4 +187,50 @@ function BuildStep(deltams) {
     }
 
     return total;
+}
+
+function CheckUnlockVisable() {
+    for (var ul of unlocks) {
+        var visible = true;
+
+        if (gamedata.unlock_viewable.includes(ul.id))
+            visible = false;
+
+        if (ul.pointreq != null) {
+            if (gamedata.points.compare(ul.pointreq) < 0)
+                visible = false;
+        }
+        if (ul.timereq != null) {
+            if (gamedata.points.compare(ul.timereq) < 0)
+                visible = false;
+        }
+
+        if (visible) {
+            CreateUnlock(ul.id, ul.name, ul.description, ul.cost, ul.costtype);
+            gamedata.unlock_viewable.push(ul.id);
+            Navbar(curtab);
+        }
+    }
+}
+
+function BuyUnlock (id, e) {
+    for (var ul of unlocks) {
+        var canbuy = false;
+
+        if (ul.id == id) {
+            switch (ul.costtype) {
+                case "point":
+                    if (gamedata.points.compare(ul.cost) >= 0) {
+                        canbuy = true;
+                    }
+                    break;
+            }
+        }
+
+        if (canbuy) {
+            gamedata.unlock_bought.push(ul.id);
+            e.textContent = "Bought";
+            e.setAttribute("onclick", "");
+        }
+    }
 }

@@ -1,3 +1,13 @@
+5t.2
+
+- fleshed out notifications
+- added msuic FOR REAL THIS TIME
+- added the boost unlock (well, the prompt)
+- saving is better! yay!
+- dragging stuff is also better! yay!
+- added back some settings
+- added a newsfeed... because
+
 5t.1
 
 - Corrected the save mechanic in relation to generators

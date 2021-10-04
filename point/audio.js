@@ -1,6 +1,6 @@
 // bg audio loop
 var audio = new Audio('chill1.mp3');
-var bgvolume = 0;
+var bgvolume = 0.2;
 audio.volume = bgvolume;
 
 var ToggleAudio = function () {

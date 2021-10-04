@@ -23,8 +23,8 @@ function dragElement(elmnt) {
     pos3 = e.clientX;
     pos4 = e.clientY;
     // set the element's new position:
-    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    elmnt.style.top = clamp(elmnt.offsetTop - pos2, 10, window.innerHeight-elmnt.clientHeight-10) + "px";
+    elmnt.style.left = clamp(elmnt.offsetLeft - pos1, 10, window.innerWidth-elmnt.clientWidth-10) + "px";
   }
 
   function closeDragElement() {
