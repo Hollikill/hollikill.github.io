@@ -62,8 +62,11 @@ var LoadGamedata = (mode) => {
         gamedata.buildbought.push(new Decimal(savecode.buildbought[i]));
     }
 
-    gamedata.unlock_viewable = savecode.unlock_viewable;
     gamedata.unlock_bought = savecode.unlock_bought;
+    for (var ulid of savecode.unlock_viewable) {
+        if (gamedata.unlock_bought.includes(ulid))
+            gamedata.unlock_viewable.push(ulid);
+    }
 
     for (var ulid of gamedata.unlock_bought) {
         TriggerUnlock(ulid);
@@ -176,7 +179,7 @@ var CreateBuild = (x) => {
         if (i == gamedata.buildcount.length) {
             gamedata.buildcount.push(new Decimal(0));
             gamedata.buildbought.push(new Decimal(0));
-            var cost = new Decimal(100).times(new Decimal(15+(curbuildcount*2)).pow(curbuildcount));
+            var cost = new Decimal(100).times(new Decimal(15+(curbuildcount*3)).pow(curbuildcount));
             gamedata.buildcost.push(cost);
             gamedata.buildcostbase.push(cost);
         }
@@ -190,7 +193,19 @@ var CreateBuild = (x) => {
             buybutton.innerHTML = buybutton.innerHTML + "]";
             buybutton.setAttribute("onclick", "BuyBuild("+curbuildcount+")")
 
+            var buildcount = document.createElement("span");
+            var seperator = document.createElement("span");
+            var buildbought = document.createElement("span");
+            buildcount.id = "buildcount"+curbuildcount;
+            buildbought.id = "buildbought"+curbuildcount;
+            seperator.textContent = " ";
+            seperator.append(buildbought);
+            seperator.innerHTML = seperator.innerHTML + " (+";
+            seperator.append(buildcount);
+            seperator.innerHTML = seperator.innerHTML + ")";
+
             document.getElementById("buildbuyholder").prepend(document.createElement("br"));
+            document.getElementById("buildbuyholder").prepend(seperator);
             document.getElementById("buildbuyholder").prepend(buybutton);
         }
     }
@@ -215,7 +230,7 @@ function BuildStep(deltams) {
         if (gamedata.buildcount[i].compare(0) > -1) {
             var addition = new Decimal(15+(2*i)).pow(i).times(deltams/1000).times(gamedata.buildcount[i])
             if (gamedata.unlock_bought.includes("metagen")) {
-                addition = addition.times(gamedata.focus.pow(i));
+                addition = addition.times(gamedata.focus.pow(i+1));
             }
             total = total.plus(addition);
         }
@@ -266,10 +281,10 @@ function BuyUnlock (id, e) {
         }
 
         if (canbuy) {
+            TriggerUnlock(ul.id);
             gamedata.unlock_bought.push(ul.id);
             e.textContent = "Bought";
             e.setAttribute("onclick", "");
-            TriggerUnlock(ul.id);
         }
     }
 }
@@ -278,10 +293,12 @@ function TriggerUnlock (id) {
     switch (id) {
         case "boost":
             CreateBoost();
+            if (!gamedata.unlock_bought.includes(id))
             Notify("alert2", "Boosting system aquired!<br><br>To use the system, simply press the point button repeatedly in quick succcession.<br><br>You can monitor your boost stats in the boost module.<br>All production is multiplied by the total boost.");
             break;
         case "metagen":
             CreateMetaSlider();
+            if (!gamedata.unlock_bought.includes(id))
             Notify("alert2", "You can now channel your focus!<br><br>To use the system, just move the slider labeled focus to focus on what you want to.<br><br>Low focus levels will lower your point prouction drastically, but your building will also produce buildings of the tiers below them. For example, B-3 buildings will make some amount of B-2 buildings per second. These amounts are not listed.");
             break;
     }

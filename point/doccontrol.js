@@ -39,14 +39,6 @@ var Update = () => {
     if (updateneeds.includes("points")) {
         ChangeNumber("pointcount", gamedata.points);
     }
-    if (updateneeds.includes("buildbuy")) {
-        var totalbought = new Decimal(0);
-        for (var i = 0; i < gamedata.buildcount.length; i++) {
-            ChangeNumber("buildcost"+i, gamedata.buildcost[i]);
-            totalbought = totalbought.plus(gamedata.buildbought[i]);
-        }
-        ChangeNumber("purchase", totalbought, 1);
-    }
     if (gamedata.unlock_bought.includes("boost")) {
         ChangeNumber("currentboost", gamedata.currentboost.add(1), 2);
         ChangeNumber("maxboost", gamedata.maxboost.add(1), 2);
@@ -57,8 +49,18 @@ var Update = () => {
         ChangeNumber("focus", gamedata.focus, 2);
     }
 
-    if (gamedata.stagekeys.includes("p10"))
+    if (gamedata.stagekeys.includes("p10")) {
         ChangeNumber("statpps", BuildStep(1000).times(GetBoost()));
+
+        var totalbought = new Decimal(0);
+        for (var i = 0; i < gamedata.buildcount.length; i++) {
+            ChangeNumber("buildcost"+i, gamedata.buildcost[i]);
+            totalbought = totalbought.plus(gamedata.buildbought[i]);
+            ChangeNumber("buildcount"+i, gamedata.buildcount[i].minus(gamedata.buildbought[i]));
+            ChangeNumber("buildbought"+i, gamedata.buildbought[i]);
+        }
+        ChangeNumber("purchase", totalbought, 1);
+    }
 
     updateneeds = [];
 }
@@ -196,16 +198,22 @@ function CreateAudioSettings () {
 
     var togglebutton = document.createElement("button");
     var volumebutton = document.createElement("button");
+    var volumeval = document.createElement("span");
+    volumeval.id = "volumeval";
 
     togglebutton.textContent = "Toggle Background Music";
     volumebutton.textContent = "Adjust Music Volume";
 
     togglebutton.setAttribute("onclick", "ToggleAudio()");
-    volumebutton.setAttribute("onclick", "AdjustMusic()");
+    volumebutton.addEventListener("onclick", function () {
+        AdjustMusic();
+        ChangeNumber("volumeval", new Decimal(1), 2);
+    });
 
     container.appendChild(togglebutton);
     container.appendChild(document.createElement("br"));
     container.appendChild(volumebutton);
+    container.appendChild(volumeval);
 }
 
 function CreateNewsfeed() {
@@ -286,6 +294,7 @@ function CreateMetaSlider () {
     focusslider.setAttribute("min", "0.01");
     focusslider.setAttribute("max", "1");
     focusslider.setAttribute("step", "0.01");
+    focusslider.setAttribute("value", "1");
     focusslider.id = "focusslider"
 
     var focustext = document.createElement("span");
