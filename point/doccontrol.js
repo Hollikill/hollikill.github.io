@@ -53,6 +53,9 @@ var Update = () => {
         ChangeNumber("boosttime", gamedata.boosttime);
         ChangeNumber("totalboost", new Decimal(GetBoost()), 2);
     }
+    if (gamedata.unlock_bought.includes("metagen")) {
+        ChangeNumber("focus", gamedata.focus, 2);
+    }
 
     if (gamedata.stagekeys.includes("p10"))
         ChangeNumber("statpps", BuildStep(1000).times(GetBoost()));
@@ -280,8 +283,10 @@ function CreateMetaSlider () {
 
     var focusslider = document.createElement("input");
     focusslider.setAttribute("type", "range");
-    focusslider.setAttribute("min", "0");
-    focusslider.setAttribute("max", "100");
+    focusslider.setAttribute("min", "0.01");
+    focusslider.setAttribute("max", "1");
+    focusslider.setAttribute("step", "0.01");
+    focusslider.id = "focusslider"
 
     var focustext = document.createElement("span");
     focustext.textContent = "Focus: ";

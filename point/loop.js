@@ -13,6 +13,8 @@ var gamedata = {
     maxboost: new Decimal(1),
     boosttime: new Decimal(0),
 
+    focus: new Decimal(1),  
+
     stagekeys: [],
 
     buildcost: [],
@@ -25,7 +27,7 @@ var gamedata = {
 
     lasttime: 0,
 
-    version: "5t.1",
+    version: "5t.4",
 }
 
 var total;
@@ -110,6 +112,7 @@ setInterval(function () {
 
     gamedata.points = gamedata.points.plus(BuildStep(delay));
     updateneeds.push("points")
+    MetagenStep();
 
     if (!gamedata.stagekeys.includes("p10") && gamedata.points >= 10) {
         gamedata.stagekeys.push("p10");
@@ -141,6 +144,8 @@ setInterval(function () {
 
     if (gamedata.unlock_bought.includes("boost"))
         gamedata.boosttime = gamedata.boosttime.plus(delay/1000);
+    if (gamedata.unlock_bought.includes("metagen"))
+        gamedata.focus = new Decimal(document.getElementById("focusslider").value);
 
     CheckUnlockVisable();
 
@@ -208,7 +213,11 @@ function BuildStep(deltams) {
 
     for (var i = 0; i < gamedata.buildcount.length; i++) {
         if (gamedata.buildcount[i].compare(0) > -1) {
-            total = total.plus(new Decimal(15+(2*i)).pow(i).times(deltams/1000).times(gamedata.buildcount[i]));
+            var addition = new Decimal(15+(2*i)).pow(i).times(deltams/1000).times(gamedata.buildcount[i])
+            if (gamedata.unlock_bought.includes("metagen")) {
+                addition = addition.times(gamedata.focus.pow(i));
+            }
+            total = total.plus(addition);
         }
     }
 
@@ -250,6 +259,7 @@ function BuyUnlock (id, e) {
                 case "point":
                     if (gamedata.points.compare(ul.cost) >= 0) {
                         canbuy = true;
+                        gamedata.points = gamedata.points.minus(ul.cost);
                     }
                     break;
             }
@@ -269,6 +279,10 @@ function TriggerUnlock (id) {
         case "boost":
             CreateBoost();
             Notify("alert2", "Boosting system aquired!<br><br>To use the system, simply press the point button repeatedly in quick succcession.<br><br>You can monitor your boost stats in the boost module.<br>All production is multiplied by the total boost.");
+            break;
+        case "metagen":
+            CreateMetaSlider();
+            Notify("alert2", "You can now channel your focus!<br><br>To use the system, just move the slider labeled focus to focus on what you want to.<br><br>Low focus levels will lower your point prouction drastically, but your building will also produce buildings of the tiers below them. For example, B-3 buildings will make some amount of B-2 buildings per second. These amounts are not listed.");
             break;
     }
 }
@@ -306,4 +320,12 @@ function GetTime () {
     var delay = new Decimal(n).minus(gamedata.lasttime);
 
     return delay;
+}
+
+function MetagenStep () {
+    for (var i = 1; i < gamedata.buildcount.length; i++) {
+        if (gamedata.buildcount[i].compare(0) > -1) {
+            gamedata.buildcount[i-1] = gamedata.buildcount[i-1].plus(gamedata.buildcount[i].times(new Decimal(1).minus(gamedata.focus).times(0.01)));
+        }
+    }
 }

@@ -16,4 +16,12 @@ var unlocks = [
         description: "Using hard work and sweat, unlock the boosting system.",
         pointreq: new Decimal(500),
     },
+    {
+        id: "metagen",
+        name: "MetaGeneration",
+        cost: new Decimal(1e7),
+        costtype: "point",
+        description: "While pondering the fractal geometry of the world, you realize that exponential growth might be able to do you some good. This unlocks a module where you can change the focus of your machines.",
+        pointreq: new Decimal(1e5),
+    },
 ]
