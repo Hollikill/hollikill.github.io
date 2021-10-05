@@ -58,6 +58,7 @@ var Update = () => {
             totalbought = totalbought.plus(gamedata.buildbought[i]);
             ChangeNumber("buildcount"+i, gamedata.buildcount[i].minus(gamedata.buildbought[i]));
             ChangeNumber("buildbought"+i, gamedata.buildbought[i]);
+            ChangeNumber("buildrate"+i, new Decimal(15+(2*i)).pow(i).times(gamedata.buildcount[i]).times(GetBoost()));
         }
         ChangeNumber("purchase", totalbought, 1);
     }
@@ -175,6 +176,8 @@ function CloseNotify (e) {
 
 function CreateUnlock (id, name, description, cost, costtype) {
     var container = AddModule("stage0");
+    container.id = "ul"+id;
+    container.classList.add("ul");
 
     var buybutton = document.createElement("button");
     buybutton.setAttribute("onclick", "BuyUnlock('"+id+"', this)");
@@ -205,15 +208,49 @@ function CreateAudioSettings () {
     volumebutton.textContent = "Adjust Music Volume";
 
     togglebutton.setAttribute("onclick", "ToggleAudio()");
-    volumebutton.addEventListener("onclick", function () {
+    volumebutton.addEventListener("click", function () {
         AdjustMusic();
-        ChangeNumber("volumeval", new Decimal(1), 2);
-    });
+        ChangeNumber("volumeval", new Decimal(audio.volume), 2);
+    }, false);
 
     container.appendChild(togglebutton);
     container.appendChild(document.createElement("br"));
     container.appendChild(volumebutton);
     container.appendChild(volumeval);
+
+    ChangeNumber("volumeval", new Decimal(0.2), 2);
+}
+
+function CreateUnlockSettings () {
+    var container = AddModule("settings")
+
+    var toggleoldbutton = document.createElement("button");
+
+    toggleoldbutton.textContent = "Toggle Old Researches";
+    
+    toggleoldbutton.addEventListener("click", function () {
+        if (gamedata.unlocksetting){
+            gamedata.unlocksetting = false;
+            alert('old unlocks hidden');
+        }
+        else{
+            gamedata.unlocksetting = true;
+            alert('old unlocks revealed');
+        }
+        
+        var style;
+        if (gamedata.unlocksetting)
+            style = "visible";
+        else
+            style = "hidden";
+
+        var ullist = document.getElementsByClassName("ul");
+        for (var ul of ullist) {
+            ul.style.visibility = style;
+        }
+    }, false);
+
+    container.appendChild(toggleoldbutton);
 }
 
 function CreateNewsfeed() {

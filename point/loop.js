@@ -27,12 +27,16 @@ var gamedata = {
 
     lasttime: 0,
 
+    unlocksetting: false,
+
     version: "5t.4",
 }
 
 var total;
 
 var LoadGamedata = (mode) => {
+    ChangeTitle("A Game");
+
     switch (mode) {
         case 0:
             var savecodejson = "";
@@ -46,6 +50,7 @@ var LoadGamedata = (mode) => {
         case 2:
             var savecodejson = JSON.stringify(gamedata);
             if (localStorage.getItem("savecodejson"))
+                ChangeTitle("YOUR SAVE MIGHT BE OVERWRITTEN IF YOU CONTINUE");
                 Notify("warn", "If you play here you will override a save with "+JSON.parse(localStorage.getItem("savecodejson")).points+" points.<br>Reload the page to load the saved game.");
             break;
     }
@@ -54,6 +59,10 @@ var LoadGamedata = (mode) => {
 
     gamedata.points = new Decimal(savecode.points);
     loadgamepoints = new Decimal(savecode.points);
+
+    gamedata.boosttime = new Decimal(savecode.boosttime);
+    gamedata.boostmax = new Decimal(savecode.boostmax);
+    gamedata.currentboost = new Decimal(savecode.currentboost);
 
     for (var i = 0; i < savecode.buildcost.length; i++) {
         gamedata.buildcost.push(new Decimal(savecode.buildcost[i]));
@@ -74,12 +83,14 @@ var LoadGamedata = (mode) => {
 
     HideElementID("startmenu");
     NavVisible(true);
-    ChangeTitle("A Game about Getting a Lot of Points");
 
     audio.play();
 
     CreateAudioSettings();
+    CreateUnlockSettings();
     Navbar(curtab);
+
+    Notify("warn", "this is NOT THE FULL VERSION OF THE GAME. this is purely a testing enviroment for new features or reworks of old features, and if you want to play the full game you should go to <a href='https://hollikill.net/point/game'>hollikill.net/point/game</a>.")
 }
 var SaveGamedata = () => {
     localStorage.setItem("savecodejson", JSON.stringify(gamedata));
@@ -131,13 +142,14 @@ setInterval(function () {
         CreateNewsfeed();
         RefreshNewsfeed();
 
+        ChangeTitle("A Game about Getting Points");
         Navbar("stage0");
 
         if (loadgamepoints < 10)
-            Notify("alert", "Congrats on your first 10 points...<br><br>Now, your first goal should be to get some sort of automatic point production set up.<br>Namely, in the form of a building.<br><br>You can see in the the building module, there is a button to buy B-1, or building one, for 100 points. (in engineer notation)");
+            Notify("alert", "Congrats on your first 10 points...<br><br>Now, your first goal should be to get some sort of automatic point production set up.<br>Namely, in the form of a building.<br><br>You can see in the the building module, there is a button to buy B-1, or building one, for 100 points. (in engineer notation)<br><br>Those other numbers to the right of the building won't make sense yet, but should soon become obvious.");
     }
     if (gamedata.stagekeys.includes("p10")) {
-        if (gamedata.points.compare(gamedata.buildcost[gamedata.buildcost.length-1]*2) >= 0) {
+        if (gamedata.points.compare(gamedata.buildcostbase[gamedata.buildcostbase.length-1]*2) >= 0) {
             CreateBuild(gamedata.buildcount.length+1);
             updateneeds.push("buildbuy");
 
@@ -196,13 +208,17 @@ var CreateBuild = (x) => {
             var buildcount = document.createElement("span");
             var seperator = document.createElement("span");
             var buildbought = document.createElement("span");
+            var buildrate = document.createElement("span");
             buildcount.id = "buildcount"+curbuildcount;
             buildbought.id = "buildbought"+curbuildcount;
+            buildrate.id = "buildrate"+curbuildcount;
             seperator.textContent = " ";
             seperator.append(buildbought);
             seperator.innerHTML = seperator.innerHTML + " (+";
             seperator.append(buildcount);
-            seperator.innerHTML = seperator.innerHTML + ")";
+            seperator.innerHTML = seperator.innerHTML + ") at [+";
+            seperator.append(buildrate);
+            seperator.innerHTML = seperator.innerHTML + " points]";
 
             document.getElementById("buildbuyholder").prepend(document.createElement("br"));
             document.getElementById("buildbuyholder").prepend(seperator);
@@ -228,7 +244,7 @@ function BuildStep(deltams) {
 
     for (var i = 0; i < gamedata.buildcount.length; i++) {
         if (gamedata.buildcount[i].compare(0) > -1) {
-            var addition = new Decimal(15+(2*i)).pow(i).times(deltams/1000).times(gamedata.buildcount[i])
+            var addition = new Decimal(15+(2*i)).pow(i).times(deltams/1000).times(gamedata.buildcount[i]);
             if (gamedata.unlock_bought.includes("metagen")) {
                 addition = addition.times(gamedata.focus.pow(i+1));
             }
@@ -285,6 +301,8 @@ function BuyUnlock (id, e) {
             gamedata.unlock_bought.push(ul.id);
             e.textContent = "Bought";
             e.setAttribute("onclick", "");
+            if (!gamedata.unlocksetting)
+                e.parentElement.style.visibility = "hidden";
         }
     }
 }
@@ -293,11 +311,13 @@ function TriggerUnlock (id) {
     switch (id) {
         case "boost":
             CreateBoost();
+            ChangeTitle("A Game about Getting Points using Boost");
             if (!gamedata.unlock_bought.includes(id))
             Notify("alert2", "Boosting system aquired!<br><br>To use the system, simply press the point button repeatedly in quick succcession.<br><br>You can monitor your boost stats in the boost module.<br>All production is multiplied by the total boost.");
             break;
         case "metagen":
             CreateMetaSlider();
+            ChangeTitle("A Game about Getting a Lot of Points");
             if (!gamedata.unlock_bought.includes(id))
             Notify("alert2", "You can now channel your focus!<br><br>To use the system, just move the slider labeled focus to focus on what you want to.<br><br>Low focus levels will lower your point prouction drastically, but your building will also produce buildings of the tiers below them. For example, B-3 buildings will make some amount of B-2 buildings per second. These amounts are not listed.");
             break;

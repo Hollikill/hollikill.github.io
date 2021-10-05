@@ -1,3 +1,14 @@
+5t.5
+
+- added a setting for old unlocks being visible
+- added a actually working audio setting
+- added some more info about point boosts
+- added a warning that this is a test version WITH MUCH LESS FEATURES
+
+5t.4
+
+- added the metageneration system. First new feature since 0.4.6, yay!
+
 5t.3
 
 - added the boosting system

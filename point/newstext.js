@@ -57,4 +57,48 @@ var newslines = [
         min: 69,
         max: 69,
     },
+    {
+        text: "Do loot boxes consist of pure gambling, or just partly gambling? Hear the soapbox this wednesday night.",
+        type: "all",
+    },
+    {
+        text: "Also try terracecraft.apexmc.co",
+        type: "all",
+    },
+    {
+        text: "This game was entirely coded in HTML, CSS, and JS!",
+        type: "all",
+    },
+    {
+        text: "Many thanks to the creator of break_infinity.js and break_eternity.js.",
+        type: "all",
+    },
+    {
+        text: "Breaking news: How far can we take it before the people strike back.",
+        type: "all",
+    },
+    {
+        text: "Equine horses confirmed to be redundant as compared to the new sythetic nano-horses.",
+        type: "all",
+    },
+    {
+        text: "Studies suggest the global warming might be cooling, scientists say.",
+        type: "all",
+    },
+    {
+        text: "Keep indoors and breath on your circadian rythm, government says.",
+        type: "all",
+    },
+    {
+        text: "Do not investigate the birds.",
+        type: "all",
+    },
+    {
+        text: "The birds are harmless.",
+        type: "all",
+    },
+    {
+        text: "There is no connection between birds and saytrs. Even little ones.",
+        type: "all",
+    },
 ]
