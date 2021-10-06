@@ -52,9 +52,10 @@ var LoadGamedata = (mode) => {
             break;
         case 2:
             var savecodejson = JSON.stringify(gamedata);
-            if (localStorage.getItem("savecodejson"))
+            if (localStorage.getItem("savecodejson")) {
                 ChangeTitle("YOUR SAVE MIGHT BE OVERWRITTEN IF YOU CONTINUE");
                 Notify("warn", "If you play here you will override a save with "+JSON.parse(localStorage.getItem("savecodejson")).points+" points.<br>Reload the page to load the saved game.");
+            }
             break;
     }
 
