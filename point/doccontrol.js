@@ -47,13 +47,14 @@ var Update = () => {
     }
     if (gamedata.unlock_bought.includes("metagen")) {
         ChangeNumber("focus", gamedata.focus, 2);
+        ChangeNumber("focusamount", gamedata.focusamount, 2);
     }
     if (gamedata.unlock_bought.includes("unboost")) {
         ChangeNumber("boosttimeval", GetBoosttimeMult(), 2);
     }
 
     if (gamedata.stagekeys.includes("p10")) {
-        ChangeNumber("statpps", BuildStep(1000).times(GetBoost()));
+        ChangeNumber("statpps", BuildStep(1000));
 
         var totalbought = new Decimal(0);
         for (var i = 0; i < gamedata.buildcount.length; i++) {
@@ -342,6 +343,12 @@ function CreateMetaSlider () {
     var focusval = document.createElement("span");
     focusval.id = "focus";
     focustext.appendChild(focusval);
+
+    focustext.innerHTML = focustext.innerHTML + " at [";
+    var focusamount = document.createElement("span");
+    focusamount.id = "focusamount";
+    focustext.appendChild(focusamount);
+    focustext.innerHTML = focustext.innerHTML + "] drift";
 
     container.append(focusslider);
     container.append(document.createElement("br"));

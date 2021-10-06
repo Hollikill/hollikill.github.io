@@ -32,4 +32,13 @@ var unlocks = [
         description: "Your lapse in clicking has revealed something extraordinary...<br><br>Your boost seems to be collecting some sort of ethereal energy while you let it rest.",
         timereq: new Decimal(45),
     },
+    {
+        id: "boostdelay",
+        name: "Sticky Key",
+        cost: new Decimal(5e9),
+        costtype: "point",
+        description: "As you press the boost button, you figure that the maximum boost must be useful for something more than just stopping you. You draw up plans for a machine that will use glue to make the boost degrade slower, powered by your maximum boost.",
+        pointreq: new Decimal(5e7),
+        timereq: new Decimal(1),
+    },
 ]

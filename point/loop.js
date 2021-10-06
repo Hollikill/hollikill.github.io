@@ -15,6 +15,8 @@ var gamedata = {
     boosttimemax: new Decimal(0),
 
     focus: new Decimal(1),  
+    focuslimit: new Decimal(120),
+    focusamount: new Decimal(0),
 
     stagekeys: [],
 
@@ -67,6 +69,10 @@ var LoadGamedata = (mode) => {
     gamedata.boosttime = new Decimal(savecode.boosttime);
     gamedata.boostmax = new Decimal(savecode.boostmax);
     gamedata.currentboost = new Decimal(savecode.currentboost);
+
+    gamedata.focus = new Decimal(savecode.focus);
+    gamedata.focusamount = new Decimal(savecode.focusamount);
+    gamedata.focuslimit = new Decimal(savecode.focuslimit);
 
     for (var i = 0; i < savecode.buildcost.length; i++) {
         gamedata.buildcost.push(new Decimal(savecode.buildcost[i]));
@@ -130,7 +136,8 @@ setInterval(function () {
 
     gamedata.points = gamedata.points.plus(BuildStep(delay));
     updateneeds.push("points")
-    MetagenStep();
+    MetagenStep(delay);
+    ValidateMetagen(true, delay);
 
     if (!gamedata.stagekeys.includes("p10") && gamedata.points >= 10) {
         gamedata.stagekeys.push("p10");
@@ -254,8 +261,12 @@ function BuildStep(deltams) {
             var addition = new Decimal(15+(2*i)).pow(i).times(deltams/1000).times(gamedata.buildcount[i]);
             if (gamedata.unlock_bought.includes("metagen")) {
                 addition = addition.times(gamedata.focus.pow(i+1).pow(2));
+                if (ValidateMetagen(false))
+                    total = total.plus(addition);
             }
-            total = total.plus(addition);
+            else {
+                total = total.plus(addition);
+            }
         }
     }
 
@@ -333,13 +344,18 @@ function TriggerUnlock (id) {
             CreateMetaSlider();
             ChangeTitle("A Game about Getting B-1");
             if (!gamedata.unlock_bought.includes(id))
-            Notify("alert2", "You can now channel your focus!<br><br>To use the system, just move the slider labeled focus to focus on what you want to.<br><br>Low focus levels will lower your point prouction drastically, but your building will also produce buildings of the tiers below them. For example, B-3 buildings will make some amount of B-2 buildings per second. These amounts are not listed.");
+            Notify("alert2", "You can now channel your focus!<br><br>To use the system, just move the slider labeled focus to focus on what you want to.<br><br>Low focus levels will lower your point prouction drastically, but your building will also produce buildings of the tiers below them. For example, B-3 buildings will make some amount of B-2 buildings per second. These amounts are not listed.<br><br>However! this comes with a downside as well. If your focus is too much toward one side, your drift will increase. At maximum drift, your focus will lapse and all production will stop.");
             break;
         case "unboost":
             CreateUnboost();
-            ChangeTitle("A Game about Mysterious Boost Things");
+            ChangeTitle("A Game about the Mysterious Boost Thing");
             if (!gamedata.unlock_bought.includes(id))
-            Notify("alert2", "INSERT TEXT HERE");
+            Notify("alert2", "The mysterious energy has merged with your button!<br><br>To use the system, simply increase your unboosted time. The maximum amount that you have ever gotten in unboosted time is saved, and you get a multiplier based on that.");
+            break;
+        case "boostdelay":
+            ChangeTitle("A Game about Getting Points using Boost... again");
+            if (!gamedata.unlock_bought.includes(id))
+            Notify("alert2", "The glue machine has been set up!<br>It's sticky, though.<br><br>It provides +"+(gamedata.boostmult-1)+" seconds to delay at time of purchase, which will increase with the maximum boost.");
             break;
     }
 }
@@ -368,7 +384,10 @@ function ValidateBoost () {
         gamedata.currentboost = gamedata.maxboost;
     }
 
-    if (gamedata.boosttime > 1) {
+    var delay = new Decimal(1);
+    if (gamedata.unlock_bought.includes("boostdelay"))
+        delay = gamedata.maxboost;
+    if (gamedata.boosttime.compare(delay) > 0) {
         gamedata.currentboost = gamedata.currentboost.minus((deltams/1000)*(0.2));
         if (gamedata.currentboost.compare(0) < 0)
             gamedata.currentboost = new Decimal(0); 
@@ -389,10 +408,28 @@ function GetTime () {
     return delay;
 }
 
-function MetagenStep () {
+function MetagenStep (deltams) {
     for (var i = 1; i < gamedata.buildcount.length; i++) {
-        if (gamedata.buildcount[i].compare(0) > -1) {
+        if (gamedata.buildcount[i].compare(0) > -1 && ValidateMetagen(false, deltams)) {
             gamedata.buildcount[i-1] = gamedata.buildcount[i-1].plus(gamedata.buildcount[i].times(new Decimal(1).minus(gamedata.focus).times(0.01)));
         }
     }
+}
+
+function ValidateMetagen (change, deltams) {
+    var mult = new Decimal(1);
+    if (gamedata.focus.plus(-0.5).sign != gamedata.focusamount.sign) {
+        mult = mult.times(20);
+    }
+
+    if (change) {
+        gamedata.focusamount = gamedata.focusamount.plus(gamedata.focus.minus(0.5).times(mult).times(deltams.div(1000)));
+        if (gamedata.focusamount.compare(gamedata.focuslimit) >= 0)
+            gamedata.focusamount = gamedata.focuslimit;
+    }
+
+    if (gamedata.focus.abs().compare(gamedata.focuslimit) <= 0)
+        return true;
+    else
+        return false;
 }

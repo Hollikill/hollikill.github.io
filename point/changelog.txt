@@ -1,3 +1,9 @@
+5t.6
+
+- added a new part to the metageneration system
+- added the indiana jones upgrade... but stickier
+- added some more details, and updated some notifiications
+
 5t.5
 
 - added a setting for old unlocks being visible
