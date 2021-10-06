@@ -48,6 +48,9 @@ var Update = () => {
     if (gamedata.unlock_bought.includes("metagen")) {
         ChangeNumber("focus", gamedata.focus, 2);
     }
+    if (gamedata.unlock_bought.includes("unboost")) {
+        ChangeNumber("boosttimeval", GetBoosttimeMult(), 2);
+    }
 
     if (gamedata.stagekeys.includes("p10")) {
         ChangeNumber("statpps", BuildStep(1000).times(GetBoost()));
@@ -177,7 +180,6 @@ function CloseNotify (e) {
 function CreateUnlock (id, name, description, cost, costtype) {
     var container = AddModule("stage0");
     container.id = "ul"+id;
-    container.classList.add("ul");
 
     var buybutton = document.createElement("button");
     buybutton.setAttribute("onclick", "BuyUnlock('"+id+"', this)");
@@ -310,6 +312,7 @@ function CreateBoost() {
 
     boosttimetext.textContent = "Unboosted Time: ";
     boosttimetext.append(boosttimeval);
+    boosttimetext.id = "boosttimetext";
     boosttimetext.innerHTML = boosttimetext.innerHTML + "s";
 
     boosttotaltext.textContent = "Total Boost: [";
@@ -343,4 +346,16 @@ function CreateMetaSlider () {
     container.append(focusslider);
     container.append(document.createElement("br"));
     container.append(focustext);
+}
+
+function CreateUnboost () {
+    if (document.getElementById("boosttimetext")) {
+        var boosttimeval = document.createElement("span");
+        var boosttimetext = document.getElementById("boosttimetext");
+        boosttimeval.id = "boosttimeval";
+
+        boosttimetext.innerHTML = boosttimetext.innerHTML + " [";
+        boosttimetext.appendChild(boosttimeval);
+        boosttimetext.innerHTML = boosttimetext.innerHTML + "x]";
+    }    
 }

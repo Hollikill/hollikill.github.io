@@ -12,6 +12,7 @@ var gamedata = {
     currentboost: new Decimal(0),
     maxboost: new Decimal(1),
     boosttime: new Decimal(0),
+    boosttimemax: new Decimal(0),
 
     focus: new Decimal(1),  
 
@@ -57,9 +58,12 @@ var LoadGamedata = (mode) => {
 
     var savecode = JSON.parse(savecodejson);
 
+    gamedata.lasttime = savecode.lasttime;
+
     gamedata.points = new Decimal(savecode.points);
     loadgamepoints = new Decimal(savecode.points);
 
+    gamedata.boosttimemax = new Decimal(savecode.boosttimemax);
     gamedata.boosttime = new Decimal(savecode.boosttime);
     gamedata.boostmax = new Decimal(savecode.boostmax);
     gamedata.currentboost = new Decimal(savecode.currentboost);
@@ -157,8 +161,11 @@ setInterval(function () {
         }
     }
 
-    if (gamedata.unlock_bought.includes("boost"))
+    if (gamedata.unlock_bought.includes("boost")) {
         gamedata.boosttime = gamedata.boosttime.plus(delay/1000);
+    }
+    if (gamedata.boosttime.compare(gamedata.boosttimemax) >= 0  && gamedata.unlock_bought.includes("unboost"))
+            gamedata.boosttimemax = gamedata.boosttime;
     if (gamedata.unlock_bought.includes("metagen"))
         gamedata.focus = new Decimal(document.getElementById("focusslider").value);
 
@@ -246,7 +253,7 @@ function BuildStep(deltams) {
         if (gamedata.buildcount[i].compare(0) > -1) {
             var addition = new Decimal(15+(2*i)).pow(i).times(deltams/1000).times(gamedata.buildcount[i]);
             if (gamedata.unlock_bought.includes("metagen")) {
-                addition = addition.times(gamedata.focus.pow(i+1));
+                addition = addition.times(gamedata.focus.pow(i+1).pow(2));
             }
             total = total.plus(addition);
         }
@@ -293,6 +300,12 @@ function BuyUnlock (id, e) {
                         gamedata.points = gamedata.points.minus(ul.cost);
                     }
                     break;
+                case "time":
+                        if (gamedata.boosttime.compare(ul.cost) >= 0) {
+                            canbuy = true;
+                            gamedata.boosttime = gamedata.boosttime.minus(ul.cost);
+                        }
+                        break;
             }
         }
 
@@ -301,6 +314,7 @@ function BuyUnlock (id, e) {
             gamedata.unlock_bought.push(ul.id);
             e.textContent = "Bought";
             e.setAttribute("onclick", "");
+            e.parentElement.classList.add("ul");
             if (!gamedata.unlocksetting)
                 e.parentElement.style.visibility = "hidden";
         }
@@ -317,9 +331,15 @@ function TriggerUnlock (id) {
             break;
         case "metagen":
             CreateMetaSlider();
-            ChangeTitle("A Game about Getting a Lot of Points");
+            ChangeTitle("A Game about Getting B-1");
             if (!gamedata.unlock_bought.includes(id))
             Notify("alert2", "You can now channel your focus!<br><br>To use the system, just move the slider labeled focus to focus on what you want to.<br><br>Low focus levels will lower your point prouction drastically, but your building will also produce buildings of the tiers below them. For example, B-3 buildings will make some amount of B-2 buildings per second. These amounts are not listed.");
+            break;
+        case "unboost":
+            CreateUnboost();
+            ChangeTitle("A Game about Mysterious Boost Things");
+            if (!gamedata.unlock_bought.includes(id))
+            Notify("alert2", "INSERT TEXT HERE");
             break;
     }
 }
@@ -329,7 +349,17 @@ function GetBoost () {
 
     boostmult = boostmult.times(gamedata.currentboost.add(1));
 
+    boostmult = boostmult.times(GetBoosttimeMult());
+
     return new Decimal(boostmult);
+}
+
+function GetBoosttimeMult () {
+    var boostmult = new Decimal(1);
+
+    boostmult = boostmult.times(gamedata.boosttimemax.times(0.003));
+
+    return boostmult;
 }
 
 function ValidateBoost () {

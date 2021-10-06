@@ -24,4 +24,12 @@ var unlocks = [
         description: "While pondering the fractal geometry of the world, you realize that exponential growth might be able to do you some good. This unlocks a module where you can change the focus of your machines.",
         pointreq: new Decimal(1e5),
     },
+    {
+        id: "unboost",
+        name: "Unboost",
+        cost: new Decimal(180),
+        costtype: "time",
+        description: "Your lapse in clicking has revealed something extraordinary...<br><br>Your boost seems to be collecting some sort of ethereal energy while you let it rest.",
+        timereq: new Decimal(45),
+    },
 ]
