@@ -357,7 +357,7 @@ function GetBoost () {
 function GetBoosttimeMult () {
     var boostmult = new Decimal(1);
 
-    boostmult = boostmult.times(gamedata.boosttimemax.times(0.003));
+    boostmult = boostmult.times(gamedata.boosttimemax.times(0.003).plus(1));
 
     return boostmult;
 }
