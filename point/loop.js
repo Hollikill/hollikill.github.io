@@ -68,7 +68,7 @@ var LoadGamedata = (mode) => {
 
     gamedata.boosttimemax = new Decimal(savecode.boosttimemax);
     gamedata.boosttime = new Decimal(savecode.boosttime);
-    gamedata.boostmax = new Decimal(savecode.boostmax);
+    gamedata.maxboost = new Decimal(savecode.maxboost);
     gamedata.currentboost = new Decimal(savecode.currentboost);
 
     gamedata.focus = new Decimal(savecode.focus);
