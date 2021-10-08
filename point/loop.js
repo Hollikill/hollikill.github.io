@@ -11,6 +11,7 @@ var gamedata = {
 
     currentboost: new Decimal(0),
     maxboost: new Decimal(1),
+    boosttimereal: new Decimal(0),
     boosttime: new Decimal(0),
     boosttimemax: new Decimal(0),
 
@@ -73,6 +74,7 @@ var LoadGamedata = (mode) => {
 
     var savecode = JSON.parse(savecodejson);
     if (savecode.version != gamedata.version) {
+        alert("Save is incompatible, cannot load. Press OK to start a new game.")
         LoadGamedata(2);
         return;
     }
@@ -136,6 +138,7 @@ var PointButton = () => {
     updateneeds.push("points");
     if (gamedata.unlock_bought.includes("boost"))
         gamedata.currentboost = gamedata.currentboost.add(0.01);
+    gamedata.boosttimereal = new Decimal(0);
     gamedata.boosttime = new Decimal(0);
 }
 
@@ -199,9 +202,13 @@ setInterval(function () {
     }
 
     if (gamedata.unlock_bought.includes("boost")) {
-        gamedata.boosttime = gamedata.boosttime.plus(delay/1000);
+        gamedata.boosttimereal = gamedata.boosttimereal.plus(delay/1000);
+        var mult = new Decimal(1);
+        if (gamedata.unlock_bought.includes("remember") && gamedata.boosttime.compare(gamedata.boosttimemax) < 0)
+            mult = mult.times(gamedata.boosttimemax.div(60));
+        gamedata.boosttime = gamedata.boosttime.plus(new Decimal(delay/1000).times(mult));
     }
-    if (gamedata.boosttime.compare(gamedata.boosttimemax) >= 0  && gamedata.unlock_bought.includes("unboost"))
+    if (gamedata.boosttime.compare(gamedata.boosttimemax) >= 0)
             gamedata.boosttimemax = gamedata.boosttime;
     if (gamedata.unlock_bought.includes("metagen")) {
         gamedata.focus = new Decimal(document.getElementById("focusslider").value);
@@ -322,7 +329,7 @@ function CheckUnlockVisable() {
                 visible = false;
         }
         if (ul.timereq != null) {
-            if (gamedata.boosttime.compare(ul.timereq) < 0)
+            if (gamedata.boosttimemax.compare(ul.timereq) < 0)
                 visible = false;
         }
         if (ul.unlockreq != null) {
@@ -409,6 +416,17 @@ function TriggerUnlock (id) {
                 ChangeTitle("A Game with a Polka-Dot Square");
             }
             break;
+        case "statistime":
+            CreateStatisPoint(5);
+            if (!gamedata.unlock_bought.includes(id)) {
+                Notify("alert2", "You have produced 5 StatiConfluxi!");
+            }
+            break;
+        case "remember":
+            if (!gamedata.unlock_bought.includes(id)) {
+                Notify("alert2", "The prediction machine has prodcued its first hyperaccelration plan!<br><br>You will now regain time up to your best unboost time faster, always reaching the maximum in one minute.");
+            }
+            break;
     }
 }
 
@@ -439,7 +457,7 @@ function ValidateBoost () {
     var delay = new Decimal(1);
     if (gamedata.unlock_bought.includes("boostdelay"))
         delay = gamedata.maxboost;
-    if (gamedata.boosttime.compare(delay) > 0) {
+    if (gamedata.boosttimereal.compare(delay) > 0) {
         if (gamedata.unlock_bought.includes("statis"))
             gamedata.currentboost = gamedata.currentboost.minus(new Decimal((deltams/1000)*(0.2)).times(GetStatisFactor()));
         else

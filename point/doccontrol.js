@@ -515,7 +515,11 @@ function DisplaySavecode (ms) {
     }
     if (diff.compare(1000*60*60*24) >= 0) {
         text.innerHTML = text.innerHTML + diff.div(1000*60*60*24).floor();
-        text.innerHTML = text.innerHTML + "d";
+        text.innerHTML = text.innerHTML + "d ";
     }
-    text.innerHTML = text.innerHTML + " ago";
+    text.innerHTML = text.innerHTML + "ago";
+
+    if (JSON.parse(localStorage.getItem("savecodejson")).version != gamedata.version) {
+        text.innerHTML = text.innerHTML + "<br><span style='color:red;font-style:bold'>SAVE INCOMPATIBLE, CANNOT LOAD</span>";
+    }
 }   

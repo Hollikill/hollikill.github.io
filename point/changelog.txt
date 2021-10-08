@@ -1,3 +1,11 @@
+5t.9
+
+- getting close to releasing this on the main version, I just gotta get the late game upgrades in
+- added the remember the past upgrade
+- added a statis upgrade
+- added some more newslines
+- added a save incompatibility notifier
+
 5t.8
 
 - just added a save timer
