@@ -1,3 +1,7 @@
+5t.8
+
+- just added a save timer
+
 5t.7
 
 - added a statis system, much reworked

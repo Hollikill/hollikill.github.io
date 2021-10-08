@@ -497,7 +497,7 @@ function CreateNotifyToggles () {
 
 function DisplaySavecode (ms) {
     var text = document.getElementById("lasttime");
-    text.innerHTML = "<br>Detected a save from ";
+    text.innerHTML = "<br>Detected a Save from: ";
 
     var d = new Date();
     var n = new Decimal(d.getTime());
@@ -505,10 +505,17 @@ function DisplaySavecode (ms) {
 
     text.innerHTML = text.innerHTML + diff.plus(diff.div(1000*60).floor().times(1000*60).neg()).div(1000).floor();
     text.innerHTML = text.innerHTML + "s ";
-    text.innerHTML = text.innerHTML + diff.plus(diff.div(1000*60*60).floor().times(1000*60*60).neg()).div(1000*60).floor();
-    text.innerHTML = text.innerHTML + "m ";
-    text.innerHTML = text.innerHTML + diff.plus(diff.div(1000*60*60*24).floor().times(1000*60*60*24).neg()).div(1000*60*60).floor();
-    text.innerHTML = text.innerHTML + "h ";
-    text.innerHTML = text.innerHTML + diff.div(1000*60*60*24).floor();
-    text.innerHTML = text.innerHTML + "d ago";
-}
+    if (diff.compare(1000*60) >= 0) {
+        text.innerHTML = text.innerHTML + diff.plus(diff.div(1000*60*60).floor().times(1000*60*60).neg()).div(1000*60).floor();
+        text.innerHTML = text.innerHTML + "m ";   
+    }
+    if (diff.compare(1000*60*60) >= 0) {
+        text.innerHTML = text.innerHTML + diff.plus(diff.div(1000*60*60*24).floor().times(1000*60*60*24).neg()).div(1000*60*60).floor();
+        text.innerHTML = text.innerHTML + "h ";
+    }
+    if (diff.compare(1000*60*60*24) >= 0) {
+        text.innerHTML = text.innerHTML + diff.div(1000*60*60*24).floor();
+        text.innerHTML = text.innerHTML + "d";
+    }
+    text.innerHTML = text.innerHTML + " ago";
+}   
