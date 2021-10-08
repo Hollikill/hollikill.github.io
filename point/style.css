@@ -72,3 +72,19 @@ button:hover {
 .statispointavg {
     background-color: lightgreen;
 }
+
+a {
+    color: gray;
+}
+
+#time {
+    color: gray;
+    font-style: italic;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#lasttime {
+    text-align: center;
+}

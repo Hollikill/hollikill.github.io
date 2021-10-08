@@ -28,7 +28,7 @@ var gamedata = {
     unlock_viewable: [],
     unlock_bought: [],
 
-    lasttime: 0,
+    lasttime: new Decimal(0),
 
     title: "",
     unlocksetting: false,
@@ -63,8 +63,10 @@ var LoadGamedata = (mode) => {
             var savecodejson = JSON.stringify(gamedata);
             ChangeTitle("A Game");
             if (localStorage.getItem("savecodejson")) {
-                ChangeTitle("YOUR SAVE MIGHT BE OVERWRITTEN IF YOU CONTINUE");
                 Notify("warn", "If you play here you will override a save with "+JSON.parse(localStorage.getItem("savecodejson")).points+" points.<br>Reload the page to load the saved game.");
+            }
+            else {
+                Notify("warn", "this is NOT THE FULL VERSION OF THE GAME. this is purely a testing branch, and if you want to play the full and stable version of the game you should go to <a href='https://hollikill.net/point/game'>hollikill.net/point/game</a>.");
             }
             break;
     }
@@ -101,10 +103,12 @@ var LoadGamedata = (mode) => {
             gamedata.unlock_viewable.push(ulid);
     }
 
+    if (gamedata.title != "A Game")
+        ChangeTitle(savecode.title);
+    
     for (var ulid of gamedata.unlock_bought) {
         TriggerUnlock(ulid);
     }
-    ChangeTitle(savecode.title);
 
     if (savecode.statispoints.length > 0)
         CreateStatisPoint(savecode.statispoints.length);
@@ -118,12 +122,13 @@ var LoadGamedata = (mode) => {
     CreateUnlockSettings();
     Navbar(curtab);
 
-    Notify("warn", "this is NOT THE FULL VERSION OF THE GAME. this is purely a testing branch, and if you want to play the full and stable version of the game you should go to <a href='https://hollikill.net/point/game'>hollikill.net/point/game</a>.");
     Notify("alert", "You can [ right-click + drag ] to re-arragne all these boxes!<br><br>Have fun playing!");
 }
 var SaveGamedata = () => {
     localStorage.setItem("savecodejson", JSON.stringify(gamedata));
-    navigator.clipboard.writeText(JSON.stringify(gamedata));
+    //navigator.clipboard.writeText(JSON.stringify(gamedata));
+    var d = new Date();
+    document.getElementById("time").textContent = "SAVED ["+d.toLocaleString()+"]";
 }
 
 var PointButton = () => {
@@ -149,6 +154,12 @@ CreateNotifyToggles();
 
 // this is the global loop
 setInterval(function () {
+
+    if (document.getElementById("navbar").display != "flex") {
+        if (localStorage.getItem("savecodejson")) {
+            DisplaySavecode(new Decimal(JSON.parse(localStorage.getItem("savecodejson")).lasttime));
+        }
+    }
 
     var delay = GetTime();
     SetTime();
@@ -213,7 +224,7 @@ setInterval(function () {
         SaveGamedata();
         RefreshNewsfeed();
     }
-}, 15000);
+}, 20*1000);
 
 });
 });

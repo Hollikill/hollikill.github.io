@@ -494,3 +494,21 @@ function CreateNotifyToggles () {
     container.style.top = "10px";
     container.style.left = "10px";
 }
+
+function DisplaySavecode (ms) {
+    var text = document.getElementById("lasttime");
+    text.innerHTML = "<br>Detected a save from ";
+
+    var d = new Date();
+    var n = new Decimal(d.getTime());
+    var diff = n.plus(ms.neg());
+
+    text.innerHTML = text.innerHTML + diff.plus(diff.div(1000*60).floor().times(1000*60).neg()).div(1000).floor();
+    text.innerHTML = text.innerHTML + "s ";
+    text.innerHTML = text.innerHTML + diff.plus(diff.div(1000*60*60).floor().times(1000*60*60).neg()).div(1000*60).floor();
+    text.innerHTML = text.innerHTML + "m ";
+    text.innerHTML = text.innerHTML + diff.plus(diff.div(1000*60*60*24).floor().times(1000*60*60*24).neg()).div(1000*60*60).floor();
+    text.innerHTML = text.innerHTML + "h ";
+    text.innerHTML = text.innerHTML + diff.div(1000*60*60*24).floor();
+    text.innerHTML = text.innerHTML + "d ago";
+}

@@ -16,7 +16,7 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 
 
-    <!-- font styling -->
+    <!-- monospace font styling -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=PT+Mono&display=swap" rel="stylesheet">
 </head>
@@ -27,13 +27,15 @@
     <div id="startmenu">
         <div style="text-align: center;">
             <!-- button onclick="LoadGamedata(0)">Import Save Code From Clipboard/button -->
-            <button onclick="LoadGamedata(1)">Import Save Code Automatically</button>
+            <button onclick="LoadGamedata(1)">Import Save Automatically</button>
             <button onclick="LoadGamedata(2)">Start Anew</button>
             <br>
-            <p id="version">Expirimental 5t.7 <a href="changelog.txt" target="blank" style="color:gray;">changelog</a></p>
+            <p id="version">Expirimental 5t.7 <a href="changelog.txt" target="blank">changelog</a></p>
         </div>
+        <p id="lasttime"></p>
     </div>
     <div id="navbar"><button onclick="SaveGamedata()" id="savebutton">Save Game</button></div>
     <div id="navcontent"></div>
+    <span id="time">NOT SAVED</span>
 </body>
 </html>
