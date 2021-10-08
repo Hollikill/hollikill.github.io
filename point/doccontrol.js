@@ -30,7 +30,7 @@ var AddModule = (tabid) => {
     container.style.top = (Math.random()*45+20)+"%";
     container.style.left = (Math.random()*45+20)+"%";
 
-    dragElement(container);
+    dragElement(container, 0);
 
     return container;
 }
@@ -52,6 +52,14 @@ var Update = () => {
     if (gamedata.unlock_bought.includes("unboost")) {
         ChangeNumber("boosttimeval", GetBoosttimeMult(), 2);
     }
+    if (gamedata.unlock_bought.includes("statis")) {
+        ChangeNumber("statisx", gamedata.statisaverage.x, 2);
+        ChangeNumber("statisy", gamedata.statisaverage.y, 2);
+        ChangeNumber("statisdrift", gamedata.statisaverage.driftx.abs().plus(gamedata.statisaverage.drifty.abs()), 2);
+        ChangeNumber("statiscount", new Decimal(gamedata.statispoints.length));
+        ChangeNumber("statisval", GetStatisFactor(), 2);
+        ChangeNumber("statiscost", gamedata.statiscostbase.times(gamedata.statiscostincreasefactor.pow(gamedata.statispoints.length+1)));
+    }
 
     if (gamedata.stagekeys.includes("p10")) {
         ChangeNumber("statpps", BuildStep(1000));
@@ -60,9 +68,9 @@ var Update = () => {
         for (var i = 0; i < gamedata.buildcount.length; i++) {
             ChangeNumber("buildcost"+i, gamedata.buildcost[i]);
             totalbought = totalbought.plus(gamedata.buildbought[i]);
-            ChangeNumber("buildcount"+i, gamedata.buildcount[i].minus(gamedata.buildbought[i]));
+            ChangeNumber("buildcount"+i, gamedata.buildcount[i].floor().minus(gamedata.buildbought[i]));    
             ChangeNumber("buildbought"+i, gamedata.buildbought[i]);
-            ChangeNumber("buildrate"+i, new Decimal(15+(2*i)).pow(i).times(gamedata.buildcount[i]).times(GetBoost()));
+            ChangeNumber("buildrate"+i, new Decimal(15+(2*i)).pow(i).times(gamedata.buildcount[i].floor()).times(GetBoost()));
         }
         ChangeNumber("purchase", totalbought, 1);
     }
@@ -96,6 +104,7 @@ var Navbar = (tabid) => {
 
 var ChangeTitle = (newtitle) => {
     document.getElementById("titletext").textContent = newtitle;
+    gamedata.title = newtitle;
 }
 
 var CreatePointButton = () => {
@@ -124,19 +133,9 @@ var CreatePointButton = () => {
 var CreateBuildings = () => {
     var container = AddModule("stage0");
 
-    var purchasetext = document.createElement("span");
-    purchasetext.id = "purchasetext";
-    purchasetext.textContent = "Purchases: ";
-
-    var purchase = document.createElement("span");
-    purchase.id = "purchase";
-
     var buildingholder = document.createElement("div");
     buildingholder.id = "buildbuyholder";
     
-    container.appendChild(purchasetext);
-    container.appendChild(purchase);
-    container.appendChild(document.createElement("br"));
     container.appendChild(buildingholder);
 }
 
@@ -155,6 +154,15 @@ function CreatePPS () {
     container.appendChild(instruct);
     container.appendChild(ppscount);
     container.appendChild(persecondtext);
+
+    container.appendChild(document.createElement("br"));
+    var purchasetext = document.createElement("span");
+    purchasetext.id = "purchasetext";
+    purchasetext.textContent = "Purchases: ";
+    container.appendChild(purchasetext);
+    var purchase = document.createElement("span");
+    purchase.id = "purchase";
+    container.appendChild(purchase);
 }
 
 function Notify (type, text) {
@@ -184,7 +192,7 @@ function CreateUnlock (id, name, description, cost, costtype) {
 
     var buybutton = document.createElement("button");
     buybutton.setAttribute("onclick", "BuyUnlock('"+id+"', this)");
-    buybutton.textContent = "Buy ("+cost.toString()+" "+costtype+")";
+    buybutton.textContent = "Buy ("+cost.mantissa.toFixed(2)+"e"+cost.exponent+" "+costtype+")";
 
     var unlockname = document.createElement("span");
     unlockname.style.fontWeight = "bold";
@@ -335,7 +343,7 @@ function CreateMetaSlider () {
     focusslider.setAttribute("min", "0.01");
     focusslider.setAttribute("max", "1");
     focusslider.setAttribute("step", "0.01");
-    focusslider.setAttribute("value", "1");
+    focusslider.setAttribute("value", gamedata.focus);
     focusslider.id = "focusslider"
 
     var focustext = document.createElement("span");
@@ -365,4 +373,124 @@ function CreateUnboost () {
         boosttimetext.appendChild(boosttimeval);
         boosttimetext.innerHTML = boosttimetext.innerHTML + "x]";
     }    
+}
+
+function CreateStatis () {
+    var container = AddModule("stage0");
+
+    var flex = document.createElement("div");
+    flex.style.display = "flex";
+
+    var statismap = document.createElement("div");
+    statismap.id = "statismap";
+    flex.append(statismap);
+    statismap.style.backgroundColor = "gray";
+    statismap.style.width = "15em";
+    statismap.style.height = "15em";
+    statismap.style.margin = "0.5em";
+
+    var vline = document.createElement("div");
+    var hline = document.createElement("div");
+
+    vline.style.height = "15em";
+    vline.style.width = "2px";
+    vline.style.position = "absolute";
+    vline.style.left = "8em";
+    vline.style.backgroundColor = "black";
+
+    hline.style.height = "2px";
+    hline.style.width = "15em";
+    hline.style.position = "absolute";
+    hline.style.top = "8em";
+    hline.style.backgroundColor = "black";
+
+    statismap.append(vline);
+    statismap.append(hline);
+
+    var rightsection = document.createElement("div");
+    flex.append(rightsection);
+    rightsection.style.width = "14em";
+
+    var statistext = document.createElement("span");
+    var statisx = document.createElement("span");
+    var statisy = document.createElement("span");
+    var statisdrift = document.createElement("span");
+    var statiscount = document.createElement("span");
+    var statisval = document.createElement("span");
+    statisx.id = "statisx";
+    statisy.id = "statisy";
+    statisdrift.id = "statisdrift";
+    statiscount.id = "statiscount";
+    statisval.id = "statisval";
+
+    statistext.innerHTML = statistext.innerHTML + "Average sHorz: ";
+    statistext.append(statisx);
+    statistext.innerHTML = statistext.innerHTML + "<br>Average sVort: ";
+    statistext.append(statisy);
+    statistext.innerHTML = statistext.innerHTML + "<br>Average Drift: ";
+    statistext.append(statisdrift);
+    statistext.innerHTML = statistext.innerHTML + "<br><br>StatiConfluxi: ";
+    statistext.append(statiscount);
+    statistext.innerHTML = statistext.innerHTML + "<br><br>Statis Factor: ";
+    statistext.append(statisval);
+
+    rightsection.append(statistext);
+
+    var buybutton = document.createElement("button");
+    buybutton.innerHTML = "Buy StatiConflux (";
+    var statiscost = document.createElement("span");
+    statiscost.id = "statiscost";
+    buybutton.append(statiscost);
+    buybutton.innerHTML = buybutton.innerHTML + ")";
+    buybutton.setAttribute("onclick", "BuyStatis()");
+
+    rightsection.append(document.createElement("br"));
+    rightsection.append(document.createElement("br"));
+    rightsection.append(buybutton);
+
+    container.append(flex);
+}
+
+function HideClasses (classes, hidden) {
+    for (var c of classes) {
+        var divs = document.getElementsByClassName(c);
+
+        for (var d of divs) {
+            if (hidden) {
+                d.style.visibility = "hidden";
+            }
+            else {
+                d.style.visibility = "visible";
+            }
+        }
+    }
+}
+
+function CreateNotifyToggles () {
+    var container = AddModule("settings");
+    container.classList.add("priority");
+
+    var buttonon = document.createElement("button");
+    var buttonoff = document.createElement("button");
+
+    buttonon.textContent = "View Notifications";
+    buttonoff.textContent = "Hide Notifications";
+
+    buttonon.addEventListener("click", function () {
+        HideClasses(["alert"], false);
+        HideClasses(["warn"], false);
+        HideClasses(["alert2"], false);
+    });
+    buttonoff.addEventListener("click", function () {
+        HideClasses(["alert"], true);
+        HideClasses(["warn"], true);
+        HideClasses(["alert2"], true);
+    });
+
+    container.append(buttonoff);
+    container.append(buttonon);
+
+    container.style.position = "absolute";
+    container.style.top = "10px";
+    container.style.left = "10px";
 }

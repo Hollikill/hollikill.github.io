@@ -1,3 +1,11 @@
+5t.7
+
+- added a statis system, much reworked
+- changed the unlock system for better quality of life
+- FINE, you can scroll the buy box
+- added a better title system
+- added a mass notification closing menu. :[
+
 5t.6
 
 - added a new part to the metageneration system

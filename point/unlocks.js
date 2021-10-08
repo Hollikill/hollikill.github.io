@@ -5,8 +5,9 @@ var unlocks = [
         cost: new Decimal(0),
         costtype: "point",
         description: "this is an upgrade",
-        pointreq: new Decimal(9e9999),
-        timereq: new Decimal(9e9999),
+        pointreq: new Decimal(0),
+        timereq: new Decimal(0),
+        unlockreq: ["template"],
     },
     {
         id: "boost",
@@ -31,6 +32,7 @@ var unlocks = [
         costtype: "time",
         description: "Your lapse in clicking has revealed something extraordinary...<br><br>Your boost seems to be collecting some sort of ethereal energy while you let it rest.",
         timereq: new Decimal(45),
+        unlockreq: ["boost"],
     },
     {
         id: "boostdelay",
@@ -39,6 +41,15 @@ var unlocks = [
         costtype: "point",
         description: "As you press the boost button, you figure that the maximum boost must be useful for something more than just stopping you. You draw up plans for a machine that will use glue to make the boost degrade slower, powered by your maximum boost.",
         pointreq: new Decimal(5e7),
-        timereq: new Decimal(1),
+        unlockreq: ["boost"],
+    },
+    {
+        id: "statis",
+        name: "Statis Capacitor",
+        cost: new Decimal(1e15),
+        costtype: "point",
+        description: "You notice the ethereal patterns of energy permeating the infused point button seem to repeat over time. You watch this for hours on end and realize that your button press feel more... powerful at certain times. Certain that this must mean something, you draw up plans for a machine that will track these patterns and use that information to keep your boost stronger over time.",
+        pointreq: new Decimal(1e10),
+        unlockreq: ["unboost"],
     },
 ]

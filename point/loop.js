@@ -30,16 +30,25 @@ var gamedata = {
 
     lasttime: 0,
 
+    title: "",
     unlocksetting: false,
 
-    version: "5t.4",
+    statispoints: [],
+    statisaverage: {
+        x: new Decimal(0),
+        y: new Decimal(0),
+        driftx: new Decimal(0),
+        drifty: new Decimal(0),
+    },
+    statiscostbase: new Decimal(1e15),
+    statiscostincreasefactor: new Decimal(1e2),
+
+    version: "5t.7",
 }
 
 var total;
 
 var LoadGamedata = (mode) => {
-    ChangeTitle("A Game");
-
     switch (mode) {
         case 0:
             var savecodejson = "";
@@ -52,6 +61,7 @@ var LoadGamedata = (mode) => {
             break;
         case 2:
             var savecodejson = JSON.stringify(gamedata);
+            ChangeTitle("A Game");
             if (localStorage.getItem("savecodejson")) {
                 ChangeTitle("YOUR SAVE MIGHT BE OVERWRITTEN IF YOU CONTINUE");
                 Notify("warn", "If you play here you will override a save with "+JSON.parse(localStorage.getItem("savecodejson")).points+" points.<br>Reload the page to load the saved game.");
@@ -60,6 +70,10 @@ var LoadGamedata = (mode) => {
     }
 
     var savecode = JSON.parse(savecodejson);
+    if (savecode.version != gamedata.version) {
+        LoadGamedata(2);
+        return;
+    }
 
     gamedata.lasttime = savecode.lasttime;
 
@@ -73,7 +87,6 @@ var LoadGamedata = (mode) => {
 
     gamedata.focus = new Decimal(savecode.focus);
     gamedata.focusamount = new Decimal(savecode.focusamount);
-    gamedata.focuslimit = new Decimal(savecode.focuslimit);
 
     for (var i = 0; i < savecode.buildcost.length; i++) {
         gamedata.buildcost.push(new Decimal(savecode.buildcost[i]));
@@ -91,6 +104,10 @@ var LoadGamedata = (mode) => {
     for (var ulid of gamedata.unlock_bought) {
         TriggerUnlock(ulid);
     }
+    ChangeTitle(savecode.title);
+
+    if (savecode.statispoints.length > 0)
+        CreateStatisPoint(savecode.statispoints.length);
 
     HideElementID("startmenu");
     NavVisible(true);
@@ -101,7 +118,8 @@ var LoadGamedata = (mode) => {
     CreateUnlockSettings();
     Navbar(curtab);
 
-    Notify("warn", "this is NOT THE FULL VERSION OF THE GAME. this is purely a testing enviroment for new features or reworks of old features, and if you want to play the full game you should go to <a href='https://hollikill.net/point/game'>hollikill.net/point/game</a>.")
+    Notify("warn", "this is NOT THE FULL VERSION OF THE GAME. this is purely a testing branch, and if you want to play the full and stable version of the game you should go to <a href='https://hollikill.net/point/game'>hollikill.net/point/game</a>.");
+    Notify("alert", "You can [ right-click + drag ] to re-arragne all these boxes!<br><br>Have fun playing!");
 }
 var SaveGamedata = () => {
     localStorage.setItem("savecodejson", JSON.stringify(gamedata));
@@ -114,7 +132,6 @@ var PointButton = () => {
     if (gamedata.unlock_bought.includes("boost"))
         gamedata.currentboost = gamedata.currentboost.add(0.01);
     gamedata.boosttime = new Decimal(0);
-    
 }
 
 // this holds everything but functions and global variables
@@ -126,8 +143,9 @@ $.getScript("format.js", function() {
 $(function() {
 
 CreatePointButton();
-Notify("alert", "You can [ right-click + drag ] to re-arragne all these boxes!<br><br>Have fun playing!");
 NavVisible(false);
+ChangeTitle("A Desolate Void, and a Changelog");
+CreateNotifyToggles();
 
 // this is the global loop
 setInterval(function () {
@@ -136,9 +154,7 @@ setInterval(function () {
     SetTime();
 
     gamedata.points = gamedata.points.plus(BuildStep(delay));
-    updateneeds.push("points")
-    MetagenStep(delay);
-    ValidateMetagen(true, delay);
+    updateneeds.push("points");
 
     if (!gamedata.stagekeys.includes("p10") && gamedata.points >= 10) {
         gamedata.stagekeys.push("p10");
@@ -154,7 +170,9 @@ setInterval(function () {
         CreateNewsfeed();
         RefreshNewsfeed();
 
-        ChangeTitle("A Game about Getting Points");
+        if (gamedata.unlock_bought.length < 1) {
+            ChangeTitle("A Game about Getting Points");
+        }
         Navbar("stage0");
 
         if (loadgamepoints < 10)
@@ -174,8 +192,13 @@ setInterval(function () {
     }
     if (gamedata.boosttime.compare(gamedata.boosttimemax) >= 0  && gamedata.unlock_bought.includes("unboost"))
             gamedata.boosttimemax = gamedata.boosttime;
-    if (gamedata.unlock_bought.includes("metagen"))
+    if (gamedata.unlock_bought.includes("metagen")) {
         gamedata.focus = new Decimal(document.getElementById("focusslider").value);
+        MetagenStep(delay);
+        ValidateMetagen(true, delay);
+    }
+    if (gamedata.unlock_bought.includes("statis"))
+        StatisStep(delay);
 
     CheckUnlockVisable();
 
@@ -259,7 +282,7 @@ function BuildStep(deltams) {
 
     for (var i = 0; i < gamedata.buildcount.length; i++) {
         if (gamedata.buildcount[i].compare(0) > -1) {
-            var addition = new Decimal(15+(2*i)).pow(i).times(deltams/1000).times(gamedata.buildcount[i]);
+            var addition = new Decimal(15+(2*i)).pow(i).times(deltams/1000).times(gamedata.buildcount[i].floor());
             if (gamedata.unlock_bought.includes("metagen")) {
                 addition = addition.times(gamedata.focus.pow(i+1).pow(2));
                 if (ValidateMetagen(false))
@@ -290,6 +313,12 @@ function CheckUnlockVisable() {
         if (ul.timereq != null) {
             if (gamedata.boosttime.compare(ul.timereq) < 0)
                 visible = false;
+        }
+        if (ul.unlockreq != null) {
+            for (var ulid of ul.unlockreq) {
+                if (!gamedata.unlock_bought.includes(ulid))
+                    visible = false;
+            }
         }
 
         if (visible) {
@@ -337,26 +366,37 @@ function TriggerUnlock (id) {
     switch (id) {
         case "boost":
             CreateBoost();
-            ChangeTitle("A Game about Getting Points using Boost");
-            if (!gamedata.unlock_bought.includes(id))
-            Notify("alert2", "Boosting system aquired!<br><br>To use the system, simply press the point button repeatedly in quick succcession.<br><br>You can monitor your boost stats in the boost module.<br>All production is multiplied by the total boost.");
+            if (!gamedata.unlock_bought.includes(id)) {
+                Notify("alert2", "Boosting system aquired!<br><br>To use the system, simply press the point button repeatedly in quick succcession.<br><br>You can monitor your boost stats in the boost module.<br>All production is multiplied by the total boost.");
+                ChangeTitle("A Game about Getting Points using Boost");
+            }
             break;
         case "metagen":
             CreateMetaSlider();
-            ChangeTitle("A Game about Getting B-1");
-            if (!gamedata.unlock_bought.includes(id))
-            Notify("alert2", "You can now channel your focus!<br><br>To use the system, just move the slider labeled focus to focus on what you want to.<br><br>Low focus levels will lower your point prouction drastically, but your building will also produce buildings of the tiers below them. For example, B-3 buildings will make some amount of B-2 buildings per second. These amounts are not listed.<br><br>However! this comes with a downside as well. If your focus is too much toward one side, your drift will increase. At maximum drift, your focus will lapse and all production will stop.");
+            if (!gamedata.unlock_bought.includes(id)) {
+                Notify("alert2", "You can now channel your focus!<br><br>To use the system, just move the slider labeled focus to focus on what you want to.<br><br>Low focus levels will lower your point prouction drastically, but your building will also produce buildings of the tiers below them. For example, B-3 buildings will make some amount of B-2 buildings per second. These amounts are not listed.<br><br>However! this comes with a downside as well. If your focus is too much toward one side, your drift will increase. At maximum drift, your focus will lapse and all production will stop.");
+                ChangeTitle("A Game about Getting a Lot of B-1");
+            }
             break;
         case "unboost":
             CreateUnboost();
-            ChangeTitle("A Game about the Mysterious Boost Thing");
-            if (!gamedata.unlock_bought.includes(id))
-            Notify("alert2", "The mysterious energy has merged with your button!<br><br>To use the system, simply increase your unboosted time. The maximum amount that you have ever gotten in unboosted time is saved, and you get a multiplier based on that.");
+            if (!gamedata.unlock_bought.includes(id)) {
+                Notify("alert2", "The mysterious energy has merged with your button!<br><br>To use the system, simply increase your unboosted time. The maximum amount that you have ever gotten in unboosted time is saved, and you get a multiplier based on that.");
+                ChangeTitle("A Game about the Waiting");
+            }
             break;
         case "boostdelay":
-            ChangeTitle("A Game about Getting Points using Boost... again");
-            if (!gamedata.unlock_bought.includes(id))
-            Notify("alert2", "The glue machine has been set up!<br>It's sticky, though.<br><br>It provides +"+(gamedata.boostmult-1)+" seconds to delay at time of purchase, which will increase with the maximum boost.");
+            if (!gamedata.unlock_bought.includes(id)) {
+                Notify("alert2", "The glue machine has been set up!<br>It's sticky, though.<br><br>It provides +"+(gamedata.boostmult-1)+" seconds to delay at time of purchase, which will increase with the maximum boost.");
+            }
+            break;
+        case "statis":
+            CreateStatis();
+            CreateStatisPoint(0);
+            if (!gamedata.unlock_bought.includes(id)) {
+                Notify("alert2", "The staticonflux information unit has been built!<br><br>It's a bit unintuitive, so you might wanna read this.<br><br>To use the system, you need to purchase one or more staticonfluxi. These staticonfluxi will randomly move around the statis chamber. Depending on how close the AVERAGE (represented in green) of all staticonfluxi (represented in blue) is to the black cross indicating the center, your boost will degrade at a rate multiplied by your statis factor.");
+                ChangeTitle("A Game with a Polka-Dot Square");
+            }
             break;
     }
 }
@@ -389,7 +429,10 @@ function ValidateBoost () {
     if (gamedata.unlock_bought.includes("boostdelay"))
         delay = gamedata.maxboost;
     if (gamedata.boosttime.compare(delay) > 0) {
-        gamedata.currentboost = gamedata.currentboost.minus((deltams/1000)*(0.2));
+        if (gamedata.unlock_bought.includes("statis"))
+            gamedata.currentboost = gamedata.currentboost.minus(new Decimal((deltams/1000)*(0.2)).times(GetStatisFactor()));
+        else
+            gamedata.currentboost = gamedata.currentboost.minus((deltams/1000)*(0.2));
         if (gamedata.currentboost.compare(0) < 0)
             gamedata.currentboost = new Decimal(0); 
     }
@@ -412,25 +455,105 @@ function GetTime () {
 function MetagenStep (deltams) {
     for (var i = 1; i < gamedata.buildcount.length; i++) {
         if (gamedata.buildcount[i].compare(0) > -1 && ValidateMetagen(false, deltams)) {
-            gamedata.buildcount[i-1] = gamedata.buildcount[i-1].plus(gamedata.buildcount[i].times(new Decimal(1).minus(gamedata.focus).times(0.01)));
+            gamedata.buildcount[i-1] = gamedata.buildcount[i-1].plus(gamedata.buildcount[i].floor().times(new Decimal(1).minus(gamedata.focus).times(0.01)));
         }
     }
 }
 
-function ValidateMetagen (change, deltams) {
+function ValidateMetagen (dochange, deltams) {
     var mult = new Decimal(1);
     if (gamedata.focus.plus(-0.5).sign != gamedata.focusamount.sign) {
         mult = mult.times(20);
     }
 
-    if (change) {
+    if (dochange) {
         gamedata.focusamount = gamedata.focusamount.plus(gamedata.focus.minus(0.5).times(mult).times(deltams.div(1000)));
-        if (gamedata.focusamount.compare(gamedata.focuslimit) >= 0)
-            gamedata.focusamount = gamedata.focuslimit;
+        if (gamedata.focusamount.abs().compare(gamedata.focuslimit) >= 0) {
+            if (gamedata.focusamount.compare(0) < 0)
+                gamedata.focusamount = gamedata.focuslimit.neg();
+            else
+                gamedata.focusamount = gamedata.focuslimit;
+        }
     }
 
-    if (gamedata.focus.abs().compare(gamedata.focuslimit) <= 0)
+    if (gamedata.focusamount.abs().compare(gamedata.focuslimit) < 0)
         return true;
     else
         return false;
+}
+
+function CreateStatisPoint (x) {
+    if (x != 0) {
+        for (var i = 0; i < x; i++) {
+            gamedata.statispoints.push({
+                x: new Decimal(15*Math.random()),
+                y: new Decimal(15*Math.random()),
+                driftx: new Decimal((1*Math.random())-0.5),
+                drifty: new Decimal((1*Math.random())-0.5),
+            });
+    
+            var pointdiv = document.createElement("div");
+            pointdiv.classList.add("statispoint");
+            pointdiv.id = ("statispoint"+(gamedata.statispoints.length-1));
+            document.getElementById("statismap").append(pointdiv);
+        }
+    }
+    else {
+        var pointdiv = document.createElement("div");
+        pointdiv.classList.add("statispoint");
+        pointdiv.classList.add("statispointavg");
+        pointdiv.id = ("statispointavg");
+        document.getElementById("statismap").append(pointdiv);
+    }
+}
+
+function StatisStep (deltams) {
+    deltams = deltams.div(1000);
+    var avg = {
+        x:new Decimal(0),
+        y:new Decimal(0),
+        driftx:new Decimal(0),
+        drifty:new Decimal(0),
+    };
+    for (var i = 0; i < gamedata.statispoints.length; i++) {
+        var p = gamedata.statispoints[i];
+        var pointdiv = document.getElementById("statispoint"+i);
+
+        p.x = modulo(p.x.plus(p.driftx.times(deltams)), new Decimal(15));
+        pointdiv.style.left = p.x.plus(0.5)+"em";
+
+        p.y = modulo(p.y.plus(p.drifty.times(deltams)), new Decimal(15));
+        pointdiv.style.top = p.y.plus(0.5)+"em";
+
+        avg.x = avg.x.plus(p.x);
+        avg.y = avg.y.plus(p.y);
+        avg.driftx = avg.driftx.plus(p.driftx);
+        avg.drifty = avg.drifty.plus(p.drifty);
+    }
+    if (gamedata.statispoints.length > 0) {
+        gamedata.statisaverage.x = avg.x.div(gamedata.statispoints.length).plus(-7.5);
+        gamedata.statisaverage.y = avg.y.div(gamedata.statispoints.length).plus(-7.5);
+        gamedata.statisaverage.driftx = avg.driftx.div(gamedata.statispoints.length);
+        gamedata.statisaverage.drifty = avg.drifty.div(gamedata.statispoints.length);
+        var pointavgdiv = document.getElementById("statispointavg");
+        pointavgdiv.style.left = avg.x.div(gamedata.statispoints.length).plus(0.5)+"em";
+        pointavgdiv.style.top = avg.y.div(gamedata.statispoints.length).plus(0.5)+"em";
+    }
+    else {
+        var pointavgdiv = document.getElementById("statispointavg");
+        pointavgdiv.style.left = "8em";
+        pointavgdiv.style.top = "8em";
+    }
+}
+
+function GetStatisFactor () {
+    var distance = gamedata.statisaverage.x.abs().plus(gamedata.statisaverage.y.abs()).div(15);
+    return distance;
+}
+
+function BuyStatis () {
+    if (gamedata.points.compare(gamedata.statiscostbase.times(gamedata.statiscostincreasefactor.pow(gamedata.statispoints.length+1))) >= 0) {
+        gamedata.points = gamedata.points.plus(gamedata.statiscostbase.times(gamedata.statiscostincreasefactor.pow(gamedata.statispoints.length+1)).neg());
+        CreateStatisPoint(1);
+    }
 }
