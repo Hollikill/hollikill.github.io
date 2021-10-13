@@ -66,7 +66,7 @@ var unlocks = [
         name: "Check the Metageneration",
         cost: new Decimal(1e20),
         costtype: "point",
-        description: "You gulp to yourself as your realize you forgot to multiply the metageneration by your boost. Better fix that.",
+        description: "You *gulp* to yourself as your realize you forgot to multiply the metageneration by your boost. Better fix that.",
         pointreq: new Decimal(1e17),
         unlockreq: ["boost", "template"],
     },
@@ -96,5 +96,14 @@ var unlocks = [
         description: "At one point while you relax watching the statis chamber, you realize that you havent tried channeling the power of unboosted time into it, while it has worked so well elsewhere.",
         pointreq: new Decimal(1e17),
         unlockreq: ["statis", "unboost"],
+    },
+    {
+        id: "decoder",
+        name: "Decoder Engine",
+        cost: new Decimal(1e40),
+        costtype: "point",
+        description: "While using the statis chamber's glow, you realize that such predictive methods might be useful elsewhere as well. You start work on a blueprint for a robot that given a key you come up with yourself, can predict the patterns of the building stock market.",
+        pointreq: new Decimal(1e35),
+        unlockreq: ["statis"],
     },
 ]

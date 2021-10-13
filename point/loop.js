@@ -44,6 +44,11 @@ var gamedata = {
     statiscostbase: new Decimal(1e15),
     statiscostincreasefactor: new Decimal(1e2),
 
+    decoderchance: new Decimal(0.1),
+    decoderstring: "",
+    decodercapacity: new Decimal(0),
+    decoderfactor: new Decimal(1),
+
     version: "5t.7",
 }
 
@@ -114,6 +119,13 @@ var LoadGamedata = (mode) => {
 
     if (savecode.statispoints.length > 0)
         CreateStatisPoint(savecode.statispoints.length);
+
+    if (gamedata.unlock_bought.includes("decoder")) {
+        gamedata.decoderfactor = new Decimal(savecode.decoderfactor);
+        gamedata.decodercapacity = new Decimal(savecode.decodercapacity);
+        gamedata.decoderstring = savecode.decoderstring;
+        document.getElementById("decoderinput").value = gamedata.decoderstring;
+    }
 
     HideElementID("startmenu");
     NavVisible(true);
@@ -193,7 +205,7 @@ setInterval(function () {
             Notify("alert", "Congrats on your first 10 points...<br><br>Now, your first goal should be to get some sort of automatic point production set up.<br>Namely, in the form of a building.<br><br>You can see in the the building module, there is a button to buy B-1, or building one, for 100 points. (in engineer notation)<br><br>Those other numbers to the right of the building won't make sense yet, but should soon become obvious.");
     }
     if (gamedata.stagekeys.includes("p10")) {
-        if (gamedata.points.compare(gamedata.buildcostbase[gamedata.buildcostbase.length-1]*2) >= 0) {
+        if (gamedata.points.compare(gamedata.buildcostbase[gamedata.buildcostbase.length-1].times(2)) >= 0) {
             CreateBuild(gamedata.buildcount.length+1);
             updateneeds.push("buildbuy");
 
@@ -222,6 +234,9 @@ setInterval(function () {
 
     ValidateBoost();
 
+    if (gamedata.unlock_bought.includes("decoder"))
+        VerifyDecoderString();
+
     Update();
 
 }, deltams);
@@ -230,6 +245,9 @@ setInterval(function () {
     if (gamedata.stagekeys.includes("p10")) {
         SaveGamedata();
         RefreshNewsfeed();
+    }
+    if (gamedata.unlock_bought.includes("decoder")) {
+        VerifyDecoder();
     }
 }, 20*1000);
 
@@ -284,8 +302,8 @@ var CreateBuild = (x) => {
 }
 
 function BuyBuild(x) {
-    if (gamedata.points.compare(gamedata.buildcost[x].plus(-1)) == 1) {
-        gamedata.points = gamedata.points.sub(gamedata.buildcost[x]);
+    if (gamedata.points.compare(gamedata.buildcost[x].times(GetDecoderBoost)) >= 0) {
+        gamedata.points = gamedata.points.sub(gamedata.buildcost[x].times(GetDecoderBoost));
 
         gamedata.buildbought[x] = gamedata.buildbought[x].plus(1);
         gamedata.buildcount[x] = gamedata.buildcount[x].plus(1);
@@ -427,6 +445,14 @@ function TriggerUnlock (id) {
                 Notify("alert2", "The prediction machine has prodcued its first hyperaccelration plan!<br><br>You will now regain time up to your best unboost time faster, always reaching the maximum in one minute.");
             }
             break;
+        case "decoder":
+            CreateDecoderPuzzle();
+            gamedata.decodercapacity = new Decimal(1);
+            if (!gamedata.unlock_bought.includes(id)) {
+                Notify("alert2", "The MetaStock-Analyzer has finished creation!<br><br>To use it, first navigate to the new page by pressing the button at the top. Once you've done that, you can use the analyzer by simply typing in what you think is the best set of random character to predict the stock market, and every 20 seconds the machine will give an updated stock report.<br><br>The amount of Tries-to-Crack your key will influence the cost of buildings for you.");
+                ChangeTitle("A Game with a Password")
+            }
+            break;
     }
 }
 
@@ -435,7 +461,8 @@ function GetBoost () {
 
     boostmult = boostmult.times(gamedata.currentboost.add(1));
 
-    boostmult = boostmult.times(GetBoosttimeMult());
+    if (gamedata.unlock_bought.includes("unboost"))
+        boostmult = boostmult.times(GetBoosttimeMult());
 
     return new Decimal(boostmult);
 }
@@ -585,4 +612,58 @@ function BuyStatis () {
         gamedata.points = gamedata.points.plus(gamedata.statiscostbase.times(gamedata.statiscostincreasefactor.pow(gamedata.statispoints.length+1)).neg());
         CreateStatisPoint(1);
     }
+}
+
+function VerifyDecoderString () {
+    var input = document.getElementById("decoderinput");
+    if (input.value.length >= gamedata.decodercapacity) {
+        input.value = input.value.substring(0, gamedata.decodercapacity);
+    }
+    gamedata.decoderstring = input.value;
+}
+
+function VerifyDecoder () {
+    VerifyDecoderString();
+
+    gamedata.decoderfactor = new Decimal(0);
+    var done = false;
+    var keylist = [];
+    for (var i = 0; i < gamedata.decoderstring.length; i++) {
+        keylist.push(false);
+    }
+
+    while (!done) {
+        gamedata.decoderfactor = gamedata.decoderfactor.plus(keylist.length);
+        var tempdone = true;
+        for (var val of keylist) {
+            if (!val) {
+                var value = new Decimal(Math.random()).plus(gamedata.decoderchance.neg());
+                if (value.compare(0) < 0) {
+                    keylist.pop();
+                }
+                else {
+                    tempdone = false;
+                }
+            }
+        }
+        if (tempdone) {
+            done = true;
+        }
+    }
+}
+
+function BuyDecoder () {
+    var tempcost = new Decimal(10).pow(gamedata.decodercapacity.plus(1));
+    if (gamedata.boosttime.compare(tempcost) >= 0) {
+        gamedata.boosttime = gamedata.boosttime.plus(tempcost.neg());
+
+        gamedata.decodercapacity = gamedata.decodercapacity.plus(1);
+    }
+}
+
+function GetDecoderBoost () {
+    if (gamedata.unlock_bought.includes("decoder") && gamedata.decoderfactor.compare(0) != 0)
+        return new Decimal(10).pow(gamedata.decoderfactor.log2().neg());
+    else
+        return new Decimal(1);
 }

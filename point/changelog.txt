@@ -1,3 +1,9 @@
+5t.10
+
+- added a password... but where?
+- added an upgrade related to that
+- new page unlocked!
+
 5t.9
 
 - getting close to releasing this on the main version, I just gotta get the late game upgrades in

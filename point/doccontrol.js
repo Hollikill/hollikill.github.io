@@ -60,13 +60,18 @@ var Update = () => {
         ChangeNumber("statisval", GetStatisFactor(), 2);
         ChangeNumber("statiscost", gamedata.statiscostbase.times(gamedata.statiscostincreasefactor.pow(gamedata.statispoints.length+1)));
     }
+    if (gamedata.unlock_bought.includes("decoder")) {
+        ChangeNumber("decoderlength", gamedata.decodercapacity);
+        ChangeNumber("decoderfactor", gamedata.decoderfactor);
+        ChangeNumber("decodercost", new Decimal(10).pow(gamedata.decodercapacity.plus(1)))
+    }
 
     if (gamedata.stagekeys.includes("p10")) {
         ChangeNumber("statpps", BuildStep(1000));
 
         var totalbought = new Decimal(0);
         for (var i = 0; i < gamedata.buildcount.length; i++) {
-            ChangeNumber("buildcost"+i, gamedata.buildcost[i]);
+            ChangeNumber("buildcost"+i, gamedata.buildcost[i].times(GetDecoderBoost()));
             totalbought = totalbought.plus(gamedata.buildbought[i]);
             ChangeNumber("buildcount"+i, gamedata.buildcount[i].floor().minus(gamedata.buildbought[i]));    
             ChangeNumber("buildbought"+i, gamedata.buildbought[i]);
@@ -522,4 +527,41 @@ function DisplaySavecode (ms) {
     if (JSON.parse(localStorage.getItem("savecodejson")).version != gamedata.version) {
         text.innerHTML = text.innerHTML + "<br><span style='color:red;font-style:bold'>SAVE INCOMPATIBLE, CANNOT LOAD</span>";
     }
-}   
+}
+
+function CreateDecoderPuzzle () {
+    var container = AddModule("stage1");
+
+    var infotext = document.createElement("span");
+    container.appendChild(infotext);
+
+    infotext.innerHTML = infotext.innerHTML + "Current Keycode: ";
+    var input = document.createElement("input");
+    input.setAttribute("type", "text");
+    input.id = "decoderinput";
+    infotext.append(input);
+    infotext.innerHTML = infotext.innerHTML + "<br>";
+
+    var capacity = document.createElement("span");
+    capacity.id = "decoderlength";
+    infotext.innerHTML = infotext.innerHTML + "Character Capacity: "
+    infotext.append(capacity);
+    infotext.innerHTML = infotext.innerHTML + "<br>";
+
+    var factor = document.createElement("span");
+    factor.id = "decoderfactor";
+    infotext.innerHTML = infotext.innerHTML + "Last Tries-to-Crack: "
+    infotext.append(factor);
+    infotext.innerHTML = infotext.innerHTML + "<br>";
+
+    var buybutton = document.createElement("button");
+    buybutton.innerHTML = "Buy Capacity [";
+    buybutton.addEventListener("click", function () {
+        BuyDecoder();
+    });
+    var buycost = document.createElement("span");
+    buycost.id = "decodercost";
+    buybutton.append(buycost);
+    buybutton.innerHTML = buybutton.innerHTML + "s]";
+    container.append(buybutton);
+}
