@@ -140,7 +140,16 @@ var AddStocks = function () {
         stk_sell.setAttribute("onclick", "AttemptStockExchange(-1, "+i+")");
         stk_sell.textContent = "Sell 1";
 
-        stk_hold.innerHTML = "Stock #"+i+" worth $"
+        var stk_buyall = document.createElement("button");
+        stk_buyall.setAttribute("onclick", "AttemptStockExchange(10000, "+i+")");
+        stk_buyall.textContent = "Buy All";
+        var stk_sellall = document.createElement("button");
+        stk_sellall.setAttribute("onclick", "AttemptStockExchange(-10000, "+i+")");
+        stk_sellall.textContent = "Sell All";
+
+        stk_hold.innerHTML = "Stock #"+i
+        stk_hold.append(document.createElement("br"));
+        stk_hold.innerHTML = stk_hold.innerHTML + "$";
         stk_hold.append(stk_c_value);
         stk_hold.append(document.createElement("br"));
         stk_hold.innerHTML = stk_hold.innerHTML + "owned: ";
@@ -148,6 +157,9 @@ var AddStocks = function () {
         stk_hold.append(document.createElement("br"));
         stk_hold.append(stk_buy);
         stk_hold.append(stk_sell);
+        stk_hold.append(document.createElement("br"));
+        stk_hold.append(stk_buyall);
+        stk_hold.append(stk_sellall);
 
         container.append(stk_hold);
     }
@@ -166,12 +178,14 @@ var AttemptStockExchange = function (x, i) {
         money += tosell*(stocks[i].value);
         stocks[i].owned = stocks[i].owned - tosell;
     }
-    else if (money >= x*(stocks[i].value)) {
-        money = money - x*(stocks[i].value);
-        stocks[i].owned += x;
+    else {
+        var tobuy = Math.min(x, Math.trunc(money/stocks[i].value))
+        money = money - tobuy*(stocks[i].value);
+        stocks[i].owned += tobuy;
     }
 
     UpdateMoney();
+    UpdateStocksVisual();
 }
 
 var UpdateStocks = function () {
@@ -185,7 +199,13 @@ var UpdateStocks = function () {
         if (stocks[i].value < 15) {
             stocks[i].value = 15;
         }
+    }
 
+    UpdateStocksVisual();
+}
+
+var UpdateStocksVisual = function () {
+    for (var i = 0; i < stocks.length; i++) {
         document.getElementById(i+"value").textContent = stocks[i].value.toFixed(2);
         document.getElementById(i+"owned").textContent = stocks[i].owned.toFixed(0);
     }
