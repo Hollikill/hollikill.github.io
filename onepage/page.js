@@ -13,7 +13,7 @@ var StartGame = function () {
     AddCounter();
     AddChance();
     AddPreviousFlipCounter();
-    AddTotalCounter();
+    //AddTotalCounter();
     AddStocks();
 
     dragElement(stat_box, 0);
@@ -67,9 +67,9 @@ var AddChance = function () {
     c_hold.id = "c_hold";
 
     var c_flip = document.createElement("button");
-    c_flip.textContent = "Flip a Coin ($1)";
+    c_flip.textContent = "Flip a Coin (5%)";
     c_flip.classList.add("c_flip");
-    c_flip.addEventListener('click', () => {DoFlip(1)});
+    c_flip.addEventListener('click', () => {DoFlip(money/20)});
 
     c_hold.append(c_flip);
 
@@ -77,6 +77,7 @@ var AddChance = function () {
 }
 
 var DoFlip = function (x) {
+    x = Math.max(1, x);
     var net_m = 0;
     if (Math.random()*3 >= 1) {
         net_m = net_m + 2*x;
@@ -107,7 +108,7 @@ var UpdateMoney = function () {
             netgain += lastflip;
             lastflip = 0;
         }
-        document.getElementById("tot_flip").textContent = (netgain*(-1)).toFixed(0);
+        //document.getElementById("tot_flip").textContent = (netgain*(-1)).toFixed(0);
     }
 
     document.getElementById("m_count").textContent = money.toFixed(0);
@@ -119,10 +120,10 @@ var AddStocks = function () {
     document.getElementById("main").append(container);
     dragElement(container, 0)
 
-    for (var i = 0; i<5; i++) {
+    for (var i = 0; i<8; i++) {
         var newstock = {
             drift: 0,
-            value: 100,
+            value: Math.random()*500,
             owned: 0,
         }
         stocks.push(newstock);
@@ -141,10 +142,10 @@ var AddStocks = function () {
         stk_sell.textContent = "Sell 1";
 
         var stk_buyall = document.createElement("button");
-        stk_buyall.setAttribute("onclick", "AttemptStockExchange(10000, "+i+")");
+        stk_buyall.setAttribute("onclick", "AttemptStockExchange(1e300, "+i+")");
         stk_buyall.textContent = "Buy All";
         var stk_sellall = document.createElement("button");
-        stk_sellall.setAttribute("onclick", "AttemptStockExchange(-10000, "+i+")");
+        stk_sellall.setAttribute("onclick", "AttemptStockExchange(-1e300, "+i+")");
         stk_sellall.textContent = "Sell All";
 
         stk_hold.innerHTML = "Stock #"+i
@@ -195,9 +196,9 @@ var UpdateStocks = function () {
     for (var i = 0; i < stocks.length; i++) {
         stocks[i].drift = stocks[i].drift + ((Math.random()*2)-1)/2;
         stocks[i].drift = clampNumber(stocks[i].drift, -1, 1)
-        stocks[i].value = stocks[i].value + 10*stocks[i].drift;
-        if (stocks[i].value < 15) {
-            stocks[i].value = 15;
+        stocks[i].value = stocks[i].value * (1+(stocks[i].drift/20));
+        if (stocks[i].value < 0.01) {
+            stocks[i].value = 0.01;
         }
     }
 
