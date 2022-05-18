@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ****  HTML Feature submission **** -->
+    <title>Greed</title>
+    
+    <script type="text/javascript" src="https://hollikill.net/point/format.js"></script>
+    <script type="text/javascript" src="https://hollikill.net/point/drag.js"></script>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        var money = 500;
+        var moneyAI = 500;
+        var moneyAI2 = 500;
+        var lastflip = 0;
+        var netgain = 0;
+        var stocks = [];
+
+        var aivalue = 0;
+        var ai2value = 0;
+
+        var StartGame = function () {
+            var delme = document.getElementById("delete_me");
+            delme.remove();
+            
+            var stat_box = document.getElementById("stat_box");
+            stat_box.classList.add("stat_box");
+
+            AddCounter();
+            AddChance();
+            //AddPreviousFlipCounter();
+            //AddTotalCounter();
+            AddStocks();
+
+            dragElement(stat_box, 0);
+            dragElement(document.getElementById("c_hold"), 0);
+
+            setInterval(() => {
+                UpdateStocks();
+                UpdateMoney();
+            }, 1000);
+        }
+
+        var AddCounter = function () {
+            if (!document.getElementById("m_count")) {
+                var m_hold = document.createElement("p");
+                m_hold.innerHTML = "You<br>$ ";
+                var m_count = document.createElement("span");
+                m_count.id = "m_count";
+                m_count.textContent = "500";
+                m_hold.append(m_count);
+                m_hold.innerHTML = m_hold.innerHTML + "<br>Fortune 900 AI<br>$ "
+                var m_count_ai = document.createElement("span");
+                m_count_ai.id = "m_count_ai";
+                m_count_ai.textContent = "500";
+                m_hold.append(m_count_ai);
+                m_hold.innerHTML = m_hold.innerHTML + "<br>Ceton Retropulsar AI<br>$ "
+                var m_count_ai2 = document.createElement("span");
+                m_count_ai2.id = "m_count_ai2";
+                m_count_ai2.textContent = "500";
+                m_hold.append(m_count_ai2);
+                document.getElementById("stat_box").append(m_hold);
+            }
+        }
+
+        var AddPreviousFlipCounter = function () {
+            var m_hold = document.createElement("p");
+            m_hold.id = "last_flip_hold";
+            m_hold.textContent = "+(";
+            var m_count = document.createElement("span");
+            m_count.id = "last_flip";
+            m_count.textContent = "0";
+            m_hold.append(m_count);
+            m_hold.innerHTML = m_hold.innerHTML + ")";
+            document.getElementById("stat_box").append(m_hold);
+        }
+
+        var AddTotalCounter = function () {
+            var m_hold = document.createElement("p");
+            m_hold.id = "tot_flip_hold";
+            m_hold.textContent = "money lost: ";
+            var m_count = document.createElement("span");
+            m_count.id = "tot_flip";
+            m_count.textContent = "0";
+            m_hold.append(m_count);
+            m_hold.innerHTML = m_hold.innerHTML + "";
+            document.getElementById("stat_box").append(m_hold);
+        }
+
+        var AddChance = function () {
+            var c_hold = document.createElement("div");
+            c_hold.classList.add("c_hold");
+            c_hold.id = "c_hold";
+
+            var c_flip = document.createElement("button");
+            c_flip.textContent = "Flip a Coin ($25)"
+            c_flip.classList.add("c_flip");
+            c_flip.addEventListener('click', () => {DoFlip(25)});
+
+            c_hold.append(c_flip);
+
+            document.getElementById("main").append(c_hold);
+        }
+
+        var DoFlip = function (x) {
+            x = Math.max(1, x);
+            var net_m = 0;
+            if (Math.random()*3 >= 1) {
+                net_m = net_m + 2*x;
+            }
+            net_m = net_m - 1*(x);
+            lastflip = net_m;
+            money = money + net_m;
+            UpdateMoney();
+        }
+
+        var UpdateMoney = function () {
+            if (money <= 0) {
+                money = -1e400;
+                document.getElementById("tot_flip_hold").innerHTML = "Totally in debt."
+            }/*
+            else {
+                if (lastflip != 0) {
+                    document.getElementById("last_flip").textContent = lastflip.toFixed(0);
+                    if (lastflip < 0) {
+                        document.getElementById("last_flip_hold").style.color = "red";
+                    }
+                    else {
+                        document.getElementById("last_flip_hold").style.color = "lime";
+                    }
+                }
+
+                if (lastflip < 0) {
+                    netgain += lastflip;
+                    lastflip = 0;
+                }
+                //document.getElementById("tot_flip").textContent = (netgain*(-1)).toFixed(0);
+            }*/
+
+            document.getElementById("m_count").textContent = money.toFixed(0);
+            document.getElementById("m_count_ai").textContent = "[" + aivalue.toFixed(0) + "] " + moneyAI.toFixed(0);
+            document.getElementById("m_count_ai2").textContent = "[" + ai2value.toFixed(0) + "] " + moneyAI2.toFixed(0);
+        }
+
+        var AddStocks = function () {
+            var container = document.createElement("div");
+            container.id = "stk_hold";
+            document.getElementById("main").append(container);
+            dragElement(container, 0)
+
+            for (var i = 0; i<5; i++) {
+                var newstock = {
+                    drift: 0,
+                    value: Math.random()*500,
+                    owned: 0,
+                    aiowned: 0,
+                    ai2owned: 0,
+                    maximum: (Math.random()*100000).toFixed(0),
+                }
+                stocks.push(newstock);
+
+                var stk_hold = document.createElement("p");
+                stk_hold.id = i+"hold";
+                var stk_c_value = document.createElement("span");
+                stk_c_value.id = i+"value";
+                var stk_c_owned = document.createElement("span");
+                stk_c_owned.id = i+"owned";
+                var stk_c_owned_ai = document.createElement("span");
+                stk_c_owned_ai.id = i+"owned_ai";
+                var stk_c_owned_ai2 = document.createElement("span");
+                stk_c_owned_ai2.id = i+"owned_ai2";
+
+                var stk_c_max = document.createElement("span");
+                stk_c_max.id = i+"max";
+                stk_c_max.textContent = newstock.maximum;
+
+                var stk_buy = document.createElement("button");
+                stk_buy.setAttribute("onclick", "AttemptStockExchange(1, "+i+")");
+                stk_buy.textContent = "Buy 1";
+                var stk_sell = document.createElement("button");
+                stk_sell.setAttribute("onclick", "AttemptStockExchange(-1, "+i+")");
+                stk_sell.textContent = "Sell 1";
+
+                var stk_buyall = document.createElement("button");
+                stk_buyall.setAttribute("onclick", "AttemptStockExchange(1e300, "+i+")");
+                stk_buyall.textContent = "Buy All";
+                var stk_sellall = document.createElement("button");
+                stk_sellall.setAttribute("onclick", "AttemptStockExchange(-1e300, "+i+")");
+                stk_sellall.textContent = "Sell All";
+
+                stk_hold.innerHTML = "Stock #"+i
+                stk_hold.append(document.createElement("br"));
+                stk_hold.innerHTML = stk_hold.innerHTML + "$";
+                stk_hold.append(stk_c_value);
+                stk_hold.append(document.createElement("br"));
+                stk_hold.innerHTML = stk_hold.innerHTML + "owned: ";
+                stk_hold.append(stk_c_owned);
+                stk_hold.append(document.createElement("br"));
+                stk_hold.innerHTML = stk_hold.innerHTML + "F900: ";
+                stk_hold.append(stk_c_owned_ai);
+                stk_hold.append(document.createElement("br"));
+                stk_hold.innerHTML = stk_hold.innerHTML + "CRY: ";
+                stk_hold.append(stk_c_owned_ai2);
+                stk_hold.append(document.createElement("br"));
+                stk_hold.innerHTML = stk_hold.innerHTML + "Stocks Left: ";
+                stk_hold.append(stk_c_max);
+                stk_hold.append(document.createElement("br"));
+                stk_hold.append(stk_buy);
+                stk_hold.append(stk_sell);
+                stk_hold.append(document.createElement("br"));
+                stk_hold.append(stk_buyall);
+                stk_hold.append(stk_sellall);
+
+                container.append(stk_hold);
+            }
+        }
+
+        var AttemptStockExchange = function (x, i) {
+            if (x < 0) {
+                var tosell = 0
+                if (stocks[i].owned >= -1*x) {
+                    tosell = -1*x;
+                }
+                else {
+                    tosell = stocks[i].owned;
+                }
+
+                money += tosell*(stocks[i].value);
+                stocks[i].owned = stocks[i].owned - tosell;
+            }
+            else {
+                var tobuy = Math.min(x, Math.trunc(money/stocks[i].value))
+                if (tobuy > stocks[i].maximum-(stocks[i].owned+stocks[i].aiowned+stocks[i].ai2owned)) {
+                    tobuy = stocks[i].maximum-(stocks[i].owned+stocks[i].aiowned+stocks[i].ai2owned)
+                }
+                money = money - tobuy*(stocks[i].value);
+                stocks[i].owned += tobuy;
+            }
+
+            UpdateMoney();
+            UpdateStocksVisual();
+        }
+
+        var AttemptStockExchangeAI = function (x, i) {
+            if (x < 0) {
+                var tosell = 0
+                if (stocks[i].aiowned >= -1*x) {
+                    tosell = -1*x;
+                }
+                else {
+                    tosell = stocks[i].aiowned;
+                }
+
+                moneyAI += tosell*(stocks[i].value);
+                stocks[i].aiowned = stocks[i].aiowned - tosell;
+            }
+            else {
+                var tobuy = Math.min(x, Math.trunc(moneyAI/stocks[i].value))
+                if (tobuy > stocks[i].maximum-(stocks[i].owned+stocks[i].aiowned+stocks[i].ai2owned)) {
+                    tobuy = stocks[i].maximum-(stocks[i].owned+stocks[i].aiowned+stocks[i].ai2owned)
+                }
+                moneyAI = moneyAI - tobuy*(stocks[i].value);
+                stocks[i].aiowned += tobuy;
+            }
+
+            UpdateMoney();
+            UpdateStocksVisual();
+        }
+
+        var AttemptStockExchangeAI2 = function (x, i) {
+            if (x < 0) {
+                var tosell = 0
+                if (stocks[i].ai2owned >= -1*x) {
+                    tosell = -1*x;
+                }
+                else {
+                    tosell = stocks[i].ai2owned;
+                }
+
+                moneyAI2 += tosell*(stocks[i].value);
+                stocks[i].ai2owned = stocks[i].ai2owned - tosell;
+            }
+            else {
+                var tobuy = Math.min(x, Math.trunc(moneyAI2/stocks[i].value))
+                if (tobuy > stocks[i].maximum-(stocks[i].owned+stocks[i].aiowned+stocks[i].ai2owned)) {
+                    tobuy = stocks[i].maximum-(stocks[i].owned+stocks[i].aiowned+stocks[i].ai2owned)
+                }
+                moneyAI2 = moneyAI2 - tobuy*(stocks[i].value);
+                stocks[i].ai2owned += tobuy;
+            }
+
+            UpdateMoney();
+            UpdateStocksVisual();
+        }
+
+        var UpdateStocks = function () {
+            //#Source https://bit.ly/2neWfJ2 
+            const clampNumber = (num, a, b) => Math.max(Math.min(num, Math.max(a, b)), Math.min(a, b));
+
+            for (var i = 0; i < stocks.length; i++) {
+                stocks[i].drift = stocks[i].drift + ((Math.random()*2)-1)/2;
+                stocks[i].drift = clampNumber(stocks[i].drift, -1, 1)
+                stocks[i].value = stocks[i].value * (1+(stocks[i].drift/20));
+                if (stocks[i].value < 0.01) {
+                    stocks[i].value = 0.01;
+                }
+            }
+
+            UpdateStockAI();
+            UpdateStocksVisual();
+        }
+
+        var UpdateStocksVisual = function () {
+            for (var i = 0; i < stocks.length; i++) {
+                document.getElementById(i+"value").textContent = stocks[i].value.toFixed(2);
+                document.getElementById(i+"owned").textContent = stocks[i].owned.toFixed(0);
+                document.getElementById(i+"owned_ai").textContent = stocks[i].aiowned.toFixed(0);
+                document.getElementById(i+"owned_ai2").textContent = stocks[i].ai2owned.toFixed(0);
+                document.getElementById(i+"max").textContent = stocks[i].maximum-(stocks[i].owned+stocks[i].aiowned+stocks[i].ai2owned);
+            }
+        }
+
+        var UpdateStockAI = function () {
+            aivalue = 0;
+            ai2value = 0;
+
+            for (var i = 0; i < stocks.length; i++) {
+                if (stocks[i].drift > 0.1) {
+                    AttemptStockExchangeAI2(5000, i)
+                }
+                else if (stocks[i].drift < -0.05) {
+                    AttemptStockExchangeAI2(-10000, i)
+                }
+                ai2value += stocks[i].value*stocks[i].ai2owned;
+            }
+
+            for (var i = 0; i < stocks.length; i++) {
+                if (stocks[i].drift > 0.6) {
+                    AttemptStockExchangeAI(1000, i)
+                }
+                else if (stocks[i].drift < -0.25) {
+                    AttemptStockExchangeAI(-2000, i)
+                }
+                aivalue += stocks[i].value*stocks[i].aiowned;
+            }
+
+            aivalue += moneyAI;
+            ai2value += moneyAI2;
+        }
+    </script>
+    <!-- ****  Bootstrap Feature submission **** -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        .stat_box {
+            background-color: white;
+            border: 1px solid black;
+            width: 20%;
+            text-align: center;
+            position: absolute;
+            top: 40%;
+            left: 40%;
+        }
+
+        body {
+            background-color: beige;
+            font-family: 'Courier Prime', monospace;
+        }
+
+        .c_hold {
+            position: absolute;
+            top:60%;
+            background-color: white;
+            border: solid 1px black;
+            left: 45%;
+            text-align: center;
+            padding: 5px;
+        }
+
+        #last_flip_hold {
+            font-weight: bold;
+        }
+
+        #stk_hold {
+            background-color: white;
+            border: 1px solid black;
+            width:90%;
+            position: absolute;
+            padding: 5px;
+            display: flex;
+            top:10%;
+            left:5%;
+            justify-content: space-around;
+        }
+    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="main">
+        <!-- ****  HTML Feature submission **** -->
+        <div id="delete_me">
+            <!-- ****  Bootstrap Feature submission **** -->
+            <div class="container p-5 m-5 bg-dark text-light">
+                <!-- ****  Bootstrap Feature submission **** -->
+                <h1 class="display-1">Greed.</h1>
+                <!-- ****  Bootstrap Feature submission **** -->
+                <button type="button" class="btn btn-primary" onclick="StartGame();">Succumb</button>
+            </div>
+        </div>
+        <!-- ****  HTML Feature submission **** -->
+        <div id="stat_box">
+            <!-- No data at start-->
+        </div>
+    </div>
+</body>
+</html>

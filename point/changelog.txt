@@ -1,3 +1,29 @@
+5t.10
+
+- added a password... but where?
+- added an upgrade related to that
+- new page unlocked!
+
+5t.9
+
+- getting close to releasing this on the main version, I just gotta get the late game upgrades in
+- added the remember the past upgrade
+- added a statis upgrade
+- added some more newslines
+- added a save incompatibility notifier
+
+5t.8
+
+- just added a save timer
+
+5t.7
+
+- added a statis system, much reworked
+- changed the unlock system for better quality of life
+- FINE, you can scroll the buy box
+- added a better title system
+- added a mass notification closing menu. :[
+
 5t.6
 
 - added a new part to the metageneration system

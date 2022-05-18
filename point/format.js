@@ -17,5 +17,25 @@ function ChangeNumber(id, num, format) {
     }
 }
 
-// from https://www.webtips.dev/webtips/javascript/how-to-clamp-numbers-in-javascript
-const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+function clamp (innum, min, max) {
+    var num = innum;
+    if (num > max) {
+        num = max;
+    }
+    else if (num < min) {
+        num = min;
+    }
+    return num;
+}
+
+function modulo (innumber, limit) {
+    var number = innumber;
+    var times = number.abs().div(limit).floor();
+    if (number.compare(limit) >= 0) {
+        number = number.plus(limit.neg().times(times));
+    }
+    else if (number.compare(0) < 0) {
+        number = number.plus(limit.times(times.plus(1)));
+    }
+    return number;
+}
