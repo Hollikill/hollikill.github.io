@@ -1,0 +1,63 @@
+<!Doctype html>
+<html>
+    <head>
+        <title>HeartCore Datapack</title>
+        <link id="pagestyle" rel="stylesheet" type="text/css" href="../css/light.css"/>
+        <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+        <script src="../javascript/subfstyle.js"></script>
+        <script src="../javascript/spoiler.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Varela+Round&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div style="position:sticky;top:0%;padding-bottom:100px;z-index:1">
+            <div style=position:absolute;background-color:var(--b);z-index:1;height:100px;width:142%;left:-21.3%;><p>
+                <div style="position: relative;width:90%;left:5%;">
+                    <span></span>
+                    <a class="navLink" style="float:left;" href="../html/index.html">Home</a>
+                    <a class="navLink" style="float:left;" href="../html/moreWorks.html">Projects</a>
+                    <a class="navLink" style="float:left;" href="../html/fullpagelist.html">More</a>
+                    <button onclick="switchStyle()" style="font-size:30px;" class="navLink">UI Mode</button>
+                </div>
+        
+                <hr style="position: absolute; bottom: 0%;left:5%;"/>
+            </p></div>
+        </div>
+        <h2 class="pageTitle">HeartCore Datapack</h2>
+
+        <div style="text-align:center">
+            <p><a href="../misc/HeartCore EXTRACT ME.zip">Download Link</a> (read installation instructions below)</p>
+        </div>
+        <div style="position:relative;" class="sidebyside">
+            <img src="../images/HeartCore.png" style="width:200px;height:200px;"/>
+            <p style="position:relative;width:85%;left: 5%">
+                HeartCore is a multiplayer-friendly semi-hardcore datapack designed to provide a fair experience between Hard and Hardcore difficulties. In HeartCore, each player has three lives, and lose 4 hearts with each life lost. However, by crafting an advanced golden apple referred to as a 'HeartCore', a player can regain a lost life. For recipes of each of the stages of a HeartCore, any player can use the <code>/trigger info</code> command in game. Players are set into spectator upon their third, and final, death.
+            </p>
+        </div>
+        <hr>
+        <div>
+            <h2>Datapack Recipes</h2>
+            <img src="https://media.forgecdn.net/attachments/463/892/crafting.png"/>
+        </div>
+        <hr>
+        <div>
+            <h2>Extra Commands</h2>
+            <p>
+                Operators can use <code>/scoreboard players set [​username] hardcore_deaths -1</code> to reset someone's lives.
+                <br>
+                <br>
+                Any player can use <code>/trigger info</code> in game to pull up this page.
+            </p>
+        </div>
+        <hr>
+        <div>
+            <h2>Installation Instructions</h2>
+            <p>
+                For singleplayer, place a copy of HeartCore_datapack.zip into the datapacks folder in your world, and place a copy of HeartCore_textures.zip in your resource packs folder and enable it.
+                <br>
+                <br>
+                If you are using this on a server, make sure the resource-pack line in server.properties looks like this: <code>resource-pack=hollikill.net/misc/HeartCore_textures.zip</code>. Additionally, make sure that HeartCore_datapack.zip is in the datapacks folder and enabled enabled by going in game on your server and typing <code>/datapack enable "HeartCore_datapack.zip"</code>
+            </p>
+        </div>
+        <div class="endofpage"></div>
+    </body>
+</html>

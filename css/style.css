@@ -103,3 +103,18 @@ button:hover {
 .endofpage {
     padding-bottom: 500px;
 }
+
+code {
+    transition:0.3s;
+    transition-timing-function: ease;
+    background-color: var(--f);
+    color: var(--f2);
+    padding: 0 5px;
+    border-left: 5px solid var(--l);
+}
+
+code:hover {
+    background-color: var(--f2);
+    color: var(--l2);
+    border-left: 5px solid var(--l2);
+}
