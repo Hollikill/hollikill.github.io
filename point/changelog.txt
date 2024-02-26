@@ -1,3 +1,7 @@
+0.4.8
+
+- fixed the description for the channel flow upgrade to be more informative.
+
 5t.10
 
 - added a password... but where?

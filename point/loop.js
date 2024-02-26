@@ -136,7 +136,7 @@ var LoadGamedata = (mode) => {
     CreateUnlockSettings();
     Navbar(curtab);
 
-    Notify("alert", "You can [ right-click + drag ] to re-arragne all these boxes!<br><br>Have fun playing!");
+    Notify("alert", "You can [ 🖱️ right-click + drag ] to re-arragne all these boxes!<br><br>Have fun playing!");
 }
 var SaveGamedata = () => {
     localStorage.setItem("savecodejson", JSON.stringify(gamedata));
