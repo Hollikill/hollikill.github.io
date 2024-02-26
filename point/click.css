@@ -1,5 +1,5 @@
 body {
-    background-color: white;
+    background-color: var(--b);
     font-family: 'PT Mono', monospace;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -7,13 +7,14 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    color:var(--f);
 }
 p {display: inline;}
 
 #pcount {font-weight: bold;}
 
 .pgenrate {
-    color: gray;
+    color: var(--f);
     display: inline;
 }
 
@@ -21,6 +22,7 @@ button {
     width: 100%;
     margin: 1em 0;
     height: 3em;
+    background-color: var(--b2);
 }
 button:hover {
     border-color: red;
@@ -28,7 +30,7 @@ button:hover {
 
 a {
     text-decoration: underline;
-    color: gray;
+    color: var(--f);
 }
 
 a:hover {
@@ -89,7 +91,7 @@ h1 {
 }
 
 #version {
-    color:gray;
+    color:var(--f);
     position: absolute;
     top: -0.5em;
     left: 0.5em;
@@ -103,7 +105,7 @@ h1 {
 }
 
 #logformatter {
-    background-color: lightgray;
+    background-color: var(--b2);
     width: 100%;
     height: 16.5em;
     padding: 0.5em;
@@ -117,7 +119,7 @@ h1 {
 
 .logtext:hover {
     color: red;
-    text-shadow: 1px 1px black;
+    text-shadow: 1px 1px var(--ts);
 }
 
 #loginstruct {
@@ -138,7 +140,7 @@ h1 {
 }
 
 #statisholder {
-    background-color: lightgray;
+    background-color: var(--b2);
     padding: 0.5em;
     text-align: center;
     overflow: hidden;
@@ -147,7 +149,7 @@ h1 {
 
 .scap:hover {
     color: cyan;
-    text-shadow: 1px 1px black;
+    text-shadow: 1px 1px var(--ts);
 }
 
 #statismod {
@@ -181,13 +183,13 @@ h1 {
 }
 
 .notify {
-    border: 1px solid black;
+    border: 1px solid var(--ts);
     position: absolute;
     top: 20%;
     width: 38%;
     left: 30%;
     padding: 1%;
-    background-color: lightgray;
+    background-color: var(--b);
     display: none;
 }
 
@@ -195,9 +197,9 @@ h1 {
     position: absolute;
     top: 0.1em;
     right: -2.5em;
-    background-color: lightgray;
+    background-color: var(--b);
     padding: 0.5%;
-    border: solid 1px black;
+    border: solid 1px var(--ts);
 }
 
 .notifyexit:hover {

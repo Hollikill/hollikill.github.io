@@ -46,6 +46,7 @@ var logviewable = true;
 var rviewable = true;
 var statviewable = true;
 var tempocolor = 0;
+var darkmode = false;
 
 // text details
 var pgennames = ["Point Generator", "PG Assembly Line", "Point Condensator", "Stem Cell Growth Lab", "Condenser Shrine", "Nanobot Mining Cluster", "Point Factort MK 1", "Nanobot Replication Chamber", "Codensation Synagogue", "Nanobot Dispersal Assembly", "Point Factory MK 2", "Nanobot Internal Condenser", "Hypercondenser Nanocluster", "Superdense Point Depositer", "Tension Generator", "Hypercondenser Supercube", "Point Factory MK 3", "Hyperdense Point Refractor", "4D Ubercondenser", "Alternate Nanobot Metastate", "Extradimensional UberCondenser", "Macro-alignment Compensator", "Uberdense Enigma Rotator", "Tension-Density Nanoweaver", "NanoExUCD Manager", "Hypertension Skimmer", "7D Nanobot Refinery", "Nanobot Merging Cloud", "Macro-alignment Distributer", "Extradense Alignment Amplifier", "Nanobot Vortex Chamber", "Subsurface Tension Refiner", "Density Collecter", "Hyperspace Density Refractor", "Megatension Supernet Recaster", "Arbitration Alignment Machine"];
@@ -627,5 +628,16 @@ var ToggleNotify = function(x) {
         for (var n of notifys) {
             n.style.display = "none";
         }
+    }
+}
+
+var ToggleDarkMode = function() {
+    if (darkmode) {
+        darkmode = false;
+        document.getElementById("pagestyle").setAttribute("href", "light.css")
+    }
+    else {
+        darkmode = true;
+        document.getElementById("pagestyle").setAttribute("href", "dark.css")
     }
 }
