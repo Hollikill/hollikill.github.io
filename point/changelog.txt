@@ -1,3 +1,8 @@
+0.4.9
+
+- fixed end screen not showing up
+- fixed some small font errors
+
 0.4.8
 
 - added a dark mode for ease of eyes

@@ -70,7 +70,7 @@ h1 {
 .unrainbow {
     background-image:
         linear-gradient(to right, red,orange,yellow,green,blue,indigo,violet);
-    text-shadow: 1px 0px black;
+    text-shadow: 1px 0px var(--ts2);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: rscroll 10s linear infinite;
@@ -78,7 +78,7 @@ h1 {
 .grainbow {
     background-image:
         linear-gradient(to right, black, white, black);
-    text-shadow: 1px 0px black;
+    text-shadow: 1px 0px var(--ts2);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: rscroll 10s linear infinite;

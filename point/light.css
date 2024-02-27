@@ -1,6 +1,8 @@
 :root {
     --b:white;
-    --f:gray;
+    --f:black;
     --b2:lightgray;
+    --b3:darkgray;
     --ts:black;
+    --ts2:black;
 }

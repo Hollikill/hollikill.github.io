@@ -509,7 +509,7 @@ var LogText = async function(text) {
     }
     else {
         logcolor = true;
-        logtext.style.backgroundColor = "lightgray";
+        logtext.style.backgroundColor = "var(--b3)";
     }
 
     // add to log
