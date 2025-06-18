@@ -143,3 +143,12 @@
 - disabled natural meta-gen
 - added boosting
 - gave shit past tier 2 names
+
+
+
+
+
+
+
+
+[incrementaldb_verification: Tetrasimplex]
