@@ -11,11 +11,18 @@ outputdir = "../html/"
 htmldir = os.path.dirname(os.path.realpath(__file__)) + "\\html"
 onlyfiles = [f for f in os.listdir(htmldir) if os.path.isfile(os.path.join(htmldir, f)) and f[-5:] == ".html"]
 htmlfiles = {}
+linkindicator = {}
 
 # load file contents into memory
 for file in onlyfiles:
     openedfile = open("html/"+file, 'r')
     htmlfiles[file[:-5]] = openedfile.read()
+    # check to see if a file is a replace file
+    if htmlfiles[file[:-5]].find("<??>") != -1:
+        linkindicator[file[:-5]] = True
+        htmlfiles[file[:-5]] = htmlfiles[file[:-5]][:htmlfiles[file[:-5]].find("<??>")]+htmlfiles[file[:-5]][htmlfiles[file[:-5]].find("<??>")+4:]
+    else:
+        linkindicator[file[:-5]] = False
 
 # replace link indicators in files
 # <??replace"example"> -> example.html contents
@@ -42,7 +49,7 @@ for file in onlyfiles:
             query = input("\ndisplay linked file? (y/n) ")
             if query.find("y") or query[:1] == "y":
                 print("\n", htmlfiles[file[:-5]])
-        if dooutput:
+        if dooutput and not linkindicator[file[:-5]]:
             os.makedirs(os.path.dirname(outputdir), exist_ok=True)
             output = open(outputdir+file, 'w')
             output.write(htmlfiles[file[:-5]])
