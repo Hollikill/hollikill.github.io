@@ -9,17 +9,16 @@
         <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Varela+Round&display=swap" rel="stylesheet">
     </head>
     <body>
-        <div style="position:sticky;top:0%;padding-bottom:100px;z-index:1">
-            <div style=position:absolute;background-color:var(--b);z-index:1;height:100px;width:142%;left:-21.3%;><p>
-                <div style="position: relative;width:90%;left:5%;">
+        <div class="menuBar">
+            <div class="subMenuBar"><p>
+                <div class="subSubMenuBar">
                     <span></span>
                     <a class="navLink" style="float:left;" href="../html/index.html">Home</a>
                     <a class="navLink" style="float:left;" href="../html/moreWorks.html">Projects</a>
-                    <a class="navLink" style="float:left;" href="../html/fullpagelist.html">More</a>
-                    <button onclick="switchStyle()" style="font-size:30px;" class="navLink">UI Mode</button>
+                    <button onclick="switchStyle()" class="navLink">UI Mode</button>
                 </div>
         
-                <hr style="position: absolute; bottom: 0%;left:5%;"/>
+                <hr class="sepSubSubMenuBar"/>
             </p></div>
         </div>
         <h2 class="pageTitle">Projects</h2>
@@ -30,6 +29,39 @@
         <hr/>
         <br/>
 
+
+        <div style="position:relative;" class="sidebyside">
+            <img src="https://raw.githubusercontent.com/Hollikill/YOMI-Hustle-modding/refs/heads/main/StyleModifiers%20Mod%20Resources/yomistylemodifierthumbnail.png" style="width:200px;height:200px;"/>
+            <p style="position:relative;width:85%;left: 5%">
+                <a href="https://github.com/Hollikill/YOMI-Hustle-modding" target="blank">YOMI Hustle Mods</a>
+                <br/><br/>
+                Two mods I made for YOMI Hustle. <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3591856808">StyleModifiers</a>, which lets you use an altered version of your opponent's style, and <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3585394092">Mirror+</a>, a fork of a mirror mod with additional config settings.
+            </p>
+        </div>
+        <br/>
+        <hr/>
+        <br/>
+        <div style="position:relative;" class="sidebyside">
+            <img src="../images/BreachingCoreCover.png" style="width:125px;height:200px;"/>
+            <p style="position:relative;width:90%;left: 5%">
+                <a href="https://www.royalroad.com/fiction/110565/breaching-core-serial-transmigration-daily" target="blank">Breaching Core: Serial Transmigration Daily</a>
+                <br/><br/>
+                An unfinished world-hopping web serial I've written.
+            </p>
+        </div>
+        <br/>
+        <hr/>
+        <br/>
+        <div style="position:relative;" class="sidebyside">
+            <p>
+                <a href="https://publish.obsidian.md/hollisterream-dnd" target="blank">DND Resources</a>
+                <br/><br/>
+                A link to some homebrew dnd spells, items, and settings.
+            </p>
+        </div>
+        <br/>
+        <hr/>
+        <br/>
         <div style="position:relative;" class="sidebyside">
             <img src="../images/panoramania.png" style="width:200px;height:200px;"/>
             <p style="position:relative;width:85%;left: 5%">
@@ -46,7 +78,7 @@
             <p style="position:relative;width:85%;left: 5%">
                 <a href="../point/game.html" target="blank">Point Game</a>
                 <br/><br/>
-                A incremetal game I made (and am making!) in my free time, for fun and to learn javascript. It's in early versions now, but people tell me it's already quite fun.
+                A incremetal game I made in my free time, for fun and to learn javascript. I'm no longer working on it, but it's still a fun ~1 hour experience.
             </p>
         </div>
         <br/>
@@ -57,28 +89,6 @@
                 <a href="../onepage/page.html" target="blank">Greed</a>
                 <br/><br/>
                 A nice little game about a small stock market and two other investors. The goal is to own every single stock, not to make the most money. (You can <i>try</i>, though)
-            </p>
-        </div>
-        <br/>
-        <hr/>
-        <br/>
-        <div style="position:relative;" class="sidebyside">
-            <img src="../images/spanish accents.png" style="width:192px;height:192px;border:8px solid var(--f)"/>
-            <p style="position:relative;width:85%;left: 5%">
-                <a href="../html/spacc.html">Easy Spanish Accents</a>
-                <br><br>
-                This program will let you type the spanish accents you need much, much easier! As you know if you've tried it, typing letters such as: á, é, í, ó, ú, ñ, ¡, ¿, etc. can be very difficult! It seems like none of the solutions listed online work at all... but this one simple program can fix all that.
-            </p>
-        </div>
-        <br/>
-        <hr/>
-        <br/>
-        <div style="position:relative;" class="sidebyside">
-            <img src="../images/wormhellthedescent.png" style="width:200px;height:200px;"/>
-            <p style="position:relative;width:85%;left: 5%">
-                <a href="../html/wormhell.html">WORMHELL</a>
-                <br><br>
-                An fake anthology of a fictional universe that I came up with. I might be a little biased, but I think it's pretty cool.
             </p>
         </div>
         <br/>
@@ -122,7 +132,7 @@
             <p style="position:relative;width:85%;left: 5%">
                 <a href="https://drive.google.com/file/d/1oZAsWXrofJ4HiMwyCNullr-KrwIWgR2e/view?usp=sharing" target="blank">Artifishal Intelligence</a>
                 <br/><br/>
-                A demonstration of basic artificial intelligence put inside a simulated 2D fish.
+                A game with the most technical definition of 'artificial intelligence'.
             </p>
         </div>
         <br/>
@@ -133,22 +143,13 @@
             <p style="position:relative;width:85%;left: 5%">
                 <a href="https://drive.google.com/open?id=19aG2jgCs5lZupx4diXSc4smMbYiRfJFM" target="blank">Caravan Sim Redux</a>
                 <br/><br/>
+                NOTE! This no longer seems to complile.. might be broken completely.
                 A remake of an earlier rougelike Caravan-hunting game set in a bleak nuclear wasteland, where you try to work your way across the land to a yet unknown, but certainly desirable destination. Thiis requires Python 3.7 to use.
             </p>
         </div>
-        <br/>
         <hr/>
-        <br/>
-        <div style="position:relative;" class="sidebyside">
-            <img src="https://raw.githubusercontent.com/Hollikill/Asteroik/master/icon.png" style="width:200px;height:200px"/>
-            <p style="position:relative;width:85%;left: 5%">
-                <a href="https://marketplace.visualstudio.com/items?itemName=hollikill.asteroik" target="blank">Asteroik</a>
-                <br/><br/>
-                A Visual Studio Code color theme, personally styled by me to help increase coding potential.
-                <br><br>
-                <i>P.S. Looking back on this years later, it is so incredibly dum. Guess I just liked the thought of having a theme. Please don't use this and use something like <a href="https://marketplace.visualstudio.com/items?itemName=tuto193.monokai-vibrant-operator">Monokai Vibrant</a> instead.</i>
-            </p>
+        <div style="text-align: center; padding-top: 100pt; padding-bottom: 15pt;">
+            <p><a href="../html/contact.html">Contact Hollister</a> | <a href="../html/fullpagelist.html">Full Page List</a></p>
         </div>
-        <div class="endofpage"></div>
     </body>
 </html>

@@ -1,10 +1,11 @@
 body {
-    padding-right: 5%;
+    padding-left: 15%;
+    padding-right: 15%;
     padding-top: 0px;
     text-align: left;
     background-color: var(--b);
     color: var(--f);
-    font-family: 'Courier New', monospace;
+    font-family: 'Varela Round', sans-serif;
     line-height: 1.5;
 }
 
@@ -22,7 +23,7 @@ h1 {
 }
 h2 {font-size:35px;}
 
-h1,h2,h3,h4,h5,h6 {user-select: none;}
+h1,h2,h3,h4,h5,h6 {text-align: center;user-select: none;}
 
 p {
     font-size: 25px;
@@ -32,7 +33,6 @@ hr {
     border-style: solid;
     border-width: 1px;
     color:var(--f2);
-    padding-left: -50pt;
     width:90%;
     position:relative;
     z-index:-1;
@@ -41,10 +41,9 @@ hr {
 button {
     outline: none;
     color:var(--l);
-    font-family: 'Courier New', monospace;
+    font-family: 'Varela Round', sans-serif;
     border:none;
 }
-
 button:hover {
     color:var(--l2);
     
@@ -53,7 +52,7 @@ button:hover {
 .navLink {
     text-align:center;
     font-size:35px;
-    width:33.3%;
+    width:25%;
     height:150%;
     text-decoration: none;
     user-select: none;
@@ -70,7 +69,6 @@ button:hover {
     flex-wrap: nowrap;
     justify-content: left;
     z-index:0;
-    padding-left: 5%;
 }
 
 .pageTitle {
@@ -105,34 +103,6 @@ button:hover {
 
 .endofpage {
     padding-bottom: 500px;
-}
-
-.menuBar {
-    position:sticky;
-    top:0%;
-    padding: 0px;
-    padding-bottom:100px;
-    z-index:1;
-}
-
-.subMenuBar {
-    position:absolute;
-    background-color:var(--b);
-    z-index:1;
-    height:100px;
-    width:100%;
-}
-
-.subSubMenuBar {
-    position: relative;
-    width:90%;
-    left:5%;
-}
-
-.sepSubSubMenuBar {
-    position: absolute;
-    bottom: 0%;
-    left:5%;
 }
 
 code {

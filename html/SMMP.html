@@ -9,17 +9,16 @@
         <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Varela+Round&display=swap" rel="stylesheet">
     </head>
     <body>
-        <div style="position:sticky;top:0%;padding-bottom:100px;z-index:1">
-            <div style=position:absolute;background-color:var(--b);z-index:1;height:100px;width:142%;left:-21.3%;><p>
-                <div style="position: relative;width:90%;left:5%;">
+        <div class="menuBar">
+            <div class="subMenuBar"><p>
+                <div class="subSubMenuBar">
                     <span></span>
                     <a class="navLink" style="float:left;" href="../html/index.html">Home</a>
                     <a class="navLink" style="float:left;" href="../html/moreWorks.html">Projects</a>
-                    <a class="navLink" style="float:left;" href="../html/fullpagelist.html">More</a>
-                    <button onclick="switchStyle()" style="font-size:30px;" class="navLink">UI Mode</button>
+                    <button onclick="switchStyle()" class="navLink">UI Mode</button>
                 </div>
         
-                <hr style="position: absolute; bottom: 0%;left:5%;"/>
+                <hr class="sepSubSubMenuBar"/>
             </p></div>
         </div>
         <h2 class="pageTitle">SMMP: Simple Minecraft Mod Profiles</h2>
@@ -51,6 +50,9 @@
                 If you want to pin SMMP to your taskbar, you have to edit the properties of the <b>SMMP Loader</b> shortcut. Right click the shortcut, select properties, then select the Target</b> field. Add <b>'C:\Windows\explorer.exe '</b> to the beginning of the field. For example, if Target previously had <code>"C:\Users\Hollikill\Desktop\SMMP\Simple Minecraft Mod Profiles.bat"</code>, it should now have <code>C:\Windows\explorer.exe "C:\Users\Hollikill\Desktop\SMMP\Simple Minecraft Mod Profiles.bat"</code>. After this is done, select <b>OK</b> at the bottom of the window. You should now be able to right click the shortcut and select <b>pin to taskbar</b>.
             </p>
         </div>
-        <div class="endofpage"></div>
+        <hr/>
+        <div style="text-align: center; padding-top: 100pt; padding-bottom: 15pt;">
+            <p><a href="../html/contact.html">Contact Hollister</a> | <a href="../html/fullpagelist.html">Full Page List</a></p>
+        </div>
     </body>
 </html>

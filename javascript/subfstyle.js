@@ -1,6 +1,6 @@
 if (getCookie("style") != "light" && getCookie("style") != "dark") {
-    swapStyleSheet("../css/light.css")
-    document.cookie = "style=light";
+    swapStyleSheet("../css/dark.css")
+    document.cookie = "style=dark";
 }
 else {
     swapStyleSheet("../css/"+getCookie("style")+".css")
