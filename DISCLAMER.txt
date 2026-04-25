@@ -1,0 +1,7 @@
+AI use disclaimer:
+I fucking hate formatting websites, I think it is a hellish mess of uselessness. However, one thing AI is good at is navigating the endless layers of requirements to make a website. Someone bought me a claude subscription, so I used it to make some formatting changes to my website.
+
+Listed below is each commit with AI changes, and the changes made:
+
+Commit 1, [4/25/2026]
+	changed the css/style.css and _source/html/menubar.html snippet to make the formatting look better. Mostly this was correcting spacing and padding, and ensuring the site still looked good on mobile.

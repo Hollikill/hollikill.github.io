@@ -1,76 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 22.5px;
+}
+
 body {
-    padding-right: 5%;
-    padding-top: 0px;
+    padding: 1.5rem 2rem;
+    padding-top: 0;
     text-align: left;
     background-color: var(--b);
     color: var(--f);
-    font-family: 'Courier New', monospace;
-    line-height: 1.5;
+    font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    line-height: 1.6;
+    word-break: break-word;
+    overflow-x: hidden;
 }
 
-a{
-    color:var(--l);
-    transition:0.3s;
-    transition-timing-function: ease;
+a {
+    color: var(--l);
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 a:hover {
-    color:var(--l2);
+    color: var(--l2);
 }
 
-h1 {
-    font-size:70px;
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.6;
+    color: var(--f);
+    user-select: none;
+    margin-bottom: 0.1em;
 }
-h2 {font-size:35px;}
-
-h1,h2,h3,h4,h5,h6 {user-select: none;}
 
 p {
-    font-size: 25px;
+    padding-left: 2rem;
+    margin: 0;
+    color: var(--f);
 }
 
 hr {
-    border-style: solid;
-    border-width: 1px;
-    color:var(--f2);
-    padding-left: -50pt;
-    width:90%;
-    position:relative;
-    z-index:-1;
+    border: none;
+    border-top: 1px solid var(--f2);
+    position: relative;
+    z-index: -1;
+    width: 100vw;
+    margin-left: calc(-1 * (100vw - 100%) / 2);
+    margin-right: calc(-1 * (100vw - 100%) / 2);
+    margin-top: 0.6rem;
+    margin-bottom: 0.6rem;
 }
 
 button {
     outline: none;
-    color:var(--l);
-    font-family: 'Courier New', monospace;
-    border:none;
+    color: var(--l);
+    font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+    font-size: inherit;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+button:hover {
+    color: var(--l2);
 }
 
-button:hover {
-    color:var(--l2);
-    
+code {
+    display: inline-block;
+    background-color: var(--f);
+    color: var(--f2);
+    padding: 0 5px;
+    border-left: 5px solid var(--l);
+    font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+    word-break: break-all;
+    transition: background-color 0.3s ease, color 0.3s ease, border-left-color 0.3s ease;
+}
+code:hover {
+    background-color: var(--f2);
+    color: var(--l2);
+    border-left: 5px solid var(--l2);
+}
+
+.menuBar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding-bottom: 60px;
+}
+
+.subMenuBar {
+    position: absolute;
+    background-color: var(--bm);
+    z-index: 10;
+    height: 60px;
+    width: 100vw;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 1px 0 var(--f2);
+}
+
+.subSubMenuBar {
+    position: relative;
+    width: 90%;
+    left: 5%;
+    display: flex;
+    align-items: center;
+    height: 100%;
 }
 
 .navLink {
-    text-align:center;
-    font-size:35px;
-    width:33.3%;
-    height:150%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: clamp(0.85rem, 2.5vw, 1rem);
+    width: 33.3%;
+    height: 60px;
     text-decoration: none;
     user-select: none;
-    transition:0.3s;
-    transition-timing-function: ease;
-    background-color:var(--b);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: var(--bm);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 0.5em;
+    font-family: 'Courier Prime', 'Courier New', Courier, monospace;
 }
 .navLink:hover {
-    background-color:var(--f2);
+    background-color: var(--f2);
 }
 
 .sidebyside {
-    display:flex;
-    flex-wrap: nowrap;
-    justify-content: left;
-    z-index:0;
-    padding-left: 5%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 1.2rem;
+    z-index: 0;
+    padding-left: 0;
+}
+
+.sidebyside img {
+    max-width: 200px;
+    flex-shrink: 0;
+    align-self: flex-start;
+}
+
+.sidebyside p {
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto !important;
+    left: 0 !important;
+    position: static !important;
+    padding-left: 2rem;
 }
 
 .pageTitle {
@@ -83,14 +174,14 @@ button:hover {
     padding: 18px 12px 6px 13px;
     background-color: var(--f2);
     color: var(--f2);
-    transition:0.3s;
-    transition-timing-function: ease;
+    transition: all 0.3s ease;
     user-select: none;
+    cursor: pointer;
 }
 .spoiler_clicked {
     border-radius: 15px;
-    font-size: 95%;
-    padding: 0% 10px 0% 10px;
+    font-size: 1rem;
+    padding: 0.5em 10px;
     background-color: var(--f2);
     color: var(--f);
     user-select: none;
@@ -101,51 +192,23 @@ button:hover {
     margin-left: auto;
     margin-right: auto;
     max-width: 100%;
+    height: auto;
 }
 
 .endofpage {
-    padding-bottom: 500px;
+    padding-bottom: clamp(100px, 30vw, 500px);
 }
 
-.menuBar {
-    position:sticky;
-    top:0%;
-    padding: 0px;
-    padding-bottom:100px;
-    z-index:1;
-}
+@media (max-width: 600px) {
+    body {
+        padding: 1rem;
+        padding-top: 0;
+    }
 
-.subMenuBar {
-    position:absolute;
-    background-color:var(--b);
-    z-index:1;
-    height:100px;
-    width:100%;
-}
+    .subMenuBar { height: 50px; }
+    .navLink { height: 50px; font-size: clamp(0.75rem, 3.5vw, 0.9rem); }
+    .menuBar { padding-bottom: 80px; }
 
-.subSubMenuBar {
-    position: relative;
-    width:90%;
-    left:5%;
-}
-
-.sepSubSubMenuBar {
-    position: absolute;
-    bottom: 0%;
-    left:5%;
-}
-
-code {
-    transition:0.3s;
-    transition-timing-function: ease;
-    background-color: var(--f);
-    color: var(--f2);
-    padding: 0 5px;
-    border-left: 5px solid var(--l);
-}
-
-code:hover {
-    background-color: var(--f2);
-    color: var(--l2);
-    border-left: 5px solid var(--l2);
+    .sidebyside { flex-direction: column; }
+    .sidebyside img { max-width: 100% !important; height: auto !important; }
 }

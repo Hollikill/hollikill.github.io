@@ -1,0 +1,151 @@
+body {
+    padding-right: 5%;
+    padding-top: 0px;
+    text-align: left;
+    background-color: var(--b);
+    color: var(--f);
+    font-family: 'Courier New', monospace;
+    line-height: 1.5;
+}
+
+a{
+    color:var(--l);
+    transition:0.3s;
+    transition-timing-function: ease;
+}
+a:hover {
+    color:var(--l2);
+}
+
+h1 {
+    font-size:70px;
+}
+h2 {font-size:35px;}
+
+h1,h2,h3,h4,h5,h6 {user-select: none;}
+
+p {
+    font-size: 25px;
+}
+
+hr {
+    border-style: solid;
+    border-width: 1px;
+    color:var(--f2);
+    padding-left: -50pt;
+    width:90%;
+    position:relative;
+    z-index:-1;
+}
+
+button {
+    outline: none;
+    color:var(--l);
+    font-family: 'Courier New', monospace;
+    border:none;
+}
+
+button:hover {
+    color:var(--l2);
+    
+}
+
+.navLink {
+    text-align:center;
+    font-size:35px;
+    width:33.3%;
+    height:150%;
+    text-decoration: none;
+    user-select: none;
+    transition:0.3s;
+    transition-timing-function: ease;
+    background-color:var(--b);
+}
+.navLink:hover {
+    background-color:var(--f2);
+}
+
+.sidebyside {
+    display:flex;
+    flex-wrap: nowrap;
+    justify-content: left;
+    z-index:0;
+    padding-left: 5%;
+}
+
+.pageTitle {
+    padding-bottom: 5%;
+}
+
+.spoiler {
+    border-radius: 15px;
+    font-size: 0px;
+    padding: 18px 12px 6px 13px;
+    background-color: var(--f2);
+    color: var(--f2);
+    transition:0.3s;
+    transition-timing-function: ease;
+    user-select: none;
+}
+.spoiler_clicked {
+    border-radius: 15px;
+    font-size: 95%;
+    padding: 0% 10px 0% 10px;
+    background-color: var(--f2);
+    color: var(--f);
+    user-select: none;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+}
+
+.endofpage {
+    padding-bottom: 500px;
+}
+
+.menuBar {
+    position:sticky;
+    top:0%;
+    padding: 0px;
+    padding-bottom:100px;
+    z-index:1;
+}
+
+.subMenuBar {
+    position:absolute;
+    background-color:var(--b);
+    z-index:1;
+    height:100px;
+    width:100%;
+}
+
+.subSubMenuBar {
+    position: relative;
+    width:90%;
+    left:5%;
+}
+
+.sepSubSubMenuBar {
+    position: absolute;
+    bottom: 0%;
+    left:5%;
+}
+
+code {
+    transition:0.3s;
+    transition-timing-function: ease;
+    background-color: var(--f);
+    color: var(--f2);
+    padding: 0 5px;
+    border-left: 5px solid var(--l);
+}
+
+code:hover {
+    background-color: var(--f2);
+    color: var(--l2);
+    border-left: 5px solid var(--l2);
+}
