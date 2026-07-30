@@ -2,10 +2,12 @@ import html
 import os
 import re
 import shutil
+import json
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, "output")
 SOURCE_CSS = os.path.join(SCRIPT_DIR, "source.css")
+CUSTOM_MARKDOWN = os.path.join(SCRIPT_DIR, "custom_markdown.json")
 
 DEFAULT_CSS = """
 :root{
@@ -109,6 +111,75 @@ hr{
 }
 """
 
+def load_custom_markdown():
+    if not os.path.exists(CUSTOM_MARKDOWN):
+        return []
+
+    with open(CUSTOM_MARKDOWN, encoding="utf8") as f:
+        data = json.load(f)
+
+    rules = []
+
+    for rule in data:
+        detect = rule.get("detection", {})
+        replace = rule.get("replacement", {})
+
+        prefix = detect.get("prefix")
+        suffix = detect.get("suffix")
+
+        if prefix is None or suffix is None:
+            continue
+
+        rules.append({
+            "detect_prefix": prefix,
+            "detect_suffix": suffix,
+            "replace_prefix": replace.get("prefix", ""),
+            "replace_suffix": replace.get("suffix", "")
+        })
+
+    return rules
+
+def apply_custom_markdown(line, rules):
+    for rule in rules:
+
+        p = rule["detect_prefix"]
+        s = rule["detect_suffix"]
+
+        start = 0
+
+        while True:
+
+            a = line.find(p, start)
+
+            if a == -1:
+                break
+
+            b = line.find(s, a + len(p))
+
+            if b == -1:
+                break
+
+            inside = line[
+                a + len(p):
+                b
+            ]
+
+            line = (
+                line[:a]
+                + rule["replace_prefix"]
+                + inside
+                + rule["replace_suffix"]
+                + line[b + len(s):]
+            )
+
+            start = (
+                a
+                + len(rule["replace_prefix"])
+                + len(inside)
+                + len(rule["replace_suffix"])
+            )
+
+    return line
 
 def build_page_index(root):
     """
@@ -161,8 +232,10 @@ def make_css():
         f.write(css)
 
 
-def inline_markup(text, current_output, page_index):
+def inline_markup(text, current_output, page_index, custom_markdown):
     text = html.escape(text)
+
+    text = apply_custom_markdown(text, custom_markdown)
 
     # page hyperlinks
     def make_page_link(page, alias=None):
@@ -231,7 +304,7 @@ def inline_markup(text, current_output, page_index):
     return text
 
 
-def parse_markdown(path, output_file, page_index):
+def parse_markdown(path, output_file, page_index, custom_markdown):
     with open(path, encoding="utf8") as f:
         lines = f.readlines()
 
@@ -250,7 +323,7 @@ def parse_markdown(path, output_file, page_index):
         m = re.match(r"\[\^(\d+)\]:\s*(.*)", line)
 
         if m:
-            footnotes[m.group(1)] = inline_markup(m.group(2), output_file, page_index)
+            footnotes[m.group(1)] = inline_markup(m.group(2), output_file, page_index, custom_markdown)
             continue
 
         line = line.rstrip("\n")
@@ -274,6 +347,7 @@ def parse_markdown(path, output_file, page_index):
                     line[1:].strip(),
                     output_file,
                     page_index,
+                    custom_markdown
                 )
             )
             continue
@@ -299,11 +373,11 @@ def parse_markdown(path, output_file, page_index):
         if h:
             level = len(h.group(1))
             html_lines.append(
-                f"<h{level}>{inline_markup(h.group(2), output_file, page_index)}</h{level}>"
+                f"<h{level}>{inline_markup(h.group(2), output_file, page_index, custom_markdown)}</h{level}>"
             )
             continue
 
-        html_lines.append("<p>" + inline_markup(line, output_file, page_index) + "</p>")
+        html_lines.append("<p>" + inline_markup(line, output_file, page_index, custom_markdown) + "</p>")
 
     if in_blockquote:
         html_lines.append(
@@ -377,6 +451,7 @@ def main():
     inp = os.path.abspath(inp)
 
     page_index = build_page_index(inp)
+    custom_markdown = load_custom_markdown()
 
     if os.path.exists(OUTPUT_DIR):
         shutil.rmtree(OUTPUT_DIR)
@@ -405,7 +480,8 @@ def main():
                     parse_markdown(
                         src,
                         dst,
-                        page_index
+                        page_index,
+                        custom_markdown
                     )
                 )
 

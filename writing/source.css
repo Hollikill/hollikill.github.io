@@ -1,3 +1,10 @@
 :root {
     --highlight:#97f98a
 }
+
+.readable-quote {
+    background-color: #111111;
+    color: #ddccbb;
+    padding: 2px;
+    border-radius: 0.2rem;
+}

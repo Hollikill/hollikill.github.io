@@ -8,5 +8,15 @@
             "prefix": "<span style=\"color: #ff0000;\">",
             "suffix": "</span>"
         }
+    },
+    {
+        "detection": {
+        "prefix": "&quot;",
+        "suffix": "&quot;"
+        },
+        "replacement": {
+            "prefix": "<span class=\"readable-quote\">&quot;",
+            "suffix": "&quot;</span>"
+        }
     }
 ]
