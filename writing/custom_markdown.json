@@ -1,0 +1,12 @@
+[
+    {
+        "detection": {
+        "prefix": "~={red}",
+        "suffix": "=~"
+        },
+        "replacement": {
+            "prefix": "<span style=\"color: #ff0000;\">",
+            "suffix": "</span>"
+        }
+    }
+]
