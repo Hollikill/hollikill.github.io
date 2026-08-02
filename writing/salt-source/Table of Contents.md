@@ -10,4 +10,4 @@ Click [[0.1 Preface|here]] to begin the story from the very start
 07/24/2026 [[0.1 Preface]]
 
 07/25/2026 [[1.1 Leaving Home]]
---/--/---- [[1.2 Arrival]]
+08/02/2026 [[1.2 Arrival]]

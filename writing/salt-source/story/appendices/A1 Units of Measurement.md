@@ -13,7 +13,13 @@ Units of time larger than a year are the same as the metric system
 **Pass**
 	1/10 of a year, a period of 6 weeks
 **Week**
-	1/6 of a pass, a period of 6 days
+	1/6 of a pass, a period of 6 days. In order:
+	1. Mahlday
+	2. Torday
+	3. Walesday
+	4. Felday
+	5. Braalday
+	6. Salzday
 **Day**
 	A single light-dark cycle of the sun
 	1/6 of a week, a period of 12 bells
