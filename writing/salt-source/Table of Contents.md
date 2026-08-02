@@ -1,3 +1,6 @@
+---
+Perspective: Navigation
+---
 Click [[0.1 Preface|here]] to begin the story from the very start
 
 ## Appendices

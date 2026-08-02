@@ -8,6 +8,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, "output")
 SOURCE_CSS = os.path.join(SCRIPT_DIR, "source.css")
 CUSTOM_MARKDOWN = os.path.join(SCRIPT_DIR, "custom_markdown.json")
+CUSTOM_RULES = os.path.join(SCRIPT_DIR, "custom_rules.json")
 
 DEFAULT_CSS = """
 :root{
@@ -36,6 +37,13 @@ body{
     letter-spacing: 0.05rem;
     word-spacing: 0.2rem;
     line-height: 1.5rem;
+}
+
+.page{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    gap:2rem;
 }
 
 main{
@@ -109,7 +117,141 @@ hr{
     border-top:2px solid var(--separators);
     margin:2em 0;
 }
+
+.property-widget{
+    position:fixed;
+
+    top:5em;
+
+    right:calc((100vw - var(--max-width))/2 - 20rem);
+
+    width:16rem;
+
+    background: var(--separators);
+    border: 3px solid var(--highlight);
+    border-radius: 3px;
+    padding:0.75rem;
+    box-sizing:border-box;
+}
+
+.property-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:1rem;
+
+    margin-bottom:0.35rem;
+}
+
+.property-row div:first-child{
+
+    text-align:left;
+    font-weight:bold;
+}
+
+.property-row div:last-child{
+
+    text-align:right;
+}
+
+@media (max-width:1328px){
+    .property-widget{
+        position:static;
+        transform:none;
+        width:auto;
+        max-width:var(--max-width);
+        margin:0 auto 2rem auto;
+    }
+}
 """
+
+def load_custom_rules():
+    if not os.path.exists(CUSTOM_RULES):
+        return []
+
+    with open(CUSTOM_RULES, encoding="utf8") as f:
+        return json.load(f)
+
+def extract_properties(lines):
+    properties = {}
+
+    if not lines or lines[0].strip() != "---":
+        return properties, lines
+
+    end = None
+
+    for i in range(1, len(lines)):
+        if lines[i].strip() == "---":
+            end = i
+            break
+
+    if end is None:
+        return properties, lines
+
+    for line in lines[1:end]:
+        if ":" not in line:
+            continue
+
+        k, v = line.split(":", 1)
+
+        v = v.strip()
+
+        if len(v) >= 2 and (
+            (v[0] == '"' and v[-1] == '"') or
+            (v[0] == "'" and v[-1] == "'")
+        ):
+            v = v[1:-1]
+
+        properties[k.strip()] = v
+
+    return properties, lines[end + 1:]
+
+def process_custom_rules(properties, rules):
+    css = {}
+    widget = []
+
+    for rule in rules:
+
+        key = rule.get("key")
+
+        if key not in properties:
+            continue
+
+        value = properties[key]
+
+        action = rule.get("action", {})
+        mapping = action.get("value")
+
+        if isinstance(mapping, dict):
+
+            exclusive = (
+                mapping.get("type", "").lower() == "exclusive"
+            )
+
+            if value in mapping:
+                value = mapping[value]
+
+            elif exclusive:
+                # Value wasn't mapped and exclusive mode is enabled.
+                # Don't perform this action.
+                continue
+
+        t = action.get("type")
+
+        if t == "css value":
+
+            name = action.get("name")
+
+            if name:
+                css[name] = value
+
+        elif t == "widget":
+
+            widget.append((key, value))
+
+    return css, widget
 
 def load_custom_markdown():
     if not os.path.exists(CUSTOM_MARKDOWN):
@@ -304,9 +446,56 @@ def inline_markup(text, current_output, page_index, custom_markdown):
     return text
 
 
-def parse_markdown(path, output_file, page_index, custom_markdown):
+def parse_markdown(path, output_file, page_index, custom_markdown, custom_rules):
     with open(path, encoding="utf8") as f:
         lines = f.readlines()
+
+########################################
+    with open(path, encoding="utf8") as f:
+        lines = f.readlines()
+
+    properties, lines = extract_properties(lines)
+
+    css_overrides, widget = process_custom_rules(
+        properties,
+        custom_rules
+    )
+
+    page_css = ""
+
+    if css_overrides:
+
+        page_css = (
+            "<style>\n"
+            ":root{\n"
+        )
+
+        for name, value in css_overrides.items():
+            page_css += f"--{name}:{value};\n"
+
+        page_css += "}\n</style>"
+
+    widget_html = ""
+
+    if widget:
+
+        rows = []
+
+        for name, value in widget:
+
+            rows.append(f"""
+    <div class="property-row">
+    <div>{html.escape(name)}</div>
+    <div>{html.escape(value)}</div>
+    </div>
+    """)
+
+        widget_html = f"""
+    <aside class="property-widget">
+    {''.join(rows)}
+    </aside>
+    """
+########################################
 
     title = os.path.splitext(os.path.basename(path))[0]
 
@@ -433,8 +622,10 @@ def parse_markdown(path, output_file, page_index, custom_markdown):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+{page_css}
 </head>
 <body>
+{widget_html}
 <main>
 {os.linesep.join(html_lines)}
 </main>
@@ -452,6 +643,7 @@ def main():
 
     page_index = build_page_index(inp)
     custom_markdown = load_custom_markdown()
+    custom_rules = load_custom_rules()
 
     if os.path.exists(OUTPUT_DIR):
         shutil.rmtree(OUTPUT_DIR)
@@ -481,7 +673,8 @@ def main():
                         src,
                         dst,
                         page_index,
-                        custom_markdown
+                        custom_markdown,
+                        custom_rules
                     )
                 )
 

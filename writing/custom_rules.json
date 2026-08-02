@@ -1,0 +1,56 @@
+[
+    {
+        "key":"Demon Level",
+        "action":{
+            "type":"widget",
+            "value":{
+                "1":"imp",
+                "2":"demon",
+                "3":"greater demon",
+                "4":"demon lord",
+                "5":"archdemon"
+            }
+        }
+    },
+    {
+        "key":"Perspective",
+        "action":{
+            "type":"css value",
+            "name":"highlight",
+            "value": {
+                "Edward": "#97f98a",
+                "Excerpt": "#164DB4",
+                "Appendix": "#C46923",
+                "Navigation": "#59BED8",
+                "Unfinished": "#ffa000"
+            }
+        }
+    },
+    {
+        "key":"Perspective",
+        "action":{
+            "type":"css value",
+            "name":"background",
+            "value": {
+                "Edward": "#262626",
+                "Excerpt": "#1E1F2C",
+                "Appendix": "#362E28",
+                "Navigation": "#5A5A5A",
+                "Unfinished": "#4e0202"
+            }
+        }
+    }
+    ,
+    {
+        "key":"Perspective",
+        "action":{
+            "type":"css value",
+            "name":"text",
+            "value": {
+                "type": "exclusive",
+                "Navigation": "#E0E0E0",
+                "Unfinished": "#e44444"
+            }
+        }
+    }
+]
