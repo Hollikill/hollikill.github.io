@@ -11,3 +11,4 @@ Click [[0.1 Preface|here]] to begin the story from the very start
 
 07/25/2026 [[1.1 Leaving Home]]
 08/02/2026 [[1.2 Arrival]]
+08/02/2026 [[E.1 Utopia]]

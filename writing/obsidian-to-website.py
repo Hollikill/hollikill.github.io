@@ -15,6 +15,7 @@ DEFAULT_CSS = """
     --background:#262626;
     --text:#c5b8a1;
     --highlight:#d35645;
+    --quote-bg: #4e1d17;
     --dim:#9e9e9e;
     --code-background:#202020;
     --code-text:#6c99bb;
@@ -57,13 +58,16 @@ p {
     tab-size: var(--tab-width);
 }
 
-h1,
 h2,
 h3,
 h4,
 h5,
 h6{
     margin: var(--heading-gap) 0 var(--paragraph-gap) 0;
+}
+
+h1 {
+    margin: var(--heading-gap) 0 calc(2 * var(--paragraph-gap)) 0;
 }
 
 a{
@@ -80,6 +84,9 @@ blockquote{
     padding-left:1em;
     margin:0;
     color:var(--text);
+    background: var(--quote-bg);
+    border-radius: 3px;
+    padding: 0.5em 1em;
 }
 
 .footnotes{

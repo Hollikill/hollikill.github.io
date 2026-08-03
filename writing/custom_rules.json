@@ -30,6 +30,19 @@
         "key":"Perspective",
         "action":{
             "type":"css value",
+            "name":"quote-bg",
+            "value": {
+                "type": "exclusive",
+                "Edward": "#263724",
+                "Excerpt": "#101f3d",
+                "Unfinished": "#47320f"
+            }
+        }
+    },
+    {
+        "key":"Perspective",
+        "action":{
+            "type":"css value",
             "name":"background",
             "value": {
                 "Edward": "#262626",
