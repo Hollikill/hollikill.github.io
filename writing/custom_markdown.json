@@ -1,8 +1,8 @@
 [
     {
         "detection": {
-        "prefix": "~={red}",
-        "suffix": "=~"
+            "prefix": "~={red}",
+            "suffix": "=~"
         },
         "replacement": {
             "prefix": "<span style=\"color: #ff0000;\">",
@@ -11,12 +11,22 @@
     },
     {
         "detection": {
-        "prefix": "&quot;",
-        "suffix": "&quot;"
+            "prefix": "&quot;",
+            "suffix": "&quot;"
         },
         "replacement": {
             "prefix": "<span class=\"readable-quote\">&quot;",
             "suffix": "&quot;</span>"
+        }
+    },
+    {
+        "detection": {
+            "prefix": "{ct{",
+            "suffix": "}ct}"
+        },
+        "replacement": {
+            "prefix": "<span class=\"cent-align\">",
+            "suffix": "</span>"
         }
     }
 ]

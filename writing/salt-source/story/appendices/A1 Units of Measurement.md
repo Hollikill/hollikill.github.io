@@ -37,4 +37,4 @@ Units of time larger than a year are the same as the metric system
 
 Units of time smaller than a section are only really relevant in atomic alchemy. Atomic alchemy uses its own variable turn-based system of time, where a turn can vary based on the type of transmutation engine and current configuration.
 
-[[Table of Contents|Index]]
+{ct{[[Table of Contents|Index]]}ct}
