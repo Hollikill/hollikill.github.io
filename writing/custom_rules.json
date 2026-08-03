@@ -21,7 +21,7 @@
                 "Edward": "#97f98a",
                 "Excerpt": "#164DB4",
                 "Appendix": "#C46923",
-                "Navigation": "#59BED8",
+                "Navigation": "#00bfff",
                 "Unfinished": "#ffa000"
             }
         }
@@ -48,7 +48,7 @@
                 "Edward": "#262626",
                 "Excerpt": "#1E1F2C",
                 "Appendix": "#362E28",
-                "Navigation": "#5A5A5A",
+                "Navigation": "#000000",
                 "Unfinished": "#4e0202"
             }
         }
@@ -61,7 +61,7 @@
             "name":"text",
             "value": {
                 "type": "exclusive",
-                "Navigation": "#E0E0E0",
+                "Navigation": "#fffeeb",
                 "Unfinished": "#e44444"
             }
         }

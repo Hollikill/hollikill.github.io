@@ -12,3 +12,39 @@
 p:has(span.cent-align) {
     text-align: center;
 }
+
+hr {
+    border: 0;
+    height: 12px;
+
+    background-image:
+        linear-gradient(
+            to right,
+            transparent,
+            var(--separators),
+            transparent
+        );
+
+    background-repeat: no-repeat;
+    background-size: 100% 1px;
+    background-position: top;
+
+    box-shadow: inset 0 12px 12px -12px var(--separators);
+
+    -webkit-mask-image: linear-gradient(
+        to right,
+        transparent,
+        black 15%,
+        black 85%,
+        transparent
+    );
+    mask-image: linear-gradient(
+        to right,
+        transparent,
+        black 15%,
+        black 85%,
+        transparent
+    );
+
+    margin: 0.4em 2em 0.2em;
+}
