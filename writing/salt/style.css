@@ -173,3 +173,7 @@ hr{
     padding: 2px;
     border-radius: 0.2rem;
 }
+
+p:has(span.cent-align) {
+    text-align: center;
+}
