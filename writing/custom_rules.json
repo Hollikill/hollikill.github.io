@@ -13,6 +13,18 @@
         }
     },
     {
+        "key":"Components",
+        "action":{
+            "type":"widget"
+        }
+    },
+    {
+        "key":"Casting",
+        "action":{
+            "type":"widget"
+        }
+    },
+    {
         "key":"Perspective",
         "action":{
             "type":"css value",

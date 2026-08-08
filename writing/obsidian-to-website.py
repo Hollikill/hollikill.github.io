@@ -431,6 +431,17 @@ def inline_markup(text, current_output, page_index, custom_markdown):
         text,
     )
 
+    # hyperlinks
+    text = re.sub(
+        r"\[([^\]]+)\]\((https?://[^\s)]+)\)",
+        lambda m: (
+            f'<a href="{html.escape(m.group(2), quote=True)}">'
+            f'{m.group(1)}</a>'
+        ),
+        text,
+    )
+
+
     # footnotes
     text = re.sub(
         r"\[\^(\d+)\]",
