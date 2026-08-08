@@ -25,6 +25,12 @@
         }
     },
     {
+        "key":"Date",
+        "action":{
+            "type":"widget"
+        }
+    },
+    {
         "key":"Perspective",
         "action":{
             "type":"css value",
