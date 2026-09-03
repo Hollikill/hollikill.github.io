@@ -1,0 +1,86 @@
+body {
+    background-color: black;
+    color: white;
+    font-family: 'Courier New', monospace;
+}
+
+body > div > div {
+    background-color: #333;
+    margin: 1em;
+    padding: 0.5em;
+}
+
+.player_info b {
+    color: #999;
+}
+
+.player_info * {
+    margin: 0;
+}
+
+.job_listing {
+    display: flex;
+    padding: 0.25em;
+    font-weight: 600;
+}
+
+.joblisting * {
+    flex: 1;
+}
+
+.active_job_listing {
+    background: #550;
+}
+
+button {
+    appearance: none;
+    border: 0.1em solid #000;
+    background-color: #555;
+    color: white;
+}
+
+.job_listing > button {
+    position: relative;
+    z-index: 0;
+    width: 20%;
+    margin: 0 1em 0 0;
+}
+
+.job_listing > button > span {
+    z-index: 1;
+    color: #28f;
+    font-weight: 700;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;  
+}
+
+.active_job_listing > button > span {
+    color: #8f2; 
+}
+
+.job_listing > button > progress {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width:100%;
+    height:100%;
+    appearance: none;
+}
+
+.job_listing > button > progress::-webkit-progress-value {
+    background-color: #55a;
+}
+
+.job_listing > button > progress::-webkit-progress-bar {
+    background-color: #336;
+}
+
+
+.active_job_listing > button > progress::-webkit-progress-value {
+    background-color: rgb(42, 162, 42);
+}
+
+.tab_button {
+    flex:1;
+    padding:0.25em 1em;
+    margin: 0 0.5em;
+}

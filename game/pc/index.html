@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Progress Cultivator</title>
+        <link rel="stylesheet" type="text/css" href="core.css"/>
+    </head>
+    <body>
+        <div style="display:flex">
+            <div class="player_info" style="flex: 1;">
+                <p><b>AGE</b> ## <b>DAY</b> ###</p>
+                <br>
+                <p><b>BALANCE</b> <span style="float:right;" id="player_money">###</span></p>
+                <p><b>INCOME</b> <span style="float:right;" id="player_income">###</span></p>
+                <p><b>EXPENSES</b> <span style="float:right;" id="player_expenses">###</span></p>
+            </div>
+            <div style="flex: 4;">
+                <div style="display:flex;margin:0 0 1em;">
+                    <button class="tab_button" onclick="SelectMainContentTab('jobs')">Jobs</button>
+                    <button class="tab_button" onclick="SelectMainContentTab('skills')">Skills</button>
+                </div>
+                <div style="display:flex;" id="main_content">
+                    <div style="flex:1;" id="jobs_holder"></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+<script src="core.js" defer></script>
