@@ -1,8 +1,17 @@
 // variable declaration
 
 // core loop control
-deltams = 250; // number of ms per game tick
+const frames_per_second = 50; // number of ms per game tick
+var last_frame_ms = Date.now(); // last computed frame in ms
 
+// game loop control
+const gain_base_time = 4; // base number of days per second
+const gain_base_xp = 10; // base number of xp per day
+var is_time_stepping = false; // is time proceeding
+
+var dev_speed = 1; // speed multiplier for rapid iterative testing without disregarding normal path to get there
+
+//////////////////
 // jobs statistics
 var jobs_data = {
     "beggar" : {
@@ -170,7 +179,7 @@ var playerdata = {
     },
     active : {
         job : "none",
-        skill : -1,
+        skill : "none",
     },
     resources : {
         money : 0,
@@ -207,10 +216,26 @@ var SelectMainContentTab = function(tabname) {
     }
 }
 
+var ToggleTimeStepping = function() {
+    is_time_stepping = !is_time_stepping;
+
+    let pause_button = document.getElementById("toggle_time_button");
+    if (is_time_stepping) {
+        pause_button.textContent = "PAUSE";
+    }
+    else {
+        pause_button.textContent = "PLAY";
+    }
+}
+
 ////////////////////////////
 // core loop
 var Gameloop = function() {
-    TickDay();
+    let delta_ms = Date.now() - last_frame_ms;
+    last_frame_ms = Date.now();
+
+    if (is_time_stepping) TickDay(delta_ms);
+
     UpdateDisplay();
 }
 
@@ -233,10 +258,20 @@ var Setup = function() {
         listing_button_bar.max = job.xp.value; listing_button_bar.value = 0;
         let listing_button_text = document.createElement("span"); listing_button.appendChild(listing_button_text);
         listing_button_text.textContent = jobname.toUpperCase();
+        let listing_button_border_div = document.createElement("div"); listing_button.appendChild(listing_button_border_div);
 
         // HTML info numbers
-        let listing_info = document.createElement("span"); job_listing.appendChild(listing_info);
-        listing_info.innerHTML = " <span id=\"" + jobname + "_level\">###</span> | XP: <span id=\"" + jobname + "_xp_left\">###</span> | Income: <span id=\"" + jobname + "_earn\">###</span>";
+        //let listing_info = document.createElement("span"); job_listing.appendChild(listing_info);
+        //listing_info.innerHTML = " <span id=\"" + jobname + "_level\">###</span> | XP: <span id=\"" + jobname + "_xp_left\">###</span> | Income: <span id=\"" + jobname + "_earn\">###</span>";
+        
+        let listing_info_level = document.createElement("span"); job_listing.appendChild(listing_info_level);
+        listing_info_level.id = jobname + "_level"
+        let listing_info_xp_day = document.createElement("span"); job_listing.appendChild(listing_info_xp_day);
+        listing_info_xp_day.id = jobname + "_xp_day"
+        let listing_info_xp_left = document.createElement("span"); job_listing.appendChild(listing_info_xp_left);
+        listing_info_xp_left.id = jobname + "_xp_left"
+        let listing_info_income = document.createElement("span"); job_listing.appendChild(listing_info_income);
+        listing_info_income.id = jobname + "_earn"
 
         // HTML create requirements text
         if (job.requirements) {
@@ -256,12 +291,13 @@ var Setup = function() {
     }
 
     // hook core loop to window
-    setInterval(Gameloop, deltams);
+    setInterval(Gameloop, 1000/frames_per_second);
 
     // preform default UI actions
     SelectActiveJob("beggar");
     UpdateUI_Jobs(true);
     SelectMainContentTab("jobs");
+    ToggleTimeStepping();
 }
 
 window.onload=Setup;
@@ -269,13 +305,16 @@ window.onload=Setup;
 //////////////////
 // Mechanical Functions
 
-var TickDay = function() {
+var TickDay = function(delta_ms) {
+    let days_passed = (delta_ms/1000) * gain_base_time * dev_speed;
+    if (days_passed == 0) return;
+
     // process job tick
     if (jobs_data[playerdata.active.job]) { // make sure job exists
         let job = jobs_data[playerdata.active.job]
 
-        playerdata.resources.money += playerdata.jobs[playerdata.active.job].earn // add income for day
-        playerdata.jobs[playerdata.active.job].xp -= 10 // add xp for day
+        playerdata.resources.money += days_passed * playerdata.jobs[playerdata.active.job].earn // add income for day
+        playerdata.jobs[playerdata.active.job].xp -= days_passed * gain_base_xp; // add xp for day
 
         // process any job level ups
         if (playerdata.jobs[playerdata.active.job].xp <= 0){
@@ -286,7 +325,7 @@ var TickDay = function() {
     }
 
     // update player age
-    playerdata.resources.time += 1
+    playerdata.resources.time += days_passed
 }
 
 //////////////////
@@ -302,6 +341,7 @@ var UpdateUI_Jobs = function(flag_reloadall = false) {
     for (let jobname in jobs_data) {
         if (jobname == playerdata.active.job || flag_reloadall) {
             document.getElementById(jobname + "_level").innerHTML = playerdata.jobs[jobname].level;
+            document.getElementById(jobname + "_xp_day").innerHTML = Places(gain_base_xp, 1);
             document.getElementById(jobname + "_xp_left").innerHTML = Math.trunc(playerdata.jobs[jobname].xp);
             document.getElementById(jobname + "_earn").innerHTML = Currency(playerdata.jobs[jobname].earn);
 
@@ -418,6 +458,23 @@ var Currency = function (value, places = 2) { // returns innerHTML for display u
 
     // construct the HTML
     return currency_text.join(" ")
+}
+
+// NOTE: unreliable, only works for numbers that js will not truncate to #.#####e+## form
+var Places = function (value, places) {
+    value = value * (10 ** places);
+    let value_string = value.toString();
+    if (value_string.length >= places) {
+        return [value_string.slice(0,value_string.length-places),'.',value_string.slice(value_string.length-places)].join('');
+    }
+    else {
+        let output_string = ['.'];
+        for (let i = 0; i < (places-value_string.length); i++) {
+            output_string.push('0');
+        }
+        output_string.push(value_string);
+        return output_string.join('');
+    }
 }
 
 //////////////////////// THIS SNIPPET FROM THE INTERNET

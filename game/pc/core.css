@@ -18,14 +18,22 @@ body > div > div {
     margin: 0;
 }
 
+.player_info i {
+    color: #777;
+    font-weight: 600;
+    font-size: 14px;
+    margin: 0 0 0 1em;
+}
+
 .job_listing {
     display: flex;
     padding: 0.25em;
     font-weight: 600;
 }
 
-.joblisting * {
+.job_listing * {
     flex: 1;
+    text-align: center;
 }
 
 .active_job_listing {
@@ -34,16 +42,16 @@ body > div > div {
 
 button {
     appearance: none;
-    border: 0.1em solid #000;
     background-color: #555;
+    border: 0.1em solid #000;
     color: white;
 }
 
 .job_listing > button {
     position: relative;
     z-index: 0;
-    width: 20%;
-    margin: 0 1em 0 0;
+    border: 0px;
+    padding: 0;
 }
 
 .job_listing > button > span {
@@ -51,6 +59,14 @@ button {
     color: #5cf;
     font-weight: 700;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;  
+}
+
+.job_listing > button > div {
+    box-shadow: 0 0 0 0.1em #000 inset;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
 }
 
 .active_job_listing > button > span {
@@ -99,4 +115,19 @@ button {
 
 .footer a {
     color: #444;
+}
+
+.listing_header {
+    display: flex;
+    text-align: center;
+}
+
+.listing_header * {
+    flex: 1;
+}
+
+#toggle_time_button {
+    width:50%;
+    color: #bbb;
+    font-weight: 700;
 }

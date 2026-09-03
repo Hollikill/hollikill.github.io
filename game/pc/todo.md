@@ -4,6 +4,12 @@
 
 - [x] add job/skill requirements
 - [ ] create skill system
+  - two layered system: each skill has master-skill components
+  - skills stored in player with:
+    - master-skill components
+    - level
+    - xp-left
+  - each tick, the true effective skill list is calculated by adding all {master-skill components * (level + 1-(xp-left/xp-max))}
 - [x] add currency display
 - [x] add age + age display
 
@@ -13,7 +19,7 @@
 
 - [ ] add homes and items + happiness display
 - [ ] add job categories
-- [ ] variable-day gametick
+- [x] variable-day gametick
   - eg. less than a day for slow gamespeed or higher for high gamespeed
   - ordering of updates is important
 

@@ -5,14 +5,20 @@
         <link rel="stylesheet" type="text/css" href="core.css"/>
     </head>
     <body>
-        <div style="display:flex">
+        <div style="display:flex; align-items: flex-start;">
             <div class="player_info" style="flex: 1;">
                 <p><b>AGE</b> <span id="player_age_y">##</span> <b>DAY</b> <span id="player_age_d">###</span></p>
                 <p><b>LIFESPAN</b> ###</p>
+                <div style="display: flex; justify-content: center;">
+                    <button onclick="ToggleTimeStepping()" id="toggle_time_button">pause</button>
+                </div>
                 <br>
                 <p><b>BALANCE</b> <span style="direction:rtl;text-align:justify;" id="player_money">###</span></p>
                 <p><b>INCOME</b>  <span style="direction:rtl;text-align:justify;" id="player_income">###</span></p>
                 <p><b>EXPENSES</b> <span style="direction:rtl;text-align:justify;" id="player_expenses">###</span></p>
+                <br>
+                <p><b>HAPPINESS</b> <span style="direction:rtl;text-align:justify;" id="player_happiness">###</span>x</p>
+                <p><i>affects all XP gain</i></p>
             </div>
             <div style="flex: 4;">
                 <div style="display:flex;margin:0 0 1em;">
@@ -20,13 +26,29 @@
                     <button class="tab_button" onclick="SelectMainContentTab('skills')">Skills</button>
                 </div>
                 <div style="display:flex;" id="main_content">
-                    <div style="flex:1;" id="jobs_holder"></div>
-                    <div style="flex:1;" id="skills_holder">TODO</div>
+                    <div style="flex:1;" id="jobs_holder">
+                        <div class="listing_header">
+                            <div>Job</div>
+                            <div>Level</div>
+                            <div>XP/day</div>
+                            <div>XP to Level</div>
+                            <div>Income</div>
+                        </div>
+                    </div>
+                    <div style="flex:1;" id="skills_holder">
+                        <div class="listing_header">
+                            <div>Skill</div>
+                            <div>Level</div>
+                            <div>XP/day</div>
+                            <div>XP to Level</div>
+                            <div>Income</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="footer">
-            alpha.1 ⋅ [<a href="changelog.txt" target="blank">changelog</a>] ⋅ [<a href="credits.txt" target="blank">credits</a>]
+            alpha.2 ⋅ [<a href="changelog.txt" target="blank">changelog</a>] ⋅ [<a href="credits.txt" target="blank">credits</a>]
         </div>
     </body>
 </html>
