@@ -1,11 +1,11 @@
 # TODO
 
-# quick tasks
+## quick tasks
 
-- [ ] add job/skill requirements
+- [x] add job/skill requirements
 - [ ] create skill system
-- [ ] add currency display
-- [ ] add age + age display
+- [x] add currency display
+- [x] add age + age display
 
 ---
 
@@ -13,6 +13,9 @@
 
 - [ ] add homes and items + happiness display
 - [ ] add job categories
+- [ ] variable-day gametick
+  - eg. less than a day for slow gamespeed or higher for high gamespeed
+  - ordering of updates is important
 
 ---
 
@@ -48,6 +51,15 @@
     - seperate lists for items and services
     - short adjective list. Similar to house adjectives.
     - items/services have static effects, though power can vary with adjectives
+  - [ ] procedurally generated currecy denomenations
+    - dictionaries of currency shorthands, with rarity classes. IE:
+      - simple letters (lowest): w c s g p
+      - capital letters (low): S L R
+      - simple letter-like symbols and shapes (medium): 🜂 🜁 🜄 🜃 ≡ ⧋ Ω Σ δ ◳ ⯎ ♃ ♇ 🜔 ☉ ♉︎ 🝃 🝘 🝔
+      - complex symbols and shapes (high): ∾ ⋣ ◎ ☵ ♅ ⛡ 🜅 🜆 ♎︎ ♑︎
+    - color ranges to go along with shorthands, seperate per dict.
+      - implement culling to prevent similar colors
+      - ascended or very high currencies have special text effects
 - [ ] add owning vs. renting houses/items
   - [ ] neccesarialy also add conditions for when you can control a world or part of world
 - [ ] add variation that seperate 'universe size' from 'world development level'

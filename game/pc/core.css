@@ -29,7 +29,7 @@ body > div > div {
 }
 
 .active_job_listing {
-    background: #550;
+    background: #222;
 }
 
 button {
@@ -48,7 +48,7 @@ button {
 
 .job_listing > button > span {
     z-index: 1;
-    color: #28f;
+    color: #5cf;
     font-weight: 700;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;  
 }
@@ -83,4 +83,20 @@ button {
     flex:1;
     padding:0.25em 1em;
     margin: 0 0.5em;
+}
+
+.req_text {
+    color: #999;
+    padding: 0.25em;
+    font-weight: 700;
+    text-align: center;
+}
+
+.footer {
+    color: #444;
+    text-align: center;
+}
+
+.footer a {
+    color: #444;
 }

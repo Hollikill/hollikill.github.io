@@ -1,0 +1,11 @@
+alpha.1 9/3/2026
+- added main content tabs
+- added age
+- added currency denominations
+- added job requirements
+- added changelog and credits pages
+
+alpha.0 9/2/2026
+- added player display widget & main content area
+- added money
+- added jobs and job leveling

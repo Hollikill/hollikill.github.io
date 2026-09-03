@@ -7,11 +7,12 @@
     <body>
         <div style="display:flex">
             <div class="player_info" style="flex: 1;">
-                <p><b>AGE</b> ## <b>DAY</b> ###</p>
+                <p><b>AGE</b> <span id="player_age_y">##</span> <b>DAY</b> <span id="player_age_d">###</span></p>
+                <p><b>LIFESPAN</b> ###</p>
                 <br>
-                <p><b>BALANCE</b> <span style="float:right;" id="player_money">###</span></p>
-                <p><b>INCOME</b> <span style="float:right;" id="player_income">###</span></p>
-                <p><b>EXPENSES</b> <span style="float:right;" id="player_expenses">###</span></p>
+                <p><b>BALANCE</b> <span style="direction:rtl;text-align:justify;" id="player_money">###</span></p>
+                <p><b>INCOME</b>  <span style="direction:rtl;text-align:justify;" id="player_income">###</span></p>
+                <p><b>EXPENSES</b> <span style="direction:rtl;text-align:justify;" id="player_expenses">###</span></p>
             </div>
             <div style="flex: 4;">
                 <div style="display:flex;margin:0 0 1em;">
@@ -20,8 +21,12 @@
                 </div>
                 <div style="display:flex;" id="main_content">
                     <div style="flex:1;" id="jobs_holder"></div>
+                    <div style="flex:1;" id="skills_holder">TODO</div>
                 </div>
             </div>
+        </div>
+        <div class="footer">
+            alpha.1 ⋅ [<a href="changelog.txt" target="blank">changelog</a>] ⋅ [<a href="credits.txt" target="blank">credits</a>]
         </div>
     </body>
 </html>

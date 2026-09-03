@@ -1,0 +1,12 @@
+Progress Cultivator
+Created in whole by Hollister Ream
+
+This game was largely inspired by the amazing idle game Progress Knight Quest (https://indomit.github.io/progress_knight_2/) by indomit, though no code was used from the game.
+- Progress Knight Quest is based on Progress Knight 2.0 (https://symb1.github.io/progress_knight_2/) by Symb1
+- Progress Knight 2.0 is based on Progress Knight (https://ihtasham42.github.io/progress-knight/) by ihtasham42
+
+Additional inspiration for lore and features were drawn from these web serials:
+- The Dao of Reincarnation: Ascending Through a Hundred Lives (https://www.royalroad.com/fiction/154239/the-dao-of-reincarnation-ascending-through-a-hundred) by RighteousEgg
+- Blood Inheritance (https://www.royalroad.com/fiction/129093/blood-inheritance-a-botched-reincarnation-xianxia) by Daoist_Kavtech
+
+No AI was used in the creation of this project
