@@ -25,6 +25,10 @@ body > div > div {
     margin: 0 0 0 1em;
 }
 
+.larger_1 {
+    font-size: 18px;
+}
+
 .job_listing {
     display: flex;
     padding: 0.25em;

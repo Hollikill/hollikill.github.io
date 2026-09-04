@@ -317,7 +317,7 @@ var TickDay = function(delta_ms) {
         playerdata.jobs[playerdata.active.job].xp -= days_passed * gain_base_xp; // add xp for day
 
         // process any job level ups
-        if (playerdata.jobs[playerdata.active.job].xp <= 0){
+        while (playerdata.jobs[playerdata.active.job].xp <= 0){
             playerdata.jobs[playerdata.active.job].level += 1
             playerdata.jobs[playerdata.active.job].xp = job.xp.value* Scaling(job.xp.scaling, playerdata.jobs[playerdata.active.job].level) + playerdata.jobs[playerdata.active.job].xp
             playerdata.jobs[playerdata.active.job].earn = job.earn.value* Scaling(job.earn.scaling, playerdata.jobs[playerdata.active.job].level);
@@ -440,24 +440,31 @@ var Log = function (value, base) {
 var Currency = function (value, places = 2) { // returns innerHTML for display usage
     if (!currencies) return value;
     if (currencies.length == 0) return value;
+
+    let is_negative = false;
+    if (value < 0) is_negative = true;
     
     let used_places = places;
-    let carried_value = value;
+    let carried_value = Math.abs(value);
     let currency_text = [];
 
     // check the correct denominations
     for (let i in currencies) {
         if (used_places <= 0) break;
         let currency = currencies[currencies.length -1 -i]; // loop in opposite direction
-        if (Math.max(Log(carried_value, 10),0) >= currency.denomination-1) {
+        if (Math.max(Log(carried_value, 10),0) >= currency.denomination-1 && (0 != Math.trunc(carried_value/(10 ** (currency.denomination-1))) || (currencies.length -1 -i == 0) && used_places == places)) {
             used_places -= 1;
             currency_text.push("<span style=\"color:"+currency.color+"\">"+Math.trunc(carried_value/(10 ** (currency.denomination-1)))+currency.symbol+"</span>")
-            carried_value = (carried_value%(10 ** (currency.denomination-1)))
         }
+        carried_value = (carried_value%(10 ** (currency.denomination-1)))
     }
 
+    currency_text = currency_text.join(" ")
+
+    if (is_negative) currency_text = '-' + currency_text;
+
     // construct the HTML
-    return currency_text.join(" ")
+    return currency_text;
 }
 
 // NOTE: unreliable, only works for numbers that js will not truncate to #.#####e+## form

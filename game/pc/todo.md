@@ -2,16 +2,13 @@
 
 ## quick tasks
 
-- [x] add job/skill requirements
-- [ ] create skill system
-  - two layered system: each skill has master-skill components
-  - skills stored in player with:
-    - master-skill components
-    - level
-    - xp-left
-  - each tick, the true effective skill list is calculated by adding all {master-skill components * (level + 1-(xp-left/xp-max))}
-- [x] add currency display
-- [x] add age + age display
+- [ ] procedural timekeeping system framework
+- [ ] move all data to gamedata
+- [ ] add settings tab
+  - [ ] framerate control
+  - [ ] add game saving
+    - import/export from textbox
+    - autosave to localstorage
 
 ---
 
@@ -19,9 +16,14 @@
 
 - [ ] add homes and items + happiness display
 - [ ] add job categories
-- [x] variable-day gametick
-  - eg. less than a day for slow gamespeed or higher for high gamespeed
-  - ordering of updates is important
+- [ ] create skill system
+  - two layered system: each skill has master-skill components
+  - skills stored in player with:
+    - master-skill components
+    - level
+    - xp-left
+  - each tick, the true effective skill list is calculated by adding all {master-skill components * (level + 1-(xp-left/xp-max))}
+- [ ] add hard reset without reloading page
 
 ---
 
@@ -66,6 +68,7 @@
     - color ranges to go along with shorthands, seperate per dict.
       - implement culling to prevent similar colors
       - ascended or very high currencies have special text effects
+  - [ ] procedurally generated timekeeping systems
 - [ ] add owning vs. renting houses/items
   - [ ] neccesarialy also add conditions for when you can control a world or part of world
 - [ ] add variation that seperate 'universe size' from 'world development level'

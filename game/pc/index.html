@@ -13,17 +13,23 @@
                     <button onclick="ToggleTimeStepping()" id="toggle_time_button">pause</button>
                 </div>
                 <br>
-                <p><b>BALANCE</b> <span style="direction:rtl;text-align:justify;" id="player_money">###</span></p>
-                <p><b>INCOME</b>  <span style="direction:rtl;text-align:justify;" id="player_income">###</span></p>
-                <p><b>EXPENSES</b> <span style="direction:rtl;text-align:justify;" id="player_expenses">###</span></p>
                 <br>
-                <p><b>HAPPINESS</b> <span style="direction:rtl;text-align:justify;" id="player_happiness">###</span>x</p>
+                <p><span class="larger_1" id="player_money">###</span></p>
+                <p><i>current balance</i></p>
+                <br>
+                <p><b>NET MONEY</b>  <span id="player_net_money">###</span></p>
+                <p><b>INCOME</b>  <span id="player_income">###</span></p>
+                <p><b>EXPENSES</b> <span id="player_expenses">###</span></p>
+                <br>
+                <br>
+                <p><b>HAPPINESS</b> <span id="player_happiness">###</span>x</p>
                 <p><i>affects all XP gain</i></p>
             </div>
             <div style="flex: 4;">
                 <div style="display:flex;margin:0 0 1em;">
                     <button class="tab_button" onclick="SelectMainContentTab('jobs')">Jobs</button>
                     <button class="tab_button" onclick="SelectMainContentTab('skills')">Skills</button>
+                    <button class="tab_button" onclick="SelectMainContentTab('settings')">Settings</button>
                 </div>
                 <div style="display:flex;" id="main_content">
                     <div style="flex:1;" id="jobs_holder">
@@ -44,11 +50,14 @@
                             <div>Income</div>
                         </div>
                     </div>
+                    <div style="flex:1;" id="settings_holder">
+                        Nothing Yet :)
+                    </div>
                 </div>
             </div>
         </div>
         <div class="footer">
-            alpha.2 ⋅ [<a href="changelog.txt" target="blank">changelog</a>] ⋅ [<a href="credits.txt" target="blank">credits</a>]
+            alpha.3 ⋅ [<a href="changelog.txt" target="blank">changelog</a>] ⋅ [<a href="credits.txt" target="blank">credits</a>]
         </div>
     </body>
 </html>

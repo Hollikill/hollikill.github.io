@@ -2,6 +2,7 @@ alpha.2 9/3/2026
 - added smoother time passing
 - added pause button
 - improved job UI
+- fixed issue with currency denominations
 
 alpha.1 9/3/2026
 - added main content tabs
