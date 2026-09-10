@@ -2,13 +2,15 @@
 
 ## quick tasks
 
-- [ ] procedural timekeeping system framework
+- [x] procedural timekeeping system framework
+  - [ ] change Units class to handle denominations other than multiples of 10
 - [ ] move all data to gamedata
-- [ ] add settings tab
+- [x] add settings tab
   - [ ] framerate control
   - [ ] add game saving
     - import/export from textbox
     - autosave to localstorage
+- [ ] reformat number place and currency handlers to automatically handle all values from 0.001 - {.js max}
 
 ---
 

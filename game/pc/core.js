@@ -1,3 +1,8 @@
+// imports
+//import {} from 'break_eternity.js'
+import { Units } from './classes.js'
+
+//////////////////
 // variable declaration
 
 // core loop control
@@ -129,48 +134,70 @@ var currencies = [
         symbol: 'c',
         color: "#a64",
         denomination: 1,
+        places: 2,
     },
     {
         symbol: 's',
         color: "#999",
         denomination: 3,
+        places: 2,
     },
     {
         symbol: 'g',
         color: "#c7bc1d",
         denomination: 5,
+        places: 2,
     },
     {
         symbol: 'p',
         color: "#7bc",
         denomination: 7,
+        places: 2,
     },
     {
         symbol: 'e',
         color: "#2c7",
         denomination: 9,
+        places: 2,
     },
     {
         symbol: 's',
         color: "#66f",
         denomination: 11,
+        places: 2,
     },
     {
         symbol: 'r',
         color: "#e33",
         denomination: 13,
+        places: 2,
     },
     {
         symbol: 'd',
         color: "#fff",
         denomination: 15,
+        places: 3,
     },
     {
         symbol: '🜂',
         color: "#ff0",
         denomination: 18,
+        places: 3,
     },
 ]
+
+var Currencies = new Units()
+for (let i in currencies) {
+    let symbol = currencies[i]
+    Currencies.appendSymbol(symbol.symbol, symbol.places, symbol.color)
+}
+
+var Time = new Units()
+Time.appendSymbol('days', 3)
+Time.appendSymbol('years', 3)
+Time.setDisplayMode("pre_spaced")
+// TODO make Units class able to handle non-multipliers of ten
+
 
 // player data
 var playerdata = {
@@ -200,7 +227,7 @@ var SelectActiveJob = function(u_jobname) {
 }
 
 var SelectMainContentTab = function(tabname) {
-    main_content_tabs = document.getElementById("main_content").children
+    let main_content_tabs = document.getElementById("main_content").children
     for (let i in main_content_tabs) {
         if (isNaN(i)) {}
         else {
@@ -369,6 +396,9 @@ var UpdateUI_JobVisibility = function() {
                         req_texts.push(reqs[i].name.toUpperCase() + " " + playerdata.jobs[reqs[i].name].level + "/" + reqs[i].level);
 
                         break;
+                    case "skill":
+                        
+                        break;
                     default:
                         console.log("ERROR: invalid job requirement type REQ."+reqs[i].type.toUpperCase());
                         break;
@@ -438,33 +468,7 @@ var Log = function (value, base) {
 }
 
 var Currency = function (value, places = 2) { // returns innerHTML for display usage
-    if (!currencies) return value;
-    if (currencies.length == 0) return value;
-
-    let is_negative = false;
-    if (value < 0) is_negative = true;
-    
-    let used_places = places;
-    let carried_value = Math.abs(value);
-    let currency_text = [];
-
-    // check the correct denominations
-    for (let i in currencies) {
-        if (used_places <= 0) break;
-        let currency = currencies[currencies.length -1 -i]; // loop in opposite direction
-        if (Math.max(Log(carried_value, 10),0) >= currency.denomination-1 && (0 != Math.trunc(carried_value/(10 ** (currency.denomination-1))) || (currencies.length -1 -i == 0) && used_places == places)) {
-            used_places -= 1;
-            currency_text.push("<span style=\"color:"+currency.color+"\">"+Math.trunc(carried_value/(10 ** (currency.denomination-1)))+currency.symbol+"</span>")
-        }
-        carried_value = (carried_value%(10 ** (currency.denomination-1)))
-    }
-
-    currency_text = currency_text.join(" ")
-
-    if (is_negative) currency_text = '-' + currency_text;
-
-    // construct the HTML
-    return currency_text;
+    return Currencies.format(value, places);
 }
 
 // NOTE: unreliable, only works for numbers that js will not truncate to #.#####e+## form
