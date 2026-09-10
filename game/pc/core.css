@@ -29,13 +29,13 @@ body > div > div {
     font-size: 18px;
 }
 
-.job_listing, .skill_listing {
+.job_listing, .skill_listing, .item_listing {
     display: flex;
     padding: 0.25em;
     font-weight: 600;
 }
 
-.job_listing *, .skill_listing * {
+.job_listing *, .skill_listing *, .item_listing * {
     flex: 1;
     text-align: center;
 }
@@ -51,21 +51,33 @@ button {
     color: white;
 }
 
-.job_listing > button, .skill_listing > button {
+.job_listing > button, .skill_listing > button, .item_listing > button {
     position: relative;
     z-index: 0;
     border: 0px;
     padding: 0;
 }
 
-.job_listing > button > span, .skill_listing > button > span {
+.item_listing > button {
+    background-color: #336;
+}
+
+.active_item_listing > button {
+    background-color: #2aa22a;
+}
+
+.job_listing > button > span, .skill_listing > button > span, .item_listing > button > span {
     z-index: 1;
     color: #5cf;
     font-weight: 700;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;  
 }
 
-.job_listing > button > div, .skill_listing > button > div {
+.item_listing > button > span {
+    color: #fff;
+}
+
+.job_listing > button > div, .skill_listing > button > div, .item_listing > button > div {
     box-shadow: 0 0 0 0.1em #000 inset;
     width: 100%;
     height: 100%;
@@ -96,7 +108,7 @@ button {
 
 
 .active_job_listing > button > progress::-webkit-progress-value, .active_skill_listing > button > progress::-webkit-progress-value {
-    background-color: rgb(42, 162, 42);
+    background-color: #2aa22a;
 }
 
 .tab_button {

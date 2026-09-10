@@ -1,6 +1,5 @@
 export class Units {
     constructor() {
-        // nothing yet
         this.units = []
         this.display_mode = "post"
     }
@@ -51,7 +50,7 @@ export class Units {
             cur_magnitude /= cur_symbol.size;
             //console.log(cur_magnitude)
 
-            if (Math.max(carried_value,0) >= cur_magnitude && (0 != Math.trunc(carried_value/cur_magnitude) || (this.units.length -1 -i == 0) && used_places == display_places)) {
+            if (Math.max(carried_value,0) >= cur_magnitude && 0 != Math.trunc(carried_value/cur_magnitude) || ((this.units.length -1 -i == 0) && used_places == display_places)) {
                 used_places -= 1;
                 switch (this.display_mode) {
                     case "post":
@@ -75,5 +74,102 @@ export class Units {
 
         // construct the HTML
         return symbol_text;
+    }
+}
+
+const RequirementTypes = [
+    "job",
+    "skill",
+    "money",
+]
+
+export class Requirements {
+    constructor(threshold = 0) {
+        this.requirements = []
+        this.threshold = Math.min(1, Math.max(0, threshold))
+    }
+
+    Done() {
+        let completion = 2;
+        for (let i in this.requirements) {
+            if (this.requirements[i].done == true) continue;
+            let value = 0;
+            switch(this.requirements[i].type) {
+                case "job":
+                    if (!(playerdata.jobs[this.requirements[i].name])) break;
+                    value = playerdata.jobs[this.requirements[i].name].level;
+                    if (value <= this.requirements[i].magnitude*this.threshold) completion = 0;
+                    else if (value < this.requirements[i].magnitude && completion >= 1) completion = 1;
+                    if (value >= this.requirements[i].magnitude) this.requirements[i].done = true;
+
+                    break;
+                case "skill":
+                    if (!(playerdata.skills[this.requirements[i].name])) break;
+                    value = playerdata.skills[this.requirements[i].name].level;
+                    if (value <= this.requirements[i].magnitude*this.threshold) completion = 0;
+                    else if (value < this.requirements[i].magnitude && completion >= 1) completion = 1;
+                    if (value >= this.requirements[i].magnitude) this.requirements[i].done = true;
+                    
+                    break;
+                case "money":
+                    value = playerdata.resources.money;
+                    if (value <= this.requirements[i].magnitude*this.threshold) completion = 0;
+                    else if (value < this.requirements[i].magnitude && completion >= 1) completion = 1;
+                    if (value >= this.requirements[i].magnitude) this.requirements[i].done = true;
+                    
+                    break;
+                case "default":
+                    console.log("ERROR: invalid requirement type req."+type.toUpperCase());
+                    break;
+            }
+        }
+        return completion;
+    }
+
+    Text() {
+        let req_texts = [];
+        for (let i in this.requirements) {
+            if (this.requirements[i].done == true) continue;
+            let value = 0;
+            switch(this.requirements[i].type) {
+                case "job":
+                    if (!(playerdata.jobs[this.requirements[i].name])) break;
+                    value = playerdata.jobs[this.requirements[i].name].level;
+                    req_texts.push(this.requirements[i].name.toUpperCase() + " " + playerdata.jobs[this.requirements[i].name].level + "/" + this.requirements[i].magnitude);
+
+                    break;
+                case "skill":
+                    if (!(playerdata.skills[this.requirements[i].name])) break;
+                    value = playerdata.skills[this.requirements[i].name].level;
+                    req_texts.push(this.requirements[i].name.toUpperCase() + " " + playerdata.skills[this.requirements[i].name].level + "/" + this.requirements[i].magnitude);
+                    
+                    break;
+                case "money":
+                    value = playerdata.resources.money;
+                    req_texts.push(Currency(playerdata.resources.money) + "/" + Currency(this.requirements[i].magnitude));
+                    
+                    break;
+                case "default":
+                    console.log("ERROR: invalid requirement type req."+type.toUpperCase());
+                    break;
+            }
+        }
+        return "Required: "+ req_texts.join(", ");
+    }
+
+    Reset() {
+        for (let i in this.requirements) {
+            this.requirements[i].done = false;
+        }
+    }
+
+    Add(type, magnitude, name="") {
+        if (RequirementTypes.includes(type)) {
+            this.requirements.push({type: type, magnitude:magnitude, name:name, done:false});
+        }
+        else {
+            console.log("ERROR: invalid requirement type req."+type.toUpperCase());
+        }
+        return this;
     }
 }

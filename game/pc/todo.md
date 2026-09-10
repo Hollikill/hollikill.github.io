@@ -6,9 +6,10 @@
 - add settings
   - [ ] framerate control
 - [ ] add game saving
-  - import/export from textbox
-  - autosave to localstorage
-- [ ] reformat decimal place handler to automatically handle all values from 0.001 - {.js max}
+  - [ ] import/export from textbox
+  - [ ] autosave to localstorage
+  - [ ] add hard reset without reloading page
+- [ ] figure out how to display effect multiplier for skills (and for nonlinear skills)
 
 ---
 
@@ -16,7 +17,6 @@
 
 - [ ] add homes and items + happiness display
 - [ ] add job/skill categories
-- [ ] add hard reset without reloading page
 - [ ] create generalized classes for skills and jobs and merge methods
 - [ ] add max level resets
 

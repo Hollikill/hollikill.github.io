@@ -1,4 +1,11 @@
-alpha.3 9/4/2026
+alpha.4 9/10/2026
+- changed skill effect calculation
+- added items
+- code refactor for better requirement handling
+- fixed below 1 decimal value display (float bug... ugh)
+- added expense and net money display
+
+alpha.3 9/9/2026
 - code refactor for better unit handling
 - added skills
 
