@@ -2,14 +2,12 @@
 
 ## quick tasks
 
-- [x] procedural timekeeping system framework
-  - [x] change Units class to handle denominations other than multiples of 10
 - [ ] move all data to gamedata
-- [x] add settings tab
+- add settings
   - [ ] framerate control
-  - [ ] add game saving
-    - import/export from textbox
-    - autosave to localstorage
+- [ ] add game saving
+  - import/export from textbox
+  - autosave to localstorage
 - [ ] reformat decimal place handler to automatically handle all values from 0.001 - {.js max}
 
 ---
@@ -17,15 +15,10 @@
 ## larger tasks
 
 - [ ] add homes and items + happiness display
-- [ ] add job categories
-- [x] create skill system
-  - two layered system: each skill has master-skill components
-  - skills stored in player with:
-    - master-skill components
-    - level
-    - xp-left
-  - each tick, the true effective skill list is calculated by adding all {master-skill components * (level + 1-(xp-left/xp-max))}
+- [ ] add job/skill categories
 - [ ] add hard reset without reloading page
+- [ ] create generalized classes for skills and jobs and merge methods
+- [ ] add max level resets
 
 ---
 
