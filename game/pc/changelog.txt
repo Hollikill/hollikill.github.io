@@ -1,3 +1,7 @@
+alpha.3 9/4/2026
+- code refactor for better unit handling
+- added skills
+
 alpha.2 9/3/2026
 - added smoother time passing
 - added pause button

@@ -8,7 +8,9 @@
     <body>
         <div style="display:flex; align-items: flex-start;">
             <div class="player_info" style="flex: 1;">
-                <p><b>AGE</b> <span id="player_age_y">##</span> <b>DAY</b> <span id="player_age_d">###</span></p>
+                <p><b><span id="player_age">###</span></b></p>
+                <p><i>current age</i></p>
+                <br>
                 <p><b>LIFESPAN</b> ###</p>
                 <div style="display: flex; justify-content: center;">
                     <button onclick="ToggleTimeStepping()" id="toggle_time_button">pause</button>
@@ -48,7 +50,7 @@
                             <div>Level</div>
                             <div>XP/day</div>
                             <div>XP to Level</div>
-                            <div>Income</div>
+                            <div>Effect</div>
                         </div>
                     </div>
                     <div style="flex:1;" id="settings_holder">

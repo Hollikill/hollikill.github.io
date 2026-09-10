@@ -29,18 +29,18 @@ body > div > div {
     font-size: 18px;
 }
 
-.job_listing {
+.job_listing, .skill_listing {
     display: flex;
     padding: 0.25em;
     font-weight: 600;
 }
 
-.job_listing * {
+.job_listing *, .skill_listing * {
     flex: 1;
     text-align: center;
 }
 
-.active_job_listing {
+.active_job_listing, .active_skill_listing {
     background: #222;
 }
 
@@ -51,21 +51,21 @@ button {
     color: white;
 }
 
-.job_listing > button {
+.job_listing > button, .skill_listing > button {
     position: relative;
     z-index: 0;
     border: 0px;
     padding: 0;
 }
 
-.job_listing > button > span {
+.job_listing > button > span, .skill_listing > button > span {
     z-index: 1;
     color: #5cf;
     font-weight: 700;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;  
 }
 
-.job_listing > button > div {
+.job_listing > button > div, .skill_listing > button > div {
     box-shadow: 0 0 0 0.1em #000 inset;
     width: 100%;
     height: 100%;
@@ -73,11 +73,11 @@ button {
     inset: 0;
 }
 
-.active_job_listing > button > span {
+.active_job_listing > button > span, .active_skill_listing > button > span {
     color: #8f2; 
 }
 
-.job_listing > button > progress {
+.job_listing > button > progress, .skill_listing > button > progress {
     position: absolute;
     inset: 0;
     z-index: -1;
@@ -86,16 +86,16 @@ button {
     appearance: none;
 }
 
-.job_listing > button > progress::-webkit-progress-value {
+.job_listing > button > progress::-webkit-progress-value, .skill_listing > button > progress::-webkit-progress-value {
     background-color: #55a;
 }
 
-.job_listing > button > progress::-webkit-progress-bar {
+.job_listing > button > progress::-webkit-progress-bar, .skill_listing > button > progress::-webkit-progress-bar {
     background-color: #336;
 }
 
 
-.active_job_listing > button > progress::-webkit-progress-value {
+.active_job_listing > button > progress::-webkit-progress-value, .active_skill_listing > button > progress::-webkit-progress-value {
     background-color: rgb(42, 162, 42);
 }
 
