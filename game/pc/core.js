@@ -70,6 +70,7 @@ var jobs_data = {
             ],
             value : 5
         },
+        category: "basic",
     },
     "farmer" : {
         xp : {
@@ -85,6 +86,7 @@ var jobs_data = {
             ],
             value : 9
         },
+        category: "basic",
         requirements : new Requirements().Add("job", 10, "beggar"),
     },
     "fisher" : {
@@ -101,6 +103,7 @@ var jobs_data = {
             ],
             value : 15
         },
+        category: "basic",
         requirements : new Requirements().Add("job", 10, "farmer"),
     },
     "miner" : {
@@ -117,6 +120,7 @@ var jobs_data = {
             ],
             value : 40
         },
+        category: "basic",
         requirements : new Requirements().Add("job", 10, "fisher").Add("skill", 10, "strength"),
     },
     "blacksmith" : {
@@ -133,6 +137,7 @@ var jobs_data = {
             ],
             value : 80
         },
+        category: "basic",
         requirements : new Requirements().Add("job", 10, "miner").Add("skill", 30, "strength"),
     },
     "merchant" : {
@@ -149,6 +154,7 @@ var jobs_data = {
             ],
             value : 150
         },
+        category: "basic",
         requirements : new Requirements().Add("job", 10, "blacksmith").Add("skill", 50, "bargaining"),
     },
 }
@@ -168,6 +174,7 @@ var skills_data = {
         components : [
             {skill: "skill_xp", part: 1, class:'a'}
         ],
+        category: "basic",
     },
     "productivity" : {
         xp : {
@@ -180,6 +187,7 @@ var skills_data = {
         components : [
             {skill: "job_xp", part: 1, class:'a'}
         ],
+        category: "basic",
         requirements : new Requirements().Add("skill", 5, "concentration"),
     },
     "charisma" : {
@@ -193,6 +201,7 @@ var skills_data = {
         components : [
             {skill: "job_pay", part: 1, class:'a'}
         ],
+        category: "basic",
         requirements : new Requirements(0.3).Add("job", 15, "farmer").Add("skill", 20, "productivity"),
     },
     "meditation" : {
@@ -206,6 +215,7 @@ var skills_data = {
         components : [
             {skill: "qol_all", part: 1, class:'a'}
         ],
+        category: "basic",
         requirements : new Requirements(0.3).Add("skill", 30, "concentration").Add("skill", 20, "productivity"),
     },
     "arcane presence" : {
@@ -219,6 +229,7 @@ var skills_data = {
         components : [
             {skill: "time_speed", part: 1, class:'a'}
         ],
+        category: "magic",
         requirements : new Requirements(0.25).Add("job", 200, "beggar").Add("skill", 200, "concentration").Add("skill", 200, "meditation"),
     },
 }
@@ -528,10 +539,20 @@ var Gameloop = function() {
 }
 
 var Setup = function() {
+    let created_categories = []
+
     // setup each job
     let jobs_holder = document.getElementById("jobs_holder")
     for (let jobname in jobs_data) {
         let job = jobs_data[jobname];
+
+        if (!created_categories.includes(job.category)) {
+            let category_header = document.createElement("div"); jobs_holder.appendChild(category_header);
+            category_header.className = "listing_header";
+            category_header.style.backgroundColor = "#814949";
+            category_header.innerHTML = "<div>"+job.category+"</div><div>Level</div><div>XP/day</div><div>XP to Level</div><div>Income</div>";
+            created_categories.push(job.category);
+        }
 
         // HTML add to holder
         let job_listing = document.createElement("div"); jobs_holder.appendChild(job_listing); // create holding div
@@ -574,10 +595,19 @@ var Setup = function() {
         }
     }
 
+    created_categories = [];
     // setup each skill
     let skills_holder = document.getElementById("skills_holder")
     for (let skillname in skills_data) {
         let skill = skills_data[skillname];
+
+        if (!created_categories.includes(skill.category)) {
+            let category_header = document.createElement("div"); skills_holder.appendChild(category_header);
+            category_header.className = "listing_header";
+            category_header.style.backgroundColor = "#814949";
+            category_header.innerHTML = "<div>"+skill.category+"</div><div>Level</div><div>XP/day</div><div>XP to Level</div><div>Effect</div>";
+            created_categories.push(skill.category);
+        }
 
         // HTML add to holder
         let skill_listing = document.createElement("div"); skills_holder.appendChild(skill_listing); // create holding div
@@ -625,10 +655,21 @@ var Setup = function() {
         playerdata.skill_effects[skillname] = 1.0;
     }
 
+    created_categories = [];
     // setup each item
     let items_holder = document.getElementById("items_holder")
     for (let itemname in items_data) {
         let item = items_data[itemname];
+
+        let item_category = item.singleton;
+        if (!item_category) item_category = "misc";
+        if (!created_categories.includes(item_category)) {
+            let category_header = document.createElement("div"); items_holder.appendChild(category_header);
+            category_header.className = "listing_header";
+            category_header.style.backgroundColor = "#814949";
+            category_header.innerHTML = "<div>"+item_category+"</div><div>Cost/day</div><div>Effect</div>";
+            created_categories.push(item_category);
+        }
 
         // HTML add to holder
         let item_listing = document.createElement("div"); items_holder.appendChild(item_listing); // create holding div

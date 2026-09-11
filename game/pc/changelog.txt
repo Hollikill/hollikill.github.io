@@ -4,6 +4,7 @@ alpha.5 --/--/----
 - added more items
 - added more skills and skill effects
 - added standard and scientific number notations
+- added category headers
 
 alpha.4 9/10/2026
 - changed skill effect calculation

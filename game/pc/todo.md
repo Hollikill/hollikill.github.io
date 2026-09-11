@@ -3,21 +3,22 @@
 ## quick tasks
 
 - [ ] move all data to gamedata
-- add settings
-  - [ ] framerate control
+- [ ] add settings: framerate control
 - [ ] add game saving
   - [ ] import/export from textbox
   - [ ] autosave to localstorage
   - [ ] add hard reset without reloading page
 - [ ] figure out how to display effect multiplier for skills (and for nonlinear skills)
-- [x] add named/e+ units framework for large normal numbers
+- [ ] add early falloff scaling type
+  - reduces effect of all scalers below a certain value, after which it does nothing
 
 ---
 
 ## larger tasks
 
-- [ ] add homes and items + happiness display
-- [ ] add job/skill categories
+- [ ] add job/skill category header colors
+- [ ] automatically hide job/skill category headers if none of their listings are visible
+  - note: this does not include requirement listings, those can appear without the header
 - [ ] create generalized classes for skills and jobs and merge methods
   - get multipliers from one place
 - [ ] add max level resets

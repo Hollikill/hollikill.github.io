@@ -38,31 +38,9 @@
                     <button class="tab_button" onclick="SelectMainContentTab('settings')">Settings</button>
                 </div>
                 <div style="display:flex;" id="main_content">
-                    <div style="flex:1;" id="jobs_holder">
-                        <div class="listing_header">
-                            <div>Job</div>
-                            <div>Level</div>
-                            <div>XP/day</div>
-                            <div>XP to Level</div>
-                            <div>Income</div>
-                        </div>
-                    </div>
-                    <div style="flex:1;" id="skills_holder">
-                        <div class="listing_header">
-                            <div>Skill</div>
-                            <div>Level</div>
-                            <div>XP/day</div>
-                            <div>XP to Level</div>
-                            <div>Effect</div>
-                        </div>
-                    </div>
-                    <div style="flex:1;" id="items_holder">
-                        <div class="listing_header">
-                            <div>Item</div>
-                            <div>Cost/day</div>
-                            <div>Effect</div>
-                        </div>
-                    </div>
+                    <div style="flex:1;" id="jobs_holder"></div>
+                    <div style="flex:1;" id="skills_holder"></div>
+                    <div style="flex:1;" id="items_holder"></div>
                     <div style="flex:1;" id="settings_holder">
                         <p>Number Display Mode</p>
                         <button onclick="SetNumberDisplayMode('standard')">Standard</button> <button onclick="SetNumberDisplayMode('e')">Scientific</button> <button onclick="SetNumberDisplayMode('unformatted')">Unformatted</button>
