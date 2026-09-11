@@ -170,7 +170,7 @@ CreateNotifyToggles();
 // this is the global loop
 setInterval(function () {
 
-    if (document.getElementById("navbar").display != "flex") {
+    if (document.getElementById("navbar").style.display != "flex") {
         if (localStorage.getItem("savecodejson")) {
             DisplaySavecode(new Decimal(JSON.parse(localStorage.getItem("savecodejson")).lasttime));
         }
@@ -302,8 +302,8 @@ var CreateBuild = (x) => {
 }
 
 function BuyBuild(x) {
-    if (gamedata.points.compare(gamedata.buildcost[x].times(GetDecoderBoost)) >= 0) {
-        gamedata.points = gamedata.points.sub(gamedata.buildcost[x].times(GetDecoderBoost));
+    if (gamedata.points.compare(gamedata.buildcost[x].times(GetDecoderBoost())) >= 0) {
+        gamedata.points = gamedata.points.sub(gamedata.buildcost[x].times(GetDecoderBoost()));
 
         gamedata.buildbought[x] = gamedata.buildbought[x].plus(1);
         gamedata.buildcount[x] = gamedata.buildcount[x].plus(1);
@@ -423,7 +423,7 @@ function TriggerUnlock (id) {
             break;
         case "boostdelay":
             if (!gamedata.unlock_bought.includes(id)) {
-                Notify("alert2", "The glue machine has been set up!<br>It's sticky, though.<br><br>It provides +"+(gamedata.boostmult-1)+" seconds to delay at time of purchase, which will increase with the maximum boost.");
+                Notify("alert2", "The glue machine has been set up!<br>It's sticky, though.<br><br>It provides +"+(gamedata.maxboost-1)+" seconds to delay at time of purchase, which will increase with the maximum boost.");
             }
             break;
         case "statis":
