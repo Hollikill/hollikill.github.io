@@ -175,4 +175,8 @@ export class Requirements {
         }
         return this;
     }
+
+    SetThreshold(threshold) {
+        this.threshold = threshold;
+    }
 }

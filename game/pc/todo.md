@@ -27,6 +27,7 @@
 
 ## very complex tasks
 
+- [ ] make game load jobs, skills, items per-world and able to restart the game with a new world_data
 - [ ] make jobs, skills, homes, items procedural
   - [ ] create dict of job componenets. mix of job types and adjectives
     - job types:
