@@ -10,6 +10,7 @@
   - [ ] autosave to localstorage
   - [ ] add hard reset without reloading page
 - [ ] figure out how to display effect multiplier for skills (and for nonlinear skills)
+- [x] add named/e+ units framework for large normal numbers
 
 ---
 
@@ -18,6 +19,7 @@
 - [ ] add homes and items + happiness display
 - [ ] add job/skill categories
 - [ ] create generalized classes for skills and jobs and merge methods
+  - get multipliers from one place
 - [ ] add max level resets
 
 ---

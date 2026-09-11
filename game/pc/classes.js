@@ -59,6 +59,9 @@ export class Units {
                     case "pre_unstyled":
                         symbol_text.push(cur_symbol.symbol+" "+"<span style=\"color:"+cur_symbol.color+"\">"+Math.trunc(carried_value/cur_magnitude)+"</span>")
                         break;
+                    case "post_d2":
+                        symbol_text.push("<span style=\"color:"+cur_symbol.color+"\">"+(Math.trunc((carried_value*100)/cur_magnitude)/100)+cur_symbol.symbol+"</span>")
+                        break;
                     default:
                         symbol_text.push(""+Math.trunc(carried_value/cur_magnitude))
                         break;
@@ -84,7 +87,7 @@ const RequirementTypes = [
 ]
 
 export class Requirements {
-    constructor(threshold = 0) {
+    constructor(threshold = 0.1) {
         this.requirements = []
         this.threshold = Math.min(1, Math.max(0, threshold))
     }
@@ -119,7 +122,7 @@ export class Requirements {
                     
                     break;
                 case "default":
-                    console.log("ERROR: invalid requirement type req."+type.toUpperCase());
+                    console.log("ERROR: invalid requirement type REQ."+type.toUpperCase());
                     break;
             }
         }
@@ -150,7 +153,7 @@ export class Requirements {
                     
                     break;
                 case "default":
-                    console.log("ERROR: invalid requirement type req."+type.toUpperCase());
+                    console.log("ERROR: invalid requirement type REQ."+type.toUpperCase());
                     break;
             }
         }
@@ -168,7 +171,7 @@ export class Requirements {
             this.requirements.push({type: type, magnitude:magnitude, name:name, done:false});
         }
         else {
-            console.log("ERROR: invalid requirement type req."+type.toUpperCase());
+            console.log("ERROR: invalid requirement type REQ."+type.toUpperCase());
         }
         return this;
     }

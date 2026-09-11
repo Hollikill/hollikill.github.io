@@ -35,6 +35,10 @@ body > div > div {
     font-weight: 600;
 }
 
+#items_holder > div:nth-child(4n-2) {
+    background: #292929;
+}
+
 .job_listing *, .skill_listing *, .item_listing * {
     flex: 1;
     text-align: center;

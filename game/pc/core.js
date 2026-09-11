@@ -14,6 +14,10 @@ const gain_base_time = 4; // base number of days per second
 const gain_base_xp = 10; // base number of xp per day
 var is_time_stepping = false; // is time proceeding
 
+// visual/display settings
+window.number_display_mode = "standard";
+const number_display_modes = ["standard", "e", "unformatted"]
+
 window.dev_speed = 1; // speed multiplier for rapid iterative testing without disregarding normal path to get there
 
 //////////////////
@@ -37,7 +41,13 @@ var master_skills_data = {
     },
     "time_speed" : {
         scaling : [
-            {type: "log", degree:6},
+            {type: "linear", degree:0.001},
+            {type: "log", degree:100},
+        ]
+    },
+    "qol_all" : {
+        scaling : [
+            {type: "linear", degree:0.01},
         ]
     },
 }
@@ -170,7 +180,7 @@ var skills_data = {
         components : [
             {skill: "job_xp", part: 1, class:'a'}
         ],
-        requirements : new Requirements().Add("skill", 10, "concentration"),
+        requirements : new Requirements().Add("skill", 5, "concentration"),
     },
     "charisma" : {
         xp : {
@@ -183,7 +193,20 @@ var skills_data = {
         components : [
             {skill: "job_pay", part: 1, class:'a'}
         ],
-        requirements : new Requirements(0.3).Add("job", 15, "farmer").Add("skill", 15, "productivity"),
+        requirements : new Requirements(0.3).Add("job", 15, "farmer").Add("skill", 20, "productivity"),
+    },
+    "meditation" : {
+        xp : {
+            scaling : [
+                {type: "exp", degree:0.01},
+                {type: "linear", degree:1},
+            ],
+            value : 50
+        },
+        components : [
+            {skill: "qol_all", part: 1, class:'a'}
+        ],
+        requirements : new Requirements(0.3).Add("skill", 30, "concentration").Add("skill", 20, "productivity"),
     },
     "arcane presence" : {
         xp : {
@@ -196,17 +219,123 @@ var skills_data = {
         components : [
             {skill: "time_speed", part: 1, class:'a'}
         ],
-        requirements : new Requirements(0.25).Add("job", 200, "beggar").Add("skill", 200, "concentration").Add("skill", 200, "productivity"),
+        requirements : new Requirements(0.25).Add("job", 200, "beggar").Add("skill", 200, "concentration").Add("skill", 200, "meditation"),
     },
 }
 
 var items_data = {
+    "tent" : {
+        singleton : "home",
+        cost : 15,
+        components : [
+            {skill: "qol_all", part: 1.4, class:'item'}
+        ],
+        requirements : new Requirements().Add("money", 1500),
+    },
+    "hut" : {
+        singleton : "home",
+        cost : 100,
+        components : [
+            {skill: "qol_all", part: 2, class:'item'}
+        ],
+        requirements : new Requirements().Add("money", 10000),
+    },
+    "cottage" : {
+        singleton : "home",
+        cost : 750,
+        components : [
+            {skill: "qol_all", part: 3.5, class:'item'}
+        ],
+        requirements : new Requirements().Add("money", 75000),
+    },
+    "house" : {
+        singleton : "home",
+        cost : 3000,
+        components : [
+            {skill: "qol_all", part: 6, class:'item'}
+        ],
+        requirements : new Requirements().Add("money", 300000),
+    },
+    "mansion" : {
+        singleton : "home",
+        cost : 25000,
+        components : [
+            {skill: "qol_all", part: 12, class:'item'}
+        ],
+        requirements : new Requirements().Add("money", 2500000),
+    },
+    "skyscraper" : {
+        singleton : "home",
+        cost : 300000,
+        components : [
+            {skill: "qol_all", part: 25, class:'item'}
+        ],
+        requirements : new Requirements().Add("money", 30000000),
+    },
+    "palace" : {
+        singleton : "home",
+        cost : 5000000,
+        components : [
+            {skill: "qol_all", part: 60, class:'item'}
+        ],
+        requirements : new Requirements().Add("money", 500000000),
+    },
+
     "book" : {
         cost : 10,
         components : [
             {skill: "skill_xp", part: 1.5, class:'item'}
         ],
         requirements : new Requirements().Add("money", 1000),
+    },
+    "dumbbells" : {
+        cost : 50,
+        components : [
+            {skill: "skill_xp", part: 1, class:'item'}
+        ],
+        requirements : new Requirements().Add("money", 5000),
+    },
+    "personal squire" : {
+        cost : 200,
+        components : [
+            {skill: "job_xp", part: 2, class:'item'}
+        ],
+        requirements : new Requirements().Add("money", 20000),
+    },
+    "steel longsword" : {
+        cost : 1000,
+        components : [
+            {skill: "skill_xp", part: 1, class:'item'}
+        ],
+        requirements : new Requirements().Add("money", 100000),
+    },
+    "butler" : {
+        cost : 7500,
+        components : [
+            {skill: "qol_all", part: 1.5, class:'item'}
+        ],
+        requirements : new Requirements().Add("money", 750000),
+    },
+    "sapphire charm" : {
+        cost : 50000,
+        components : [
+            {skill: "skill_xp", part: 1, class:'item'}
+        ],
+        requirements : new Requirements().Add("money", 5000000),
+    },
+    "study desk" : {
+        cost : 1000000,
+        components : [
+            {skill: "skill_xp", part: 2, class:'item'}
+        ],
+        requirements : new Requirements().Add("money", 100000000),
+    },
+    "library" : {
+        cost : 10000000,
+        components : [
+            {skill: "skill_xp", part: 1.5, class:'item'}
+        ],
+        requirements : new Requirements().Add("money", 1000000000),
     },
 }
 
@@ -273,6 +402,21 @@ Time.appendSymbol('epoch', 200)
 Time.appendSymbol('eon', 14) // no real end here
 Time.setDisplayMode("pre_unstyled")
 
+var StandardNotation = new Units()
+StandardNotation.appendSymbol('', 1000)
+StandardNotation.appendSymbol('k', 1000)
+StandardNotation.appendSymbol('M', 1000)
+StandardNotation.appendSymbol('B', 1000)
+StandardNotation.appendSymbol('T', 1000)
+StandardNotation.appendSymbol('Qa', 1000)
+StandardNotation.appendSymbol('Qu', 1000)
+StandardNotation.appendSymbol('Sx', 1000)
+StandardNotation.appendSymbol('Sp', 1000)
+StandardNotation.appendSymbol('Oc', 1000)
+StandardNotation.appendSymbol('No', 1000)
+StandardNotation.appendSymbol('Dc', 1000)
+StandardNotation.setDisplayMode("post_d2");
+
 //////////////////
 // player data
 var playerdata = {
@@ -311,6 +455,7 @@ var SelectActiveSkill = function(u_skillname) {
 
 var SelectItem = function(u_itemname, flag_disable=false) {
     if (items_data[u_itemname]) {
+        playerdata.items[u_itemname].last_selected = Date.now();
         if (playerdata.items[u_itemname].enabled == true || flag_disable) {
             removeCSSClass(document.getElementById(u_itemname+"_item_listing"), "active_item_listing");
             playerdata.items[u_itemname].enabled = false;
@@ -353,6 +498,18 @@ var ToggleTimeStepping = function() {
 }
 window.ToggleTimeStepping = ToggleTimeStepping;
 
+var SetNumberDisplayMode = function(u_number_display_mode) {
+    let valid_mode = false
+    for (let i in number_display_modes) {
+        if (number_display_modes[i] == u_number_display_mode) {
+            number_display_mode = u_number_display_mode;
+            valid_mode = true;
+        }
+    }
+    if (!valid_mode) number_display_mode = number_display_modes[0];
+}
+window.SetNumberDisplayMode = SetNumberDisplayMode;
+
 ////////////////////////////
 // core loop
 var Gameloop = function() {
@@ -363,6 +520,7 @@ var Gameloop = function() {
         TickDay(delta_ms);
         CalculateSkillEffects(true);
     }
+    VerifyItemSingletons();
 
     UpdateDisplay();
 
@@ -504,6 +662,7 @@ var Setup = function() {
             cost: item.cost,
             effects : [], // effects empty until later setup function
             enabled : false,
+            last_selected : Date.now(),
         }
     }
 
@@ -538,7 +697,7 @@ var TickDay = function(delta_ms) {
         let job = jobs_data[playerdata.active.job]
 
         playerdata.resources.money += days_passed * playerdata.jobs[playerdata.active.job].earn * playerdata.skill_effects["job_pay"]; // add income for day
-        playerdata.jobs[playerdata.active.job].xp -= days_passed * gain_base_xp * playerdata.skill_effects["job_xp"]; // add xp for day
+        playerdata.jobs[playerdata.active.job].xp -= days_passed * gain_base_xp * playerdata.skill_effects["job_xp"] * playerdata.skill_effects["qol_all"]; // add xp for day
 
         // process any job level ups
         while (playerdata.jobs[playerdata.active.job].xp <= 0){
@@ -552,7 +711,7 @@ var TickDay = function(delta_ms) {
     if (skills_data[playerdata.active.skill]) { // make sure skill exists
         let skill = skills_data[playerdata.active.skill]
 
-        playerdata.skills[playerdata.active.skill].xp -= days_passed * gain_base_xp * playerdata.skill_effects["skill_xp"]; // add xp for day
+        playerdata.skills[playerdata.active.skill].xp -= days_passed * gain_base_xp * playerdata.skill_effects["skill_xp"] * playerdata.skill_effects["qol_all"]; // add xp for day
 
         // process any skill level ups
         while (playerdata.skills[playerdata.active.skill].xp <= 0){
@@ -628,7 +787,7 @@ var CalculateSkillEffects = function(flag_reloadall = false) {
         let item_effects = playerdata.items[itemname].effects;
         for (let i in item_effects) {
             unique_class_iterator += 1;
-            let unique_class_id = "item." + unique_class_iterator;
+            let unique_class_id = "item-" + unique_class_iterator;
             if (item_effects[i].class != 'item')  unique_class_id = item_effects[i].class;
             if (!(master_skill_levels[item_effects[i].skill][unique_class_id])) master_skill_levels[item_effects[i].skill][unique_class_id] = 0;
             master_skill_levels[item_effects[i].skill][unique_class_id] += item_effects[i].value;
@@ -650,6 +809,26 @@ var CalculateSkillEffects = function(flag_reloadall = false) {
     }
 }
 
+var VerifyItemSingletons = function() {
+    for (let itemname in items_data) {
+        if (playerdata.items[itemname].enabled && items_data[itemname].singleton) {
+            for (let otheritemname in items_data) {
+                if (items_data[otheritemname].singleton) {
+                    if (playerdata.items[otheritemname].enabled && items_data[otheritemname].singleton == items_data[itemname].singleton && itemname != otheritemname) {
+                        if (playerdata.items[itemname].last_selected >= playerdata.items[otheritemname].last_selected) {
+                            SelectItem(otheritemname, true);
+                        }
+                        else {
+                            SelectItem(itemname, true);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 //////////////////
 // Display functions
 
@@ -665,8 +844,8 @@ var UpdateUI_Jobs = function(flag_reloadall = false) {
     for (let jobname in jobs_data) {
         if (jobname == playerdata.active.job || flag_reloadall) {
             document.getElementById(jobname + "_level").innerHTML = playerdata.jobs[jobname].level;
-            document.getElementById(jobname + "_xp_day").innerHTML = Places(gain_base_xp * playerdata.skill_effects["job_xp"], 1);
-            document.getElementById(jobname + "_xp_left").innerHTML = Math.trunc(playerdata.jobs[jobname].xp);
+            document.getElementById(jobname + "_xp_day").innerHTML = Places(gain_base_xp * playerdata.skill_effects["job_xp"] * playerdata.skill_effects["qol_all"], 1);
+            document.getElementById(jobname + "_xp_left").innerHTML = Places(playerdata.jobs[jobname].xp, 0);
             document.getElementById(jobname + "_earn").innerHTML = Currency(playerdata.jobs[jobname].earn * playerdata.skill_effects["job_pay"]);
 
             // update progress bar
@@ -681,8 +860,8 @@ var UpdateUI_Skills = function(flag_reloadall = false) {
     for (let skillname in skills_data) {
         if (skillname == playerdata.active.skill || flag_reloadall) {
             document.getElementById(skillname + "_level").innerHTML = playerdata.skills[skillname].level;
-            document.getElementById(skillname + "_xp_day").innerHTML = Places(gain_base_xp * playerdata.skill_effects["skill_xp"], 1);
-            document.getElementById(skillname + "_xp_left").innerHTML = Math.trunc(playerdata.skills[skillname].xp);
+            document.getElementById(skillname + "_xp_day").innerHTML = Places(gain_base_xp * playerdata.skill_effects["skill_xp"] * playerdata.skill_effects["qol_all"], 1);
+            document.getElementById(skillname + "_xp_left").innerHTML = Places(playerdata.skills[skillname].xp, 0);
             document.getElementById(skillname + "_effect").innerHTML = "+"+ Places(playerdata.skills[skillname].effects[0].value, 2) + " " + playerdata.skills[skillname].effects[0].class + ":" + playerdata.skills[skillname].effects[0].skill;
 
             // update progress bar
@@ -799,6 +978,10 @@ var UpdateUI_PlayerInfo = function() {
     document.getElementById("player_net_money").innerHTML = Currency(income + expenses);
     document.getElementById("player_income").innerHTML = Currency(income);
     document.getElementById("player_expenses").innerHTML = Currency(expenses);
+
+    document.getElementById("player_happiness").innerHTML = Places(playerdata.skill_effects["qol_all"], 2);
+
+    document.getElementById("player_time_speed").innerHTML = Places(playerdata.skill_effects["time_speed"], 2);
 }
 
 //////////////////
@@ -837,11 +1020,29 @@ var Currency = function (value, places = 2) { // returns innerHTML for display u
 }
 window.Currency = Currency;
 
-var Places = function (value, places) {
-    value *= (10 ** places);
-    value = Math.trunc(value);
-    value /= (10 ** places);
-    return value;
+var Places = function (value, places=2, threshold=3) {
+    if (value < (10 ** threshold)) {
+        value *= (10 ** places);
+        value = Math.trunc(value);
+        value /= (10 ** places);
+        return value;
+    }
+    else {
+        switch(number_display_mode) {
+            case "standard":
+                value = StandardNotation.format(value, 1);
+                break;
+            case "e":
+                let e_mag = Math.floor(Math.log10(value));
+                value /= (10 ** (e_mag-2));
+                value = (Math.trunc(value)/100)+"e+"+e_mag;
+                break;
+            default:
+                value = Math.trunc(value);
+                break;
+        }
+        return value;
+    }
 }
 
 //////////////////////// THIS SNIPPET FROM THE INTERNET

@@ -1,3 +1,10 @@
+alpha.5 --/--/----
+- added time warping ui stat
+- added homes
+- added more items
+- added more skills and skill effects
+- added standard and scientific number notations
+
 alpha.4 9/10/2026
 - changed skill effect calculation
 - added items

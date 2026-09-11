@@ -27,6 +27,8 @@
                 <br>
                 <p><b>HAPPINESS</b> <span id="player_happiness">###</span>x</p>
                 <p><i>affects all XP gain</i></p>
+                <br>
+                <p><b>TIME WARPING</b> <span id="player_time_speed">###</span>x</p>
             </div>
             <div style="flex: 4;">
                 <div style="display:flex;margin:0 0 1em;">
@@ -62,7 +64,8 @@
                         </div>
                     </div>
                     <div style="flex:1;" id="settings_holder">
-                        Nothing Yet :)
+                        <p>Number Display Mode</p>
+                        <button onclick="SetNumberDisplayMode('standard')">Standard</button> <button onclick="SetNumberDisplayMode('e')">Scientific</button> <button onclick="SetNumberDisplayMode('unformatted')">Unformatted</button>
                     </div>
                 </div>
             </div>
