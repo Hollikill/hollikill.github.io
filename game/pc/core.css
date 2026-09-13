@@ -35,13 +35,21 @@ body > div > div {
     font-weight: 600;
 }
 
-#items_holder > div:nth-child(4n-2) {
+#items_holder > .item_listing:nth-child(4n+1), #items_holder > .item_listing:nth-child(4n+2) {
     background: #292929;
 }
 
-.job_listing *, .skill_listing *, .item_listing * {
+.job_listing *, .skill_listing *, .item_listing *, .listing_header * {
     flex: 1;
     text-align: center;
+}
+
+.job_listing *:nth-child(1), .skill_listing *:nth-child(1), .item_listing *:nth-child(1), .listing_header *:nth-child(1) {
+    flex: 3;
+}
+
+.skill_listing *:nth-child(5), .item_listing *:nth-child(3), #skills_holder > .listing_header *:last-child, #items_holder > .listing_header *:last-child {
+    flex: 2;
 }
 
 .active_job_listing, .active_skill_listing {
@@ -140,10 +148,6 @@ button {
 .listing_header {
     display: flex;
     text-align: center;
-}
-
-.listing_header * {
-    flex: 1;
 }
 
 #toggle_time_button {

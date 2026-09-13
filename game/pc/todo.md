@@ -9,19 +9,27 @@
   - [ ] autosave to localstorage
   - [ ] add hard reset without reloading page
 - [ ] figure out how to display effect multiplier for skills (and for nonlinear skills)
-- [ ] add early falloff scaling type
-  - reduces effect of all scalers below a certain value, after which it does nothing
+- [x] add scaling softcap
 
 ---
 
 ## larger tasks
 
-- [ ] add job/skill category header colors
-- [ ] automatically hide job/skill category headers if none of their listings are visible
+- [x] add job/skill category header colors
+- [x] automatically hide job/skill category headers if none of their listings are visible
   - note: this does not include requirement listings, those can appear without the header
-- [ ] create generalized classes for skills and jobs and merge methods
-  - get multipliers from one place
-- [ ] add max level resets
+- [ ] add death
+  - [ ] add combat and dangerous jobs
+    - [ ] add health & damage
+      - damage accumulates in discrete 'wounds', reducing lifespan and decreasing combat safety. Wounds have a location on a coordinate space (3d? 2d?), and if another wound comes close enough they may combine to a more serious wound that has greater total effect.
+      - add health to UI. Health is an measure of your damage, deliniated in named stages.
+  - [ ] in-world legacy tallying (max levels)
+    - world_data holds legacy information for first reset tier
+- [ ] event log
+  - random events with rewards such as:
+    - extra money
+    - heal a random wound (if applicable)
+  - logs combat damage
 
 ---
 
@@ -66,7 +74,7 @@
       - complex symbols and shapes (high): ∾ ⋣ ◎ ☵ ♅ ⛡ 🜅 🜆 ♎︎ ♑︎
     - color ranges to go along with shorthands, seperate per dict.
       - implement culling to prevent similar colors
-      - ascended or very high currencies have special text effects
+      - ascended or very high currencies have special text effects (check for lag)
   - [ ] procedurally generated timekeeping systems
 - [ ] add owning vs. renting houses/items
   - [ ] neccesarialy also add conditions for when you can control a world or part of world
@@ -75,8 +83,6 @@
     - flat monetary cost, hardcapped by the largest house size than can be contained in the 'universe size'
   - [ ] allow creation of items past a max technology level of a world
     - flat monetary cost, requires sufficient skill prerequisites, softcapped past 'universe size' tech level via a multiplier to all costs
-- [ ] add death + in-world legacy tallying
-- [ ] add combat and dangerous jobs
 - [ ] add ascended worlds & transcension
   - additional world stages that essentialy add content when the player has transcended the boundries of their world.
   - releases some restrictions on powers of alternate awakened systems

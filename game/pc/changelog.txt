@@ -1,14 +1,16 @@
-alpha.5 --/--/----
+alpha.5 9/12/2026
 - added time warping ui stat
 - added homes
 - added more items
 - added more skills and skill effects
 - added standard and scientific number notations
 - added category headers
+- near-full code refactoring
+- added military jobs & combat skills (not fully implemented)
 
 alpha.4 9/10/2026
 - changed skill effect calculation
-- added items
+- added item
 - code refactor for better requirement handling
 - fixed below 1 decimal value display (float bug... ugh)
 - added expense and net money display

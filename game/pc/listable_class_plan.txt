@@ -5,6 +5,8 @@ Listable:
         category, id
         // eg. "income", "job_pay"
         // inheriting classes will override this method, switch for added categories, then super.addmultiplier()
+    f: get multiplier
+        category
     f: get requirements
         // if none exists, creates one
     f: get category

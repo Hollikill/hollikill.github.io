@@ -1,6 +1,6 @@
 // imports
 //import {} from 'break_eternity.js'
-import { Units, Requirements } from './classes.js'
+import { Units, Requirements, Listable, Levelable, Job, Skill, Buyable } from './classes.js'
 
 //////////////////
 // variable declaration
@@ -12,6 +12,7 @@ var last_frame_ms = Date.now(); // last computed frame in ms
 // game loop control
 const gain_base_time = 4; // base number of days per second
 const gain_base_xp = 10; // base number of xp per day
+window.gain_base_xp = gain_base_xp;
 var is_time_stepping = false; // is time proceeding
 
 // visual/display settings
@@ -50,6 +51,31 @@ var master_skills_data = {
             {type: "linear", degree:0.01},
         ]
     },
+    "item_cost" : {
+        scaling : [
+            {type: "exp", degree:-0.01, softcap: {start: 50, strength: 0.5}},
+        ]
+    },
+    "xp_all_spillover" : {
+        scaling : [
+            {type: "linear", degree:0.01},
+        ]
+    },
+    "military_job_pay" : {
+        scaling : [
+            {type: "linear", degree:0.01},
+        ]
+    },
+    "military_job_xp" : {
+        scaling : [
+            {type: "linear", degree:0.01},
+        ]
+    },
+    "strength_skill_xp" : {
+        scaling : [
+            {type: "linear", degree:0.01},
+        ]
+    },
 }
 
 //////////////////
@@ -70,7 +96,7 @@ var jobs_data = {
             ],
             value : 5
         },
-        category: "basic",
+        category: "mortal",
     },
     "farmer" : {
         xp : {
@@ -86,7 +112,7 @@ var jobs_data = {
             ],
             value : 9
         },
-        category: "basic",
+        category: "mortal",
         requirements : new Requirements().Add("job", 10, "beggar"),
     },
     "fisher" : {
@@ -103,7 +129,7 @@ var jobs_data = {
             ],
             value : 15
         },
-        category: "basic",
+        category: "mortal",
         requirements : new Requirements().Add("job", 10, "farmer"),
     },
     "miner" : {
@@ -120,7 +146,7 @@ var jobs_data = {
             ],
             value : 40
         },
-        category: "basic",
+        category: "mortal",
         requirements : new Requirements().Add("job", 10, "fisher").Add("skill", 10, "strength"),
     },
     "blacksmith" : {
@@ -137,7 +163,7 @@ var jobs_data = {
             ],
             value : 80
         },
-        category: "basic",
+        category: "mortal",
         requirements : new Requirements().Add("job", 10, "miner").Add("skill", 30, "strength"),
     },
     "merchant" : {
@@ -154,13 +180,59 @@ var jobs_data = {
             ],
             value : 150
         },
-        category: "basic",
+        category: "mortal",
         requirements : new Requirements().Add("job", 10, "blacksmith").Add("skill", 50, "bargaining"),
     },
-}
 
-//window.testreq = new Requirements();
-//testreq.Add("job", 20, "beggar");
+    "squire" : {
+        xp : { value : 100 },
+        earn : { value : 5 },
+        category: "military",
+        requirements : new Requirements().Add("skill", 5, "strength"),
+    },
+    "footman" : {
+        xp : { value : 1000 },
+        earn : { value : 50 },
+        category: "military",
+        requirements : new Requirements().Add("skill", 40, "strength").Add("job", 10, "squire"),
+    },
+    "veteran footman" : {
+        xp : { value : 10000 },
+        earn : { value : 120 },
+        category: "military",
+        requirements : new Requirements().Add("skill", 40, "battle tactics").Add("job", 10, "footman"),
+    },
+    "centenary" : {
+        xp : { value : 100000 },
+        earn : { value : 300 },
+        category: "military",
+        requirements : new Requirements().Add("skill", 100, "strength").Add("job", 10, "veteran footman"),
+    },
+    "knight" : {
+        xp : { value : 1000000 },
+        earn : { value : 1000 },
+        category: "military",
+        requirements : new Requirements().Add("skill", 150, "battle tactics").Add("job", 10, "centenary"),
+    },
+    "veteran knight" : {
+        xp : { value : 7500000 },
+        earn : { value : 3000 },
+        category: "military",
+        requirements : new Requirements().Add("skill", 300, "strength").Add("job", 10, "knight"),
+    },
+    "holy knight" : {
+        xp : { value : 40000000 },
+        earn : { value : 15000 },
+        category: "military",
+        requirements : new Requirements().Add("skill", 500, "mana control").Add("job", 10, "veteran knight"),
+    },
+    "lieutenant general" : {
+        xp : { value : 150000000 },
+        earn : { value : 50000 },
+        category: "military",
+        requirements : new Requirements().Add("skill", 1000, "battle tactics").Add("skill", 1000, "mana control").Add("job", 10, "holy knight"),
+    },
+}
 
 var skills_data = {
     "concentration" : {
@@ -174,7 +246,7 @@ var skills_data = {
         components : [
             {skill: "skill_xp", part: 1, class:'a'}
         ],
-        category: "basic",
+        category: "fundamentals",
     },
     "productivity" : {
         xp : {
@@ -187,22 +259,18 @@ var skills_data = {
         components : [
             {skill: "job_xp", part: 1, class:'a'}
         ],
-        category: "basic",
+        category: "fundamentals",
         requirements : new Requirements().Add("skill", 5, "concentration"),
     },
-    "charisma" : {
+    "bargaining" : {
         xp : {
-            scaling : [
-                {type: "exp", degree:0.01},
-                {type: "linear", degree:1},
-            ],
             value : 50
         },
         components : [
-            {skill: "job_pay", part: 1, class:'a'}
+            {skill: "item_cost", part: 1, class:'a'}
         ],
-        category: "basic",
-        requirements : new Requirements(0.3).Add("job", 15, "farmer").Add("skill", 20, "productivity"),
+        category: "fundamentals",
+        requirements : new Requirements(0.3).Add("job", 15, "farmer").Add("skill", 15, "productivity"),
     },
     "meditation" : {
         xp : {
@@ -215,9 +283,80 @@ var skills_data = {
         components : [
             {skill: "qol_all", part: 1, class:'a'}
         ],
-        category: "basic",
+        category: "fundamentals",
         requirements : new Requirements(0.3).Add("skill", 30, "concentration").Add("skill", 20, "productivity"),
     },
+    "knowledge" : {
+        xp : {
+            scaling : [
+                {type: "exp", degree:0.01},
+                {type: "linear", degree:1},
+            ],
+            value : 100
+        },
+        components : [
+            {skill: "xp_all_spillover", part: 1, class:'a'}
+        ],
+        category: "fundamentals",
+        requirements : new Requirements(0.15).Add("job", 50, "beggar").Add("skill", 75, "concentration").Add("skill", 75, "productivity"),
+    },
+    "charisma" : {
+        xp : {
+            scaling : [
+                {type: "exp", degree:0.01},
+                {type: "linear", degree:1},
+            ],
+            value : 50
+        },
+        components : [
+            {skill: "job_pay", part: 1, class:'a'}
+        ],
+        category: "fundamentals",
+        requirements : new Requirements(0.3).Add("job", 25, "merchant").Add("skill", 75, "bargaining").Add("job", 9999, "beggar"),
+    },
+
+    "strength" : {
+        xp : {
+            scaling : [
+                {type: "exp", degree:0.01},
+                {type: "linear", degree:1},
+            ],
+            value : 50
+        },
+        components : [
+            {skill: "military_job_pay", part: 1, class:'a'}
+        ],
+        category: "combat",
+    },
+    "battle tactics" : {
+        xp : {
+            scaling : [
+                {type: "exp", degree:0.01},
+                {type: "linear", degree:1},
+            ],
+            value : 50
+        },
+        components : [
+            {skill: "military_job_xp", part: 1, class:'a'}
+        ],
+        category: "combat",
+        requirements : new Requirements().Add("skill", 20, "concentration"),
+    },
+    "muscle memory" : {
+        xp : {
+            scaling : [
+                {type: "exp", degree:0.01},
+                {type: "linear", degree:1},
+            ],
+            value : 50
+        },
+        components : [
+            {skill: "strength_skill_xp", part: 1, class:'a'}
+        ],
+        category: "combat",
+        requirements : new Requirements().Add("skill", 30, "concentration").Add("skill", 30, "strength"),
+    },
+
     "arcane presence" : {
         xp : {
             scaling : [
@@ -230,7 +369,7 @@ var skills_data = {
             {skill: "time_speed", part: 1, class:'a'}
         ],
         category: "magic",
-        requirements : new Requirements(0.25).Add("job", 200, "beggar").Add("skill", 200, "concentration").Add("skill", 200, "meditation"),
+        requirements : new Requirements(0.25).Add("skill", 200, "concentration").Add("skill", 200, "meditation").Add("job", 9999, "beggar"),
     },
 }
 
@@ -302,7 +441,7 @@ var items_data = {
     "dumbbells" : {
         cost : 50,
         components : [
-            {skill: "skill_xp", part: 1, class:'item'}
+            {skill: "strength_skill_xp", part: 1.5, class:'item'}
         ],
         requirements : new Requirements().Add("money", 5000),
     },
@@ -316,7 +455,7 @@ var items_data = {
     "steel longsword" : {
         cost : 1000,
         components : [
-            {skill: "skill_xp", part: 1, class:'item'}
+            {skill: "military_job_xp", part: 2, class:'item'}
         ],
         requirements : new Requirements().Add("money", 100000),
     },
@@ -348,6 +487,18 @@ var items_data = {
         ],
         requirements : new Requirements().Add("money", 1000000000),
     },
+}
+
+var categories_data = {
+    mortal: "#568b40",
+    military: "#853737",
+
+    fundamentals: "#568b40",
+    combat: "#853737",
+    magic: "#b33c83",
+
+    home: "#4d97aa",
+    misc: "#7b8e8f",
 }
 
 // unit formatting in the world
@@ -429,12 +580,9 @@ StandardNotation.appendSymbol('Dc', 1000)
 StandardNotation.setDisplayMode("post_d2");
 
 //////////////////
-// player data
+// game data
 var playerdata = {
-    jobs : {},
-    skills : {},
     skill_effects : {},
-    items : {},
     active : {
         job : "none",
         skill : "none",
@@ -445,37 +593,26 @@ var playerdata = {
     }
 }
 
+var worlddata = {
+    jobs: {},
+    skills: {},
+    items : {},
+}
+
 //////////////////
 // User interaction functions
 
 var SelectActiveJob = function(u_jobname) {
-    if (jobs_data[u_jobname] && u_jobname != playerdata.active.job) {
-        if (jobs_data[playerdata.active.job]) { removeCSSClass(document.getElementById(playerdata.active.job+"_job_listing"), "active_job_listing"); } // remove old active job css class
-        playerdata.active.job = u_jobname;
-        addCSSClass(document.getElementById(playerdata.active.job+"_job_listing"), "active_job_listing");
-    }
+    worlddata.jobs[u_jobname].SetActive();
 }
 
 var SelectActiveSkill = function(u_skillname) {
-    if (skills_data[u_skillname] && u_skillname != playerdata.active.skill) {
-        if (skills_data[playerdata.active.skill]) { removeCSSClass(document.getElementById(playerdata.active.skill+"_skill_listing"), "active_skill_listing"); } // remove old active skill css class
-        playerdata.active.skill = u_skillname;
-        addCSSClass(document.getElementById(playerdata.active.skill+"_skill_listing"), "active_skill_listing");
-    }
+    worlddata.skills[u_skillname].SetActive();
 }
 
-var SelectItem = function(u_itemname, flag_disable=false) {
-    if (items_data[u_itemname]) {
-        playerdata.items[u_itemname].last_selected = Date.now();
-        if (playerdata.items[u_itemname].enabled == true || flag_disable) {
-            removeCSSClass(document.getElementById(u_itemname+"_item_listing"), "active_item_listing");
-            playerdata.items[u_itemname].enabled = false;
-        }
-        else {
-            addCSSClass(document.getElementById(u_itemname+"_item_listing"), "active_item_listing");
-            playerdata.items[u_itemname].enabled = true;
-        }
-    }
+var SelectItem = function(u_itemname) {
+    worlddata.items[u_itemname].SetActive();
+    if (worlddata.items[u_itemname].GetSingleton()) VerifyItemSingletons(worlddata.items[u_itemname].GetSingleton());
 }
 
 var SelectMainContentTab = function(tabname) {
@@ -524,6 +661,9 @@ window.SetNumberDisplayMode = SetNumberDisplayMode;
 ////////////////////////////
 // core loop
 var Gameloop = function() {
+    window.playerdata = playerdata;
+    window.worlddata = worlddata;
+
     let delta_ms = Date.now() - last_frame_ms;
     last_frame_ms = Date.now();
 
@@ -531,15 +671,12 @@ var Gameloop = function() {
         TickDay(delta_ms);
         CalculateSkillEffects(true);
     }
-    VerifyItemSingletons();
 
     UpdateDisplay();
-
-    window.playerdata = playerdata;
 }
 
 var Setup = function() {
-    let created_categories = []
+    let created_categories = [];
 
     // setup each job
     let jobs_holder = document.getElementById("jobs_holder")
@@ -549,15 +686,16 @@ var Setup = function() {
         if (!created_categories.includes(job.category)) {
             let category_header = document.createElement("div"); jobs_holder.appendChild(category_header);
             category_header.className = "listing_header";
-            category_header.style.backgroundColor = "#814949";
+            category_header.style.backgroundColor = categories_data[job.category];
             category_header.innerHTML = "<div>"+job.category+"</div><div>Level</div><div>XP/day</div><div>XP to Level</div><div>Income</div>";
             created_categories.push(job.category);
+            category_header.id = "category_job_"+job.category;
         }
 
         // HTML add to holder
         let job_listing = document.createElement("div"); jobs_holder.appendChild(job_listing); // create holding div
         job_listing.className = "job_listing";
-        job_listing.id = jobname+"_job_listing";
+        job_listing.id = jobname+"_listing";
 
         // HTML button features
         let listing_button = document.createElement("button"); job_listing.appendChild(listing_button); // create job selection button
@@ -579,20 +717,23 @@ var Setup = function() {
         listing_info_income.id = jobname + "_earn"
 
         // HTML create requirements text
-        if (job.requirements) {
-            let listing_req_text = document.createElement("div"); jobs_holder.appendChild(listing_req_text);
-            listing_req_text.style.visibility = "hidden";
-            listing_req_text.style.display = "none";
-            listing_req_text.className = "req_text"
-            listing_req_text.id = jobname+"_req_text"
-        }
+        //if (job.requirements) {
+        let listing_req_text = document.createElement("div"); jobs_holder.appendChild(listing_req_text);
+        listing_req_text.style.visibility = "hidden";
+        listing_req_text.style.display = "none";
+        listing_req_text.className = "req_text"
+        listing_req_text.id = jobname+"_req_text"
+        //}
 
-        // add to playerdata
-        playerdata.jobs[jobname] = {
-            xp : job.xp.value,
-            level : 0,
-            earn : job.earn.value,
-        }
+        // add to worlddata
+        worlddata.jobs[jobname] = new Job(jobname, job.category, job.xp["value"], job.earn["value"]);
+        worlddata.jobs[jobname].requirements = job.requirements;
+        worlddata.jobs[jobname].AddMultiplier("xp", "job_xp");
+        worlddata.jobs[jobname].AddMultiplier("xp", "qol_all");
+        worlddata.jobs[jobname].AddMultiplier("earn", "job_pay");
+        worlddata.jobs[jobname].AddMultiplier("xp_inactive", "xp_all_spillover");
+        worlddata.jobs[jobname].AddMultiplier("xp", "military_job_xp", {category: "military"});
+        worlddata.jobs[jobname].AddMultiplier("earn", "military_job_pay", {category: "military"});
     }
 
     created_categories = [];
@@ -604,15 +745,16 @@ var Setup = function() {
         if (!created_categories.includes(skill.category)) {
             let category_header = document.createElement("div"); skills_holder.appendChild(category_header);
             category_header.className = "listing_header";
-            category_header.style.backgroundColor = "#814949";
+            category_header.style.backgroundColor = categories_data[skill.category];
             category_header.innerHTML = "<div>"+skill.category+"</div><div>Level</div><div>XP/day</div><div>XP to Level</div><div>Effect</div>";
             created_categories.push(skill.category);
+            category_header.id = "category_skill_"+skill.category;
         }
 
         // HTML add to holder
         let skill_listing = document.createElement("div"); skills_holder.appendChild(skill_listing); // create holding div
         skill_listing.className = "skill_listing";
-        skill_listing.id = skillname+"_skill_listing";
+        skill_listing.id = skillname+"_listing";
 
         // HTML button features
         let listing_button = document.createElement("button"); skill_listing.appendChild(listing_button); // create skill selection button
@@ -634,20 +776,21 @@ var Setup = function() {
         listing_info_effect.id = skillname + "_effect"
 
         // HTML create requirements text
-        if (skill.requirements) {
-            let listing_req_text = document.createElement("div"); skills_holder.appendChild(listing_req_text);
-            listing_req_text.style.visibility = "hidden";
-            listing_req_text.style.display = "none";
-            listing_req_text.className = "req_text"
-            listing_req_text.id = skillname+"_req_text"
-        }
+        //if (skill.requirements) {
+        let listing_req_text = document.createElement("div"); skills_holder.appendChild(listing_req_text);
+        listing_req_text.style.visibility = "hidden";
+        listing_req_text.style.display = "none";
+        listing_req_text.className = "req_text"
+        listing_req_text.id = skillname+"_req_text"
+        //}
 
-        // add to playerdata
-        playerdata.skills[skillname] = {
-            xp : skill.xp.value,
-            level : 0,
-            effects : [], // effects empty until later setup function
-        }
+        // add to worlddata
+        worlddata.skills[skillname] = new Skill(skillname, skill.category, skill.xp["value"], skill.components);
+        worlddata.skills[skillname].requirements = skill.requirements;
+        worlddata.skills[skillname].AddMultiplier("xp", "skill_xp");
+        worlddata.skills[skillname].AddMultiplier("xp", "qol_all");
+        worlddata.skills[skillname].AddMultiplier("xp_inactive", "xp_all_spillover");
+        worlddata.skills[skillname].AddMultiplier("xp", "strength_skill_xp", {name: "strength"});
     }
 
     // setup master skills effect list
@@ -666,15 +809,16 @@ var Setup = function() {
         if (!created_categories.includes(item_category)) {
             let category_header = document.createElement("div"); items_holder.appendChild(category_header);
             category_header.className = "listing_header";
-            category_header.style.backgroundColor = "#814949";
+            category_header.style.backgroundColor = categories_data[item_category];
             category_header.innerHTML = "<div>"+item_category+"</div><div>Cost/day</div><div>Effect</div>";
             created_categories.push(item_category);
+            category_header.id = "category_item_"+item_category;
         }
 
         // HTML add to holder
         let item_listing = document.createElement("div"); items_holder.appendChild(item_listing); // create holding div
         item_listing.className = "item_listing";
-        item_listing.id = itemname+"_item_listing";
+        item_listing.id = itemname+"_listing";
 
         // HTML button features
         let listing_button = document.createElement("button"); item_listing.appendChild(listing_button); // create item toggle button
@@ -690,21 +834,18 @@ var Setup = function() {
         listing_info_effect.id = itemname + "_effect"
 
         // HTML create requirements text
-        if (item.requirements) {
-            let listing_req_text = document.createElement("div"); items_holder.appendChild(listing_req_text);
-            listing_req_text.style.visibility = "hidden";
-            listing_req_text.style.display = "none";
-            listing_req_text.className = "req_text"
-            listing_req_text.id = itemname+"_req_text"
-        }
+        //if (item.requirements) {
+        let listing_req_text = document.createElement("div"); items_holder.appendChild(listing_req_text);
+        listing_req_text.style.visibility = "hidden";
+        listing_req_text.style.display = "none";
+        listing_req_text.className = "req_text"
+        listing_req_text.id = itemname+"_req_text"
+        //}
 
-        // add to playerdata
-        playerdata.items[itemname] = {
-            cost: item.cost,
-            effects : [], // effects empty until later setup function
-            enabled : false,
-            last_selected : Date.now(),
-        }
+        // add to worlddata
+        worlddata.items[itemname] = new Buyable(itemname, item.cost, item.components);
+        if (item.singleton) worlddata.items[itemname].SetSingleton(item.singleton);
+        worlddata.items[itemname].AddMultiplier("cost", "item_cost");
     }
 
     /////////////////////////
@@ -734,43 +875,18 @@ var TickDay = function(delta_ms) {
     if (days_passed == 0) return;
 
     // process job tick
-    if (jobs_data[playerdata.active.job]) { // make sure job exists
-        let job = jobs_data[playerdata.active.job]
-
-        playerdata.resources.money += days_passed * playerdata.jobs[playerdata.active.job].earn * playerdata.skill_effects["job_pay"]; // add income for day
-        playerdata.jobs[playerdata.active.job].xp -= days_passed * gain_base_xp * playerdata.skill_effects["job_xp"] * playerdata.skill_effects["qol_all"]; // add xp for day
-
-        // process any job level ups
-        while (playerdata.jobs[playerdata.active.job].xp <= 0){
-            playerdata.jobs[playerdata.active.job].level += 1
-            playerdata.jobs[playerdata.active.job].xp = job.xp.value* Scaling(job.xp.scaling, playerdata.jobs[playerdata.active.job].level) + playerdata.jobs[playerdata.active.job].xp
-            playerdata.jobs[playerdata.active.job].earn = job.earn.value* Scaling(job.earn.scaling, playerdata.jobs[playerdata.active.job].level);
-        }
+    for (let id in worlddata.jobs) {
+        worlddata.jobs[id].Tick(days_passed);
     }
 
     // process skill tick
-    if (skills_data[playerdata.active.skill]) { // make sure skill exists
-        let skill = skills_data[playerdata.active.skill]
-
-        playerdata.skills[playerdata.active.skill].xp -= days_passed * gain_base_xp * playerdata.skill_effects["skill_xp"] * playerdata.skill_effects["qol_all"]; // add xp for day
-
-        // process any skill level ups
-        while (playerdata.skills[playerdata.active.skill].xp <= 0){
-            playerdata.skills[playerdata.active.skill].level += 1
-            playerdata.skills[playerdata.active.skill].xp = skill.xp.value* Scaling(skill.xp.scaling, playerdata.skills[playerdata.active.skill].level) + playerdata.skills[playerdata.active.skill].xp
-        }
+    for (let id in worlddata.skills) {
+        worlddata.skills[id].Tick(days_passed);
     }
 
     // process item tick
-    for (let itemname in items_data) {
-        if (playerdata.items[itemname].enabled) {
-            let item = playerdata.items[itemname];
-            if (playerdata.resources.money <= item.cost) {
-                SelectItem(itemname);
-                continue;
-            }
-            playerdata.resources.money -= days_passed * item.cost;
-        }
+    for (let id in worlddata.items) {
+        worlddata.items[id].Tick(days_passed);
     }
 
     // update player age
@@ -778,35 +894,6 @@ var TickDay = function(delta_ms) {
 }
 
 var CalculateSkillEffects = function(flag_reloadall = false) {
-    // reload the effect components on the active skill in case of levelup
-    for (let skillname in skills_data) {
-        if (skillname == playerdata.active.skill || flag_reloadall) {
-            let skill = skills_data[skillname];
-
-            playerdata.skills[skillname].effects = [] // TODO: costly operation, fix this by smartly replacing values later
-            for (let i in skill.components) {
-                let component = skill.components[i]
-                let skill_effect = playerdata.skills[skillname].level * component.part;
-                playerdata.skills[skillname].effects.push({skill: component.skill, value: skill_effect, class: component.class})
-            }
-        }
-    }
-
-    // reload the effect components on the active items
-    if (flag_reloadall) {
-        for (let itemname in items_data) {
-            let item = items_data[itemname];
-
-            playerdata.items[itemname].effects = [] // TODO: costly operation, fix this by smartly replacing values later
-            for (let i in item.components) {
-                let component = item.components[i]
-                let item_effect = component.part;
-                if (playerdata.items[itemname].enabled == false) item_effect = 1;
-                playerdata.items[itemname].effects.push({skill: component.skill, value: item_effect, class: component.class})
-            }
-        }
-    }
-    
     for (let skillname in master_skills_data) {  // TODO: costly operation, fix this by smartly replacing values later
         playerdata.skill_effects[skillname] = 1.0;
     }
@@ -816,16 +903,16 @@ var CalculateSkillEffects = function(flag_reloadall = false) {
     for (let skillname in master_skills_data) {
         master_skill_levels[skillname] = {};
     }
-    for (let skillname in playerdata.skills) {
-        let skill_effects = playerdata.skills[skillname].effects;
+    for (let skillname in worlddata.skills) {
+        let skill_effects = worlddata.skills[skillname].Effects();
         for (let i in skill_effects) {
             if (!(master_skill_levels[skill_effects[i].skill][skill_effects[i].class])) master_skill_levels[skill_effects[i].skill][skill_effects[i].class] = 0;
             master_skill_levels[skill_effects[i].skill][skill_effects[i].class] += skill_effects[i].value;
         }
     }
     let unique_class_iterator = 0;
-    for (let itemname in playerdata.items) {
-        let item_effects = playerdata.items[itemname].effects;
+    for (let itemname in worlddata.items) {
+        let item_effects = worlddata.items[itemname].Effects();
         for (let i in item_effects) {
             unique_class_iterator += 1;
             let unique_class_id = "item-" + unique_class_iterator;
@@ -850,20 +937,16 @@ var CalculateSkillEffects = function(flag_reloadall = false) {
     }
 }
 
-var VerifyItemSingletons = function() {
-    for (let itemname in items_data) {
-        if (playerdata.items[itemname].enabled && items_data[itemname].singleton) {
-            for (let otheritemname in items_data) {
-                if (items_data[otheritemname].singleton) {
-                    if (playerdata.items[otheritemname].enabled && items_data[otheritemname].singleton == items_data[itemname].singleton && itemname != otheritemname) {
-                        if (playerdata.items[itemname].last_selected >= playerdata.items[otheritemname].last_selected) {
-                            SelectItem(otheritemname, true);
-                        }
-                        else {
-                            SelectItem(itemname, true);
-                            break;
-                        }
-                    }
+var VerifyItemSingletons = function(singleton_id) {
+    for (let id in worlddata.items) {
+        let item_l = worlddata.items[id];
+        if (item_l.GetSingleton() != singleton_id) continue;
+        for (let id_other in worlddata.items) {
+            let item_r = worlddata.items[id_other];
+            if (item_r.GetSingleton() != singleton_id) continue;
+            if (item_l.GetActive() && item_r.GetActive()) {
+                if (!item_l.CompareSingletonPriority(item_r)) {
+                    item_l.SetActive(true);
                 }
             }
         }
@@ -882,139 +965,101 @@ var UpdateDisplay = function() {
 }
 
 var UpdateUI_Jobs = function(flag_reloadall = false) {
-    for (let jobname in jobs_data) {
-        if (jobname == playerdata.active.job || flag_reloadall) {
-            document.getElementById(jobname + "_level").innerHTML = playerdata.jobs[jobname].level;
-            document.getElementById(jobname + "_xp_day").innerHTML = Places(gain_base_xp * playerdata.skill_effects["job_xp"] * playerdata.skill_effects["qol_all"], 1);
-            document.getElementById(jobname + "_xp_left").innerHTML = Places(playerdata.jobs[jobname].xp, 0);
-            document.getElementById(jobname + "_earn").innerHTML = Currency(playerdata.jobs[jobname].earn * playerdata.skill_effects["job_pay"]);
-
-            // update progress bar
-            let job_bar = document.getElementById(jobname+"_job_listing").getElementsByTagName("button")[0].getElementsByTagName("progress")[0]
-            job_bar.max = jobs_data[jobname].xp.value* Scaling(jobs_data[jobname].xp.scaling, playerdata.jobs[jobname].level)
-            job_bar.value = job_bar.max - playerdata.jobs[jobname].xp
-        }
+    for (let id in worlddata.jobs) {
+        worlddata.jobs[id].UpdateUI();
     }
 }
 
 var UpdateUI_Skills = function(flag_reloadall = false) {
-    for (let skillname in skills_data) {
-        if (skillname == playerdata.active.skill || flag_reloadall) {
-            document.getElementById(skillname + "_level").innerHTML = playerdata.skills[skillname].level;
-            document.getElementById(skillname + "_xp_day").innerHTML = Places(gain_base_xp * playerdata.skill_effects["skill_xp"] * playerdata.skill_effects["qol_all"], 1);
-            document.getElementById(skillname + "_xp_left").innerHTML = Places(playerdata.skills[skillname].xp, 0);
-            document.getElementById(skillname + "_effect").innerHTML = "+"+ Places(playerdata.skills[skillname].effects[0].value, 2) + " " + playerdata.skills[skillname].effects[0].class + ":" + playerdata.skills[skillname].effects[0].skill;
-
-            // update progress bar
-            let skill_bar = document.getElementById(skillname+"_skill_listing").getElementsByTagName("button")[0].getElementsByTagName("progress")[0]
-            skill_bar.max = skills_data[skillname].xp.value* Scaling(skills_data[skillname].xp.scaling, playerdata.skills[skillname].level)
-            skill_bar.value = skill_bar.max - playerdata.skills[skillname].xp
-        }
+    for (let id in worlddata.skills) {
+        worlddata.skills[id].UpdateUI();
     }
 }
 
 var UpdateUI_Items = function() {
-    for (let itemname in items_data) {
-        document.getElementById(itemname + "_cost").innerHTML = Currency(items_data[itemname].cost);
-        document.getElementById(itemname + "_effect").innerHTML = "x"+ Places(playerdata.items[itemname].effects[0].value, 2) + " " + playerdata.items[itemname].effects[0].skill;
+    for (let id in worlddata.items) {
+        worlddata.items[id].UpdateUI();
     }
 }
 
 var UpdateUI_Visibility = function() {
-    for (let jobname in jobs_data) {
-        if (jobs_data[jobname].requirements) {
-            let visible = jobs_data[jobname].requirements.Done();
-            let req_text = jobs_data[jobname].requirements.Text();
-
-            if (visible == 1) {
-                document.getElementById(jobname+"_req_text").style.visibility = "visible";
-                document.getElementById(jobname+"_req_text").style.display = "";
-                document.getElementById(jobname+"_req_text").innerHTML = req_text;
-            }
-            else {
-                document.getElementById(jobname+"_req_text").style.visibility = "hidden";
-                document.getElementById(jobname+"_req_text").style.display = "none";
-            }
+    // listing visibility
+    let visibility_listings = [];
+    let visibility_headers = {};
+    for (let id in worlddata.jobs) {
+        if (worlddata.jobs[id].GetRequirements()) {
+            visibility_listings.push({id: id, visible: worlddata.jobs[id].GetRequirements().Done(), req_text: worlddata.jobs[id].GetRequirements().Text()});
             
-            if (visible < 2) {
-                document.getElementById(jobname+"_job_listing").style.visibility = "hidden";
-                document.getElementById(jobname+"_job_listing").style.display = "none";
+            if (!visibility_headers["category_job_"+worlddata.jobs[id].GetCategory()]) {
+                visibility_headers["category_job_"+worlddata.jobs[id].GetCategory()] = 0;
             }
-            else {
-                document.getElementById(jobname+"_job_listing").style.visibility = "visible";
-                document.getElementById(jobname+"_job_listing").style.display = "";
-            }
+            if (worlddata.jobs[id].GetRequirements().Done() == 2) visibility_headers["category_job_"+worlddata.jobs[id].GetCategory()] += 1;
         }
-        else continue
     }
-    
-    for (let skillname in skills_data) {
-        if (skills_data[skillname].requirements) {
-            let visible = skills_data[skillname].requirements.Done();
-            let req_text = skills_data[skillname].requirements.Text();
-
-            if (visible == 1) {
-                document.getElementById(skillname+"_req_text").style.visibility = "visible";
-                document.getElementById(skillname+"_req_text").style.display = "";
-                document.getElementById(skillname+"_req_text").innerHTML = req_text;
+    for (let id in worlddata.skills) {
+        if (worlddata.skills[id].GetRequirements()) {
+            visibility_listings.push({id: id, visible: worlddata.skills[id].GetRequirements().Done(), req_text: worlddata.skills[id].GetRequirements().Text()});
+        
+            if (!visibility_headers["category_skill_"+worlddata.skills[id].GetCategory()]) {
+                visibility_headers["category_skill_"+worlddata.skills[id].GetCategory()] = 0;
             }
-            else {
-                document.getElementById(skillname+"_req_text").style.visibility = "hidden";
-                document.getElementById(skillname+"_req_text").style.display = "none";
-            }
-            
-            if (visible < 2) {
-                document.getElementById(skillname+"_skill_listing").style.visibility = "hidden";
-                document.getElementById(skillname+"_skill_listing").style.display = "none";
-            }
-            else {
-                document.getElementById(skillname+"_skill_listing").style.visibility = "visible";
-                document.getElementById(skillname+"_skill_listing").style.display = "";
-            }
+            if (worlddata.skills[id].GetRequirements().Done() == 2) visibility_headers["category_skill_"+worlddata.skills[id].GetCategory()] += 1;
         }
-        else continue
+    }
+    for (let id in worlddata.items) {
+        if (worlddata.items[id].GetRequirements()) {
+            visibility_listings.push({id: id, visible: worlddata.items[id].GetRequirements().Done(), req_text: worlddata.items[id].GetRequirements().Text()});
+        
+            if (!visibility_headers["category_item_"+worlddata.items[id].GetCategory()]) {
+                visibility_headers["category_item_"+worlddata.items[id].GetCategory()] = 0;
+            }
+            if (worlddata.items[id].GetRequirements().Done() == 2) visibility_headers["category_item_"+worlddata.items[id].GetCategory()] += 1;
+        }
     }
 
-    for (let itemname in items_data) {
-        if (items_data[itemname].requirements) {
-            let visible = items_data[itemname].requirements.Done();
-            let req_text = items_data[itemname].requirements.Text();
+    for (let i in visibility_listings) {
+        let id = visibility_listings[i].id;
 
-            if (visible == 1) {
-                document.getElementById(itemname+"_req_text").style.visibility = "visible";
-                document.getElementById(itemname+"_req_text").style.display = "";
-                document.getElementById(itemname+"_req_text").innerHTML = req_text;
-            }
-            else {
-                document.getElementById(itemname+"_req_text").style.visibility = "hidden";
-                document.getElementById(itemname+"_req_text").style.display = "none";
-            }
-            
-            if (visible < 2) {
-                document.getElementById(itemname+"_item_listing").style.visibility = "hidden";
-                document.getElementById(itemname+"_item_listing").style.display = "none";
-            }
-            else {
-                document.getElementById(itemname+"_item_listing").style.visibility = "visible";
-                document.getElementById(itemname+"_item_listing").style.display = "";
-            }
+        if (visibility_listings[i].visible == 1) {
+            document.getElementById(id+"_req_text").style.visibility = "visible";
+            document.getElementById(id+"_req_text").style.display = "";
+            document.getElementById(id+"_req_text").innerHTML = visibility_listings[i].req_text;
         }
-        else continue
+        else {
+            document.getElementById(id+"_req_text").style.visibility = "hidden";
+            document.getElementById(id+"_req_text").style.display = "none";
+        }
+
+        if (visibility_listings[i].visible < 2) {
+            document.getElementById(id+"_listing").style.visibility = "hidden";
+            document.getElementById(id+"_listing").style.display = "none";
+        }
+        else {
+            document.getElementById(id+"_listing").style.visibility = "visible";
+            document.getElementById(id+"_listing").style.display = "";
+        }
+    }
+    for (let header_id in visibility_headers) {
+        if (visibility_headers[header_id] > 0) {
+            document.getElementById(header_id).style.visibility = "visible";
+            document.getElementById(header_id).style.display = "";
+        }
+        else {
+            document.getElementById(header_id).style.visibility = "hidden";
+            document.getElementById(header_id).style.display = "none";
+        }
     }
 }
 
 var UpdateUI_PlayerInfo = function() {
-    //document.getElementById("player_age_y").textContent = Math.trunc(playerdata.resources.time/365);
-    //document.getElementById("player_age_d").textContent = Math.trunc(playerdata.resources.time%365);
     document.getElementById("player_age").innerHTML = Time.format(playerdata.resources.time);
 
     document.getElementById("player_money").innerHTML = Currency(playerdata.resources.money);
-    let income = jobs_data[playerdata.active.job].earn.value * Scaling(jobs_data[playerdata.active.job].earn.scaling, playerdata.jobs[playerdata.active.job].level) * playerdata.skill_effects["job_pay"];
+
+    let income = worlddata.jobs[playerdata.active.job].Income();
     let expenses = 0;
-    for (let itemname in items_data) {
-        if (playerdata.items[itemname].enabled) {
-            expenses -= items_data[itemname].cost;
-        }
+    for (let id in worlddata.items) {
+        expenses -= worlddata.items[id].Cost();
     }
     document.getElementById("player_net_money").innerHTML = Currency(income + expenses);
     document.getElementById("player_income").innerHTML = Currency(income);
@@ -1031,18 +1076,24 @@ var UpdateUI_PlayerInfo = function() {
 var Scaling = function (scalings, power) {
     let current_mult = 1
     for (let i in scalings) {
+        let scaling_power = power;
+        if (scalings[i].softcap) {
+            if (power > scalings[i].softcap.start) {
+                scaling_power = scalings[i].softcap.start + ((power - scalings[i].softcap.start) ** scalings[i].softcap.strength)
+            }
+        }
         switch(scalings[i].type) {
             case "linear":
-                current_mult *= (1+(scalings[i].degree*power))
+                current_mult *= (1+(scalings[i].degree*scaling_power))
                 break;
             case "exp":
-                current_mult *= ((1+scalings[i].degree) ** power)
+                current_mult *= ((1+scalings[i].degree) ** scaling_power)
                 break;
             case "falloff":
-                current_mult *= Log(power + 1, 1 + (1/scalings[i].degree)) + 1
+                current_mult *= Log(scaling_power + 1, 1 + (1/scalings[i].degree)) + 1
                 break;
             case "log":
-                current_mult *= Log(power + 1, scalings[i].degree) + 1
+                current_mult *= Log(scaling_power + 1, scalings[i].degree) + 1
                 break;
             default:
                 console.log("ERROR: invalid scaling type SCALING."+scalings[i].type.toUpperCase());
@@ -1051,6 +1102,7 @@ var Scaling = function (scalings, power) {
     }
     return current_mult;
 }
+window.Scaling = Scaling;
 
 var Log = function (value, base) {
     return Math.log(value) / Math.log(base);
@@ -1085,6 +1137,7 @@ var Places = function (value, places=2, threshold=3) {
         return value;
     }
 }
+window.Places = Places;
 
 //////////////////////// THIS SNIPPET FROM THE INTERNET
 function addCSSClass(element, className) {
@@ -1106,3 +1159,5 @@ function removeCSSClass(element, className) {
   }
 }
 //////////////////////// END THIS SNIPPET FROM THE INTERNET
+window.addCSSClass = addCSSClass;
+window.removeCSSClass = removeCSSClass;
