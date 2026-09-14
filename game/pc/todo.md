@@ -10,6 +10,7 @@
   - [ ] master-skills
 - [ ] fix reverse requirement warning still showing empty when it is impossible to violate
 - [ ] add stats display tab
+- [ ] add numeral.js to prevent places flickering (and have more standard notation?)
 
 ---
 
