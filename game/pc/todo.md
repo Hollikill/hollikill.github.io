@@ -54,7 +54,7 @@
       - strength (muscles): major combat threat boost, minor traveling speed boost
       - mental (brain, nervous system): major skill xp boost, minor all xp boost
     - damage to organs reduces lifespan and other effects
-      - lifespan effect formula: 1-({%integrity}-1)^6 // {0 ≤ %integrity ≤ 1}
+      - lifespan effect formula: 1-({percent integrity}-1)^6 // {0 ≤ percent integrity ≤ 1}
       - other effects reduce linearly
   - each life may be born with random special organs according to major {meta:talent}, minor {meta:background}
     - special organs are (usually) more resistant to damage, but stop providing their special function when too damaged
