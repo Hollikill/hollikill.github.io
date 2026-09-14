@@ -5,13 +5,11 @@
 - [ ] add settings: framerate control
 - [ ] figure out how to display effect multiplier for skills (and for nonlinear skills)
   - save total effect values per class, along with part total, and divide class-effect multiplier by self-part/total-part
-- [x] add exclusive requirements type
-  - [x] exclusive job restriction
-  - [x] less than age restriction
 - [ ] add display names
   - [ ] listable classes
   - [ ] master-skills
 - [ ] fix reverse requirement warning still showing empty when it is impossible to violate
+- [ ] add stats display tab
 
 ---
 
@@ -24,6 +22,7 @@
       - add health to UI. Health is an measure of your damage, deliniated in named stages.
   - [ ] in-world legacy tallying (max levels)
     - world_data holds legacy information for first reset tier
+  - [ ] add {percent lifespan} requirements
 - [ ] event log
   - random events with rewards such as:
     - extra money

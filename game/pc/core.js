@@ -616,13 +616,11 @@ var Setup = async function() {
         
 
         // HTML create requirements text
-        //if (job.requirements) {
         let listing_req_text = document.createElement("div"); jobs_holder.appendChild(listing_req_text);
         listing_req_text.style.visibility = "hidden";
         listing_req_text.style.display = "none";
         listing_req_text.className = "req_text"
         listing_req_text.id = jobname+"_req_text"
-        //}
 
         // add to worlddata
         worlddata.jobs[jobname] = new Job(jobname, job.category, job.xp["value"], job.earn["value"]);
@@ -682,13 +680,11 @@ var Setup = async function() {
         listing_info_effect.id = skillname + "_effect"
 
         // HTML create requirements text
-        //if (skill.requirements) {
         let listing_req_text = document.createElement("div"); skills_holder.appendChild(listing_req_text);
         listing_req_text.style.visibility = "hidden";
         listing_req_text.style.display = "none";
         listing_req_text.className = "req_text"
         listing_req_text.id = skillname+"_req_text"
-        //}
 
         // add to worlddata
         worlddata.skills[skillname] = new Skill(skillname, skill.category, skill.xp["value"], skill.components);
@@ -712,6 +708,7 @@ var Setup = async function() {
     }
 
     created_categories = [];
+    let list_alternator = false;
     // setup each item
     let items_holder = document.getElementById("items_holder")
     for (let itemname in items_data) {
@@ -732,6 +729,7 @@ var Setup = async function() {
         let item_listing = document.createElement("div"); items_holder.appendChild(item_listing); // create holding div
         item_listing.className = "item_listing";
         item_listing.id = itemname+"_listing";
+        if (list_alternator) item_listing.style.backgroundColor = "#292929";
 
         // HTML button features
         let listing_button = document.createElement("button"); item_listing.appendChild(listing_button); // create item toggle button
@@ -747,13 +745,13 @@ var Setup = async function() {
         listing_info_effect.id = itemname + "_effect"
 
         // HTML create requirements text
-        //if (item.requirements) {
         let listing_req_text = document.createElement("div"); items_holder.appendChild(listing_req_text);
         listing_req_text.style.visibility = "hidden";
         listing_req_text.style.display = "none";
         listing_req_text.className = "req_text"
         listing_req_text.id = itemname+"_req_text"
-        //}
+        if (list_alternator) listing_req_text.style.backgroundColor = "#292929";
+        list_alternator = !list_alternator;
 
         // add to worlddata
         worlddata.items[itemname] = new Buyable(itemname, item.cost, item.components);

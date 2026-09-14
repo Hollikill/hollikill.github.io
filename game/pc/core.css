@@ -36,10 +36,6 @@ body > div > div > div {
     position: relative;
 }
 
-#items_holder > .item_listing:nth-child(4n+1), #items_holder > .item_listing:nth-child(4n+2) {
-    background: #292929;
-}
-
 .job_listing *, .skill_listing *, .item_listing *, .listing_header * {
     flex: 1;
     text-align: center;
@@ -162,7 +158,6 @@ button {
     color: #fff;
 }
 
-/* FROM THE INTERNET ///////////////////////////////////////////////////////////*/
 .requirement_warning_symbol {
   position: absolute;
   left: 0px;
