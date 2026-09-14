@@ -26,6 +26,34 @@ core.js changes:
 
 
 world class:
+    this.jobs
+    this.skills
+    this.items
+
+    this.resources
+    this.active
+    this.skill_effects
+
     constructor
-        ???
-    f: setup world
+        categories, jobs_data, skills_data, items_data
+        // arg notes: switch to generating all this and instead taking meta-value parameters once procedural gen
+        // master-skill notes: generate a copy of master skills which include the main master-skills but also add categorical ones
+        // temp: hook the handmade data into this
+    f: setup html
+    f: Time()
+        value
+        // passes to Time.format()
+    f: Currency()
+        value
+        // passes to Currency.format()
+    f: Jobs
+        // returns jobs list
+    f: skills
+        // returns skills list
+    f: items
+        // returns items list
+    f: Tick()
+        deltams
+        // hooks into main Gameloop function and executes all world-stage actions
+    destructor
+        // stops the game loop function

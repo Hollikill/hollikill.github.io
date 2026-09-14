@@ -11,6 +11,11 @@
 - [ ] fix reverse requirement warning still showing empty when it is impossible to violate
 - [ ] add stats display tab
 - [ ] add numeral.js to prevent places flickering (and have more standard notation?)
+- [ ] add job and skill progress bar to player UI
+- [ ] add listing options
+  - lock listing (button is disabled, deselects the job)
+  - hide listing
+  - add button in settings that reveals all listings
 
 ---
 
@@ -45,6 +50,10 @@
   - [ ] add game saving
     - [ ] import/export from textbox
     - [ ] autosave to localstorage
+      - [ ] add extra selectable autosaves at breakpoints:
+        - current autosave
+        - 2 autosaves on the last two half-hour marks
+        - last manual save
     - [ ] add hard reset without reloading page
 - [ ] anatomy page
   - organs start at level 0, with increasing levels improving lifespan and other effects based on class
