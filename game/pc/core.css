@@ -4,7 +4,7 @@ body {
     font-family: 'Courier New', monospace;
 }
 
-body > div > div {
+body > div > div > div {
     background-color: #333;
     margin: 1em;
     padding: 0.5em;
@@ -33,6 +33,7 @@ body > div > div {
     display: flex;
     padding: 0.25em;
     font-weight: 600;
+    position: relative;
 }
 
 #items_holder > .item_listing:nth-child(4n+1), #items_holder > .item_listing:nth-child(4n+2) {
@@ -151,7 +152,48 @@ button {
 }
 
 #toggle_time_button {
-    width:50%;
+    width: 2em;
+    padding: 0.25em 0 0.5em;
     color: #bbb;
     font-weight: 700;
+}
+
+#player_age > span {
+    color: #fff;
+}
+
+/* FROM THE INTERNET ///////////////////////////////////////////////////////////*/
+.requirement_warning_symbol {
+  position: absolute;
+  left: 0px;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ff0000;
+  color: #000;
+  border: 1px solid #000;
+  cursor: pointer;
+  z-index: 2;
+}
+.requirement_warning_symbol > span {
+  position: absolute;
+  top: 0;
+  left: 150%;
+  background-color: #533;
+  color: #fff;
+  border: 2px solid #422;
+  padding: 6px;
+  white-space: nowrap;
+  z-index: 1;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+.requirement_warning_symbol:hover > span {
+  visibility: visible;
+  opacity: 1;
 }

@@ -1,0 +1,31 @@
+what needs to be created on world instance gen:
+- categories added to list
+- jobs added to list
+- skills added to list
+- items added to list
+///
+- subscribe all multipliers
+
+what needs to be stored per world instance:
+- jobs list
+- skills list
+- items list
+
+what needs to be added to html page:
+1. fresh world basic holder from template
+2. job/skill/item listings
+
+TODO
+- add maxlevel to levelables
+
+core.js changes:
+    async f: change stage
+        stage_id
+        // validates the stage id
+        // changes content_area HTML from template
+
+
+world class:
+    constructor
+        ???
+    f: setup world

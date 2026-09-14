@@ -1,3 +1,9 @@
+alpha.6 9/14/2026
+- added more requirement types + exclusive requirements, updated requirements displays
+- added more jobs
+- renamed the 'knowledge' skill to 'polymath' and rebalanced it
+- changed pause button UI and added pause/unpause hotkey
+
 alpha.5 9/12/2026
 - added time warping ui stat
 - added homes

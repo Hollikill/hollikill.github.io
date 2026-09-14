@@ -83,293 +83,184 @@ var master_skills_data = {
 // TODO: actually procedurally generate this
 var jobs_data = {
     "beggar" : {
-        xp : {
-            scaling : [
-                {type: "exp", degree:0.01},
-                {type: "linear", degree:1},
-            ],
-            value : 50
-        },
-        earn : {
-            scaling : [
-                {type: "log", degree:10},
-            ],
-            value : 5
-        },
+        xp : { value : 50 },
+        earn : { value : 5 },
         category: "mortal",
     },
     "farmer" : {
-        xp : {
-            scaling : [
-                {type: "exp", degree:0.01},
-                {type: "linear", degree:1},
-            ],
-            value : 100
-        },
-        earn : {
-            scaling : [
-                {type: "log", degree:10},
-            ],
-            value : 9
-        },
+        xp : { value : 100 },
+        earn : { value : 9 },
         category: "mortal",
-        requirements : new Requirements().Add("job", 10, "beggar"),
+        requirements : new Requirements().Add("job", 10, {name:"beggar"}),
     },
     "fisher" : {
-        xp : {
-            scaling : [
-                {type: "exp", degree:0.01},
-                {type: "linear", degree:1},
-            ],
-            value : 200
-        },
-        earn : {
-            scaling : [
-                {type: "log", degree:10},
-            ],
-            value : 15
-        },
+        xp : { value : 200 },
+        earn : { value : 15 },
         category: "mortal",
-        requirements : new Requirements().Add("job", 10, "farmer"),
+        requirements : new Requirements().Add("job", 10, {name:"farmer"}),
     },
     "miner" : {
-        xp : {
-            scaling : [
-                {type: "exp", degree:0.01},
-                {type: "linear", degree:1},
-            ],
-            value : 400
-        },
-        earn : {
-            scaling : [
-                {type: "log", degree:10},
-            ],
-            value : 40
-        },
+        xp : { value : 400 },
+        earn : { value : 40 },
         category: "mortal",
-        requirements : new Requirements().Add("job", 10, "fisher").Add("skill", 10, "strength"),
+        requirements : new Requirements().Add("job", 10, {name:"fisher"}).Add("skill", 10, {name:"strength"}),
     },
     "blacksmith" : {
-        xp : {
-            scaling : [
-                {type: "exp", degree:0.01},
-                {type: "linear", degree:1},
-            ],
-            value : 800
-        },
-        earn : {
-            scaling : [
-                {type: "log", degree:10},
-            ],
-            value : 80
-        },
+        xp : { value : 800 },
+        earn : { value : 80 },
         category: "mortal",
-        requirements : new Requirements().Add("job", 10, "miner").Add("skill", 30, "strength"),
+        requirements : new Requirements().Add("job", 10, {name:"miner"}).Add("skill", 30, {name:"strength"}),
     },
     "merchant" : {
-        xp : {
-            scaling : [
-                {type: "exp", degree:0.01},
-                {type: "linear", degree:1},
-            ],
-            value : 1600
-        },
-        earn : {
-            scaling : [
-                {type: "log", degree:10},
-            ],
-            value : 150
-        },
+        xp : { value : 1600 },
+        earn : { value : 150 },
         category: "mortal",
-        requirements : new Requirements().Add("job", 10, "blacksmith").Add("skill", 50, "bargaining"),
+        requirements : new Requirements().Add("job", 10, {name:"blacksmith"}).Add("skill", 50, {name:"bargaining"}),
     },
 
     "squire" : {
         xp : { value : 100 },
         earn : { value : 5 },
         category: "military",
-        requirements : new Requirements().Add("skill", 5, "strength"),
+        requirements : new Requirements().Add("skill", 5, {name:"strength"}).Add("job", 1, {name:"bandit", reverse:true}),
     },
     "footman" : {
         xp : { value : 1000 },
         earn : { value : 50 },
         category: "military",
-        requirements : new Requirements().Add("skill", 40, "strength").Add("job", 10, "squire"),
+        requirements : new Requirements().Add("skill", 40, {name:"strength"}).Add("job", 10, {name:"squire"}).Add("job", 1, {name:"bandit", reverse:true}),
     },
     "veteran footman" : {
         xp : { value : 10000 },
         earn : { value : 120 },
         category: "military",
-        requirements : new Requirements().Add("skill", 40, "battle tactics").Add("job", 10, "footman"),
+        requirements : new Requirements().Add("skill", 40, {name:"battle tactics"}).Add("job", 10, {name:"footman"}).Add("job", 1, {name:"bandit", reverse:true}),
     },
     "centenary" : {
         xp : { value : 100000 },
         earn : { value : 300 },
         category: "military",
-        requirements : new Requirements().Add("skill", 100, "strength").Add("job", 10, "veteran footman"),
+        requirements : new Requirements().Add("skill", 100, {name:"strength"}).Add("job", 10, {name:"veteran footman"}).Add("job", 1, {name:"bandit", reverse:true}),
     },
     "knight" : {
         xp : { value : 1000000 },
         earn : { value : 1000 },
         category: "military",
-        requirements : new Requirements().Add("skill", 150, "battle tactics").Add("job", 10, "centenary"),
+        requirements : new Requirements().Add("skill", 150, {name:"battle tactics"}).Add("job", 10, {name:"centenary"}).Add("job", 1, {name:"bandit", reverse:true}),
     },
     "veteran knight" : {
         xp : { value : 7500000 },
         earn : { value : 3000 },
         category: "military",
-        requirements : new Requirements().Add("skill", 300, "strength").Add("job", 10, "knight"),
+        requirements : new Requirements().Add("skill", 300, {name:"strength"}).Add("job", 10, {name:"knight"}).Add("job", 1, {name:"bandit", reverse:true}),
     },
     "holy knight" : {
         xp : { value : 40000000 },
         earn : { value : 15000 },
         category: "military",
-        requirements : new Requirements().Add("skill", 500, "mana control").Add("job", 10, "veteran knight"),
+        requirements : new Requirements().Add("skill", 500, {name:"mana control"}).Add("job", 10, {name:"veteran knight"}).Add("job", 1, {name:"bandit", reverse:true}),
     },
     "lieutenant general" : {
         xp : { value : 150000000 },
         earn : { value : 50000 },
         category: "military",
-        requirements : new Requirements().Add("skill", 1000, "battle tactics").Add("skill", 1000, "mana control").Add("job", 10, "holy knight"),
+        requirements : new Requirements().Add("skill", 1000, {name:"battle tactics"}).Add("skill", 1000, {name:"mana control"}).Add("job", 10, {name:"holy knight"}).Add("job", 1, {name:"bandit", reverse:true}),
+    },
+
+    "bandit" : {
+        xp : { value : 1000 },
+        earn : { value : 100 },
+        category: "military",
+        requirements : new Requirements().Add("skill", 10, {name:"strength"}),
+    },
+    "bandit captain" : {
+        xp : { value : 10000 },
+        earn : { value : 250 },
+        category: "military",
+        requirements : new Requirements().Add("skill", 50, {name:"strength"}).Add("skill", 50, {name:"battle tactics"}).Add("job", 10, {name:"bandit"}),
     },
 }
 
 var skills_data = {
     "concentration" : {
-        xp : {
-            scaling : [
-                {type: "exp", degree:0.01},
-                {type: "linear", degree:1},
-            ],
-            value : 50
-        },
+        xp : { value : 50 },
         components : [
             {skill: "skill_xp", part: 1, class:'a'}
         ],
         category: "fundamentals",
     },
     "productivity" : {
-        xp : {
-            scaling : [
-                {type: "exp", degree:0.01},
-                {type: "linear", degree:1},
-            ],
-            value : 50
-        },
+        xp : { value : 50 },
         components : [
             {skill: "job_xp", part: 1, class:'a'}
         ],
         category: "fundamentals",
-        requirements : new Requirements().Add("skill", 5, "concentration"),
+        requirements : new Requirements().Add("skill", 5, {name:"concentration"}),
     },
     "bargaining" : {
-        xp : {
-            value : 50
-        },
+        xp : { value : 50 },
         components : [
             {skill: "item_cost", part: 1, class:'a'}
         ],
         category: "fundamentals",
-        requirements : new Requirements(0.3).Add("job", 15, "farmer").Add("skill", 15, "productivity"),
+        requirements : new Requirements(0.3).Add("job", 15, {name:"farmer"}).Add("skill", 15, {name:"productivity"}),
     },
     "meditation" : {
-        xp : {
-            scaling : [
-                {type: "exp", degree:0.01},
-                {type: "linear", degree:1},
-            ],
-            value : 50
-        },
+        xp : { value : 50 },
         components : [
             {skill: "qol_all", part: 1, class:'a'}
         ],
         category: "fundamentals",
-        requirements : new Requirements(0.3).Add("skill", 30, "concentration").Add("skill", 20, "productivity"),
+        requirements : new Requirements(0.3).Add("skill", 30, {name:"concentration"}).Add("skill", 20, {name:"productivity"}),
     },
-    "knowledge" : {
-        xp : {
-            scaling : [
-                {type: "exp", degree:0.01},
-                {type: "linear", degree:1},
-            ],
-            value : 100
-        },
+    "polymath" : {
+        xp : { value : 100 },
         components : [
             {skill: "xp_all_spillover", part: 1, class:'a'}
         ],
         category: "fundamentals",
-        requirements : new Requirements(0.15).Add("job", 50, "beggar").Add("skill", 75, "concentration").Add("skill", 75, "productivity"),
+        requirements : new Requirements(0.15).Add("age", (365*25), {reverse:true}).Add("job", 20, {name:"beggar"}).Add("skill", 25, {name:"concentration"}).Add("skill", 25, {name:"productivity"}),
     },
     "charisma" : {
-        xp : {
-            scaling : [
-                {type: "exp", degree:0.01},
-                {type: "linear", degree:1},
-            ],
-            value : 50
-        },
+        xp : { value : 50 },
         components : [
             {skill: "job_pay", part: 1, class:'a'}
         ],
         category: "fundamentals",
-        requirements : new Requirements(0.3).Add("job", 25, "merchant").Add("skill", 75, "bargaining").Add("job", 9999, "beggar"),
+        requirements : new Requirements(0.3).Add("job", 25, {name:"merchant"}).Add("skill", 75, {name:"bargaining"}).Add("job", 9999, {name:"beggar"}),
     },
 
     "strength" : {
-        xp : {
-            scaling : [
-                {type: "exp", degree:0.01},
-                {type: "linear", degree:1},
-            ],
-            value : 50
-        },
+        xp : { value : 50 },
         components : [
             {skill: "military_job_pay", part: 1, class:'a'}
         ],
         category: "combat",
     },
     "battle tactics" : {
-        xp : {
-            scaling : [
-                {type: "exp", degree:0.01},
-                {type: "linear", degree:1},
-            ],
-            value : 50
-        },
+        xp : { value : 50 },
         components : [
             {skill: "military_job_xp", part: 1, class:'a'}
         ],
         category: "combat",
-        requirements : new Requirements().Add("skill", 20, "concentration"),
+        requirements : new Requirements().Add("skill", 20, {name:"concentration"}),
     },
     "muscle memory" : {
-        xp : {
-            scaling : [
-                {type: "exp", degree:0.01},
-                {type: "linear", degree:1},
-            ],
-            value : 50
-        },
+        xp : { value : 50 },
         components : [
             {skill: "strength_skill_xp", part: 1, class:'a'}
         ],
         category: "combat",
-        requirements : new Requirements().Add("skill", 30, "concentration").Add("skill", 30, "strength"),
+        requirements : new Requirements().Add("skill", 30, {name:"concentration"}).Add("skill", 30, {name:"strength"}),
     },
 
     "arcane presence" : {
-        xp : {
-            scaling : [
-                {type: "exp", degree:0.01},
-                {type: "linear", degree:1},
-            ],
-            value : 500
-        },
+        xp : { value : 500 },
         components : [
             {skill: "time_speed", part: 1, class:'a'}
         ],
         category: "magic",
-        requirements : new Requirements(0.25).Add("skill", 200, "concentration").Add("skill", 200, "meditation").Add("job", 9999, "beggar"),
+        requirements : new Requirements(0.25).Add("skill", 200, {name:"concentration"}).Add("skill", 200, {name:"meditation"}).Add("job", 9999, {name:"beggar"}),
     },
 }
 
@@ -563,6 +454,7 @@ Time.appendSymbol('millenia', 10000)
 Time.appendSymbol('epoch', 200)
 Time.appendSymbol('eon', 14) // no real end here
 Time.setDisplayMode("pre_unstyled")
+window.Time = Time;
 
 var StandardNotation = new Units()
 StandardNotation.appendSymbol('', 1000)
@@ -581,7 +473,7 @@ StandardNotation.setDisplayMode("post_d2");
 
 //////////////////
 // game data
-var playerdata = {
+window.playerdata = {
     skill_effects : {},
     active : {
         job : "none",
@@ -593,7 +485,7 @@ var playerdata = {
     }
 }
 
-var worlddata = {
+window.worlddata = {
     jobs: {},
     skills: {},
     items : {},
@@ -638,10 +530,12 @@ var ToggleTimeStepping = function() {
 
     let pause_button = document.getElementById("toggle_time_button");
     if (is_time_stepping) {
-        pause_button.textContent = "PAUSE";
+        pause_button.textContent = "⏸";
+        pause_button.style.backgroundColor = "#533";
     }
     else {
-        pause_button.textContent = "PLAY";
+        pause_button.textContent = "▶";
+        pause_button.style.backgroundColor = "#353";
     }
 }
 window.ToggleTimeStepping = ToggleTimeStepping;
@@ -670,12 +564,15 @@ var Gameloop = function() {
     if (is_time_stepping) {
         TickDay(delta_ms);
         CalculateSkillEffects(true);
+        ValidateActive();
     }
 
     UpdateDisplay();
 }
 
-var Setup = function() {
+var Setup = async function() {
+    document.getElementById("content_area").innerHTML = await fromFile("world.html");
+
     let created_categories = [];
 
     // setup each job
@@ -716,6 +613,8 @@ var Setup = function() {
         let listing_info_income = document.createElement("span"); job_listing.appendChild(listing_info_income);
         listing_info_income.id = jobname + "_earn"
 
+        
+
         // HTML create requirements text
         //if (job.requirements) {
         let listing_req_text = document.createElement("div"); jobs_holder.appendChild(listing_req_text);
@@ -734,6 +633,13 @@ var Setup = function() {
         worlddata.jobs[jobname].AddMultiplier("xp_inactive", "xp_all_spillover");
         worlddata.jobs[jobname].AddMultiplier("xp", "military_job_xp", {category: "military"});
         worlddata.jobs[jobname].AddMultiplier("earn", "military_job_pay", {category: "military"});
+
+        if (worlddata.jobs[jobname].GetRequirements().HasReverse()) {
+            let requirement_warning = document.createElement("div"); job_listing.appendChild(requirement_warning);
+            requirement_warning.className = "requirement_warning_symbol";
+            requirement_warning.id = jobname + "_req_reverse_warn";
+            requirement_warning.innerHTML = "!<span>###</span>"
+        }
     }
 
     created_categories = [];
@@ -791,6 +697,13 @@ var Setup = function() {
         worlddata.skills[skillname].AddMultiplier("xp", "qol_all");
         worlddata.skills[skillname].AddMultiplier("xp_inactive", "xp_all_spillover");
         worlddata.skills[skillname].AddMultiplier("xp", "strength_skill_xp", {name: "strength"});
+
+        if (worlddata.skills[skillname].GetRequirements().HasReverse()) {
+            let requirement_warning = document.createElement("div"); skill_listing.appendChild(requirement_warning);
+            requirement_warning.className = "requirement_warning_symbol";
+            requirement_warning.id = skillname + "_req_reverse_warn";
+            requirement_warning.innerHTML = "!<span>###</span>"
+        }
     }
 
     // setup master skills effect list
@@ -846,6 +759,13 @@ var Setup = function() {
         worlddata.items[itemname] = new Buyable(itemname, item.cost, item.components);
         if (item.singleton) worlddata.items[itemname].SetSingleton(item.singleton);
         worlddata.items[itemname].AddMultiplier("cost", "item_cost");
+
+        if (worlddata.items[itemname].GetRequirements().HasReverse()) {
+            let requirement_warning = document.createElement("div"); item_listing.appendChild(requirement_warning);
+            requirement_warning.className = "requirement_warning_symbol";
+            requirement_warning.id = itemname + "_req_reverse_warn";
+            requirement_warning.innerHTML = "!<span>###</span>"
+        }
     }
 
     /////////////////////////
@@ -862,6 +782,16 @@ var Setup = function() {
     UpdateUI_Skills(true);
     SelectMainContentTab("jobs");
     ToggleTimeStepping();
+
+    // hook in hotkey input
+    window.addEventListener('keydown', function(e) {
+        if(e.key==" " && !e.repeat ) {
+            ToggleTimeStepping()
+            if(e.target == document.body) {
+                e.preventDefault();
+            }
+        }
+    });
 }
 
 window.onload=Setup;
@@ -948,6 +878,25 @@ var VerifyItemSingletons = function(singleton_id) {
                 if (!item_l.CompareSingletonPriority(item_r)) {
                     item_l.SetActive(true);
                 }
+            }
+        }
+    }
+}
+
+var ValidateActive = function() {
+    if (worlddata.jobs[playerdata.active.job].GetRequirements().Done(true) != 2) {
+        for (let id in worlddata.jobs) {
+            if (worlddata.jobs[id].GetRequirements().Done(true) == 2) {
+                SelectActiveJob(id);
+                break;
+            }
+        }
+    }
+    if (worlddata.skills[playerdata.active.skill].GetRequirements().Done(true) != 2) {
+        for (let id in worlddata.skills) {
+            if (worlddata.skills[id].GetRequirements().Done(true) == 2) {
+                SelectActiveSkill(id);
+                break;
             }
         }
     }
@@ -1161,3 +1110,9 @@ function removeCSSClass(element, className) {
 //////////////////////// END THIS SNIPPET FROM THE INTERNET
 window.addCSSClass = addCSSClass;
 window.removeCSSClass = removeCSSClass;
+//////////////////////// THIS SNIPPET FROM THE INTERNET
+async function fromFile(filename) {
+    const response = await fetch(filename);
+    return response.text();
+}
+//////////////////////// END THIS SNIPPET FROM THE INTERNET

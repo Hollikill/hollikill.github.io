@@ -6,50 +6,9 @@
         <script src="break_eternity.js"></script>
     </head>
     <body>
-        <div style="display:flex; align-items: flex-start;">
-            <div class="player_info" style="flex: 1;">
-                <p><b><span id="player_age">###</span></b></p>
-                <p><i>current age</i></p>
-                <br>
-                <p><b>LIFESPAN</b> ###</p>
-                <div style="display: flex; justify-content: center;">
-                    <button onclick="ToggleTimeStepping()" id="toggle_time_button">pause</button>
-                </div>
-                <br>
-                <br>
-                <p><span class="larger_1" id="player_money">###</span></p>
-                <p><i>current balance</i></p>
-                <br>
-                <p><b>NET MONEY</b>  <span id="player_net_money">###</span></p>
-                <p><b>INCOME</b>  <span id="player_income">###</span></p>
-                <p><b>EXPENSES</b> <span id="player_expenses">###</span></p>
-                <br>
-                <br>
-                <p><b>HAPPINESS</b> <span id="player_happiness">###</span>x</p>
-                <p><i>affects all XP gain</i></p>
-                <br>
-                <p><b>TIME WARPING</b> <span id="player_time_speed">###</span>x</p>
-            </div>
-            <div style="flex: 4;">
-                <div style="display:flex;margin:0 0 1em;">
-                    <button class="tab_button" onclick="SelectMainContentTab('jobs')">Jobs</button>
-                    <button class="tab_button" onclick="SelectMainContentTab('skills')">Skills</button>
-                    <button class="tab_button" onclick="SelectMainContentTab('items')">Shop</button>
-                    <button class="tab_button" onclick="SelectMainContentTab('settings')">Settings</button>
-                </div>
-                <div style="display:flex;" id="main_content">
-                    <div style="flex:1;" id="jobs_holder"></div>
-                    <div style="flex:1;" id="skills_holder"></div>
-                    <div style="flex:1;" id="items_holder"></div>
-                    <div style="flex:1;" id="settings_holder">
-                        <p>Number Display Mode</p>
-                        <button onclick="SetNumberDisplayMode('standard')">Standard</button> <button onclick="SetNumberDisplayMode('e')">Scientific</button> <button onclick="SetNumberDisplayMode('unformatted')">Unformatted</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div id="content_area"></div>
         <div class="footer">
-            alpha.5 ⋅ [<a href="changelog.txt" target="blank">changelog</a>] ⋅ [<a href="credits.txt" target="blank">credits</a>]
+            alpha.6 ⋅ [<a href="changelog.txt" target="blank">changelog</a>] ⋅ [<a href="credits.txt" target="blank">credits</a>]
         </div>
     </body>
 </html>

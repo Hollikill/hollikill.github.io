@@ -1,0 +1,45 @@
+<div style="display:flex; align-items: flex-start;">
+    <div class="player_info" style="flex: 1;">
+        <p><b><span id="player_age">###</span></b></p>
+        <p><i>current age</i></p>
+        <br>
+        
+        <div style="display: flex;">
+            <button onclick="ToggleTimeStepping()" id="toggle_time_button" style="margin: 0 1em 0 0;">pause</button><p><b>LIFESPAN</b> ###</p>
+        </div>
+        <br>
+        <br>
+        <p><span class="larger_1" id="player_money">###</span></p>
+        <p><i>current balance</i></p>
+        <br>
+        <p><b>NET MONEY</b>  <span id="player_net_money">###</span></p>
+        <p><b>INCOME</b>  <span id="player_income">###</span></p>
+        <p><b>EXPENSES</b> <span id="player_expenses">###</span></p>
+        <br>
+        <br>
+        <p><b>HAPPINESS</b> <span id="player_happiness">###</span>x</p>
+        <p><i>affects all XP gain</i></p>
+        <br>
+        <p><b>TIME WARPING</b> <span id="player_time_speed">###</span>x</p>
+    </div>
+    <div style="flex: 4;">
+        <div style="display:flex;margin:0 0 1em;">
+            <button class="tab_button" onclick="SelectMainContentTab('jobs')">Jobs</button>
+            <button class="tab_button" onclick="SelectMainContentTab('skills')">Skills</button>
+            <button class="tab_button" onclick="SelectMainContentTab('items')">Shop</button>
+            <button class="tab_button" onclick="SelectMainContentTab('settings')">Settings</button>
+        </div>
+        <div style="display:flex;" id="main_content">
+            <div style="flex:1;" id="jobs_holder"></div>
+            <div style="flex:1;" id="skills_holder"></div>
+            <div style="flex:1;" id="items_holder"></div>
+            <div style="flex:1;" id="settings_holder">
+                <h2>Settings</h2>
+                <p>Number Display Mode</p>
+                <button onclick="SetNumberDisplayMode('standard')">Standard</button> <button onclick="SetNumberDisplayMode('e')">Scientific</button> <button onclick="SetNumberDisplayMode('unformatted')">Unformatted</button>
+                <h2>Hotkeys</h2>
+                <p>Space : pause/unpause time</p>
+            </div>
+        </div>
+    </div>
+</div>

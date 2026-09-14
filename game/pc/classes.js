@@ -8,7 +8,7 @@ export class Units {
         this.display_mode = display_mode;
     }
 
-    insertSymbol = function (position, symbol, size, color="#fff") {
+    insertSymbol = function (position, symbol, size, color="") {
         let newSymbol = {
             symbol: symbol,
             color: color,
@@ -23,7 +23,7 @@ export class Units {
         }
     }
 
-    appendSymbol = function (symbol, size, color="#fff") {
+    appendSymbol = function (symbol, size, color="") {
         return this.insertSymbol(this.units.length, symbol, size, color);
     }
 
@@ -84,80 +84,111 @@ const RequirementTypes = [
     "job",
     "skill",
     "money",
+    "age",
 ]
 
 export class Requirements {
     constructor(threshold = 0.1) {
         this.requirements = []
         this.threshold = Math.min(1, Math.max(0, threshold))
+
+        // optimization values
+        this.last_completion = 0;
+        this.has_reverse_requirements = 0;
     }
 
-    Done() {
+    Done(flag_return_last_check = false) {
+        if (flag_return_last_check) return this.last_completion;
         let completion = 2;
         for (let i in this.requirements) {
             if (this.requirements[i].done == true) continue;
             let value = 0;
+            let cur_completion = 2;
             switch(this.requirements[i].type) {
                 case "job":
-                    if (!(worlddata.jobs[this.requirements[i].name])) break;
-                    value = worlddata.jobs[this.requirements[i].name].instance.level;
-                    if (value <= this.requirements[i].magnitude*this.threshold) completion = 0;
-                    else if (value < this.requirements[i].magnitude && completion >= 1) completion = 1;
+                    if (!(worlddata.jobs[this.requirements[i].conditions.name])) break;
+                    value = worlddata.jobs[this.requirements[i].conditions.name].instance.level;
+                    if (value <= this.requirements[i].magnitude*this.threshold) cur_completion = 0;
+                    else if (value < this.requirements[i].magnitude && cur_completion >= 1) cur_completion = 1;
                     if (value >= this.requirements[i].magnitude) this.requirements[i].done = true;
 
                     break;
                 case "skill":
-                    if (!(worlddata.skills[this.requirements[i].name])) break;
-                    value = worlddata.skills[this.requirements[i].name].instance.level;
-                    if (value <= this.requirements[i].magnitude*this.threshold) completion = 0;
-                    else if (value < this.requirements[i].magnitude && completion >= 1) completion = 1;
+                    if (!(worlddata.skills[this.requirements[i].conditions.name])) break;
+                    value = worlddata.skills[this.requirements[i].conditions.name].instance.level;
+                    if (value <= this.requirements[i].magnitude*this.threshold) cur_completion = 0;
+                    else if (value < this.requirements[i].magnitude && cur_completion >= 1) cur_completion = 1;
                     if (value >= this.requirements[i].magnitude) this.requirements[i].done = true;
                     
                     break;
                 case "money":
                     value = playerdata.resources.money;
-                    if (value <= this.requirements[i].magnitude*this.threshold) completion = 0;
-                    else if (value < this.requirements[i].magnitude && completion >= 1) completion = 1;
+                    if (value <= this.requirements[i].magnitude*this.threshold) cur_completion = 0;
+                    else if (value < this.requirements[i].magnitude && cur_completion >= 1) cur_completion = 1;
                     if (value >= this.requirements[i].magnitude) this.requirements[i].done = true;
                     
                     break;
-                case "default":
-                    console.log("ERROR: invalid requirement type REQ."+type.toUpperCase());
+                case "age":
+                    value = playerdata.resources.time;
+                    if (value <= this.requirements[i].magnitude*this.threshold) cur_completion = 0;
+                    else if (value < this.requirements[i].magnitude && cur_completion >= 1) cur_completion = 1;
+                    if (value >= this.requirements[i].magnitude) this.requirements[i].done = true;
+                    
+                    break;
+                default:
+                    console.log("ERROR: invalid requirement type REQ."+this.requirements[i].type.toUpperCase());
                     break;
             }
+            if (this.requirements[i].conditions.reverse == true) {
+                this.requirements[i].done = false;
+                if (cur_completion == 2) cur_completion = 0;
+                else cur_completion = 2;
+            }
+            if (cur_completion < completion) completion = cur_completion;
         }
+        this.last_completion = completion;
         return completion;
     }
 
-    Text() {
+    Text(flag_only_reverse = false) {
         let req_texts = [];
         for (let i in this.requirements) {
             if (this.requirements[i].done == true) continue;
+            if (flag_only_reverse && !this.requirements[i].conditions.reverse) continue;
             let value = 0;
+            let prefix = "<span style='color:#9de946'>";
+            if (this.requirements[i].conditions.reverse) prefix = "<span style='color:#fd4646'>";
             switch(this.requirements[i].type) {
                 case "job":
-                    if (!(worlddata.jobs[this.requirements[i].name])) break;
-                    value = worlddata.jobs[this.requirements[i].name].instance.level;
-                    req_texts.push(this.requirements[i].name.toUpperCase() + " " + worlddata.jobs[this.requirements[i].name].instance.level + "/" + this.requirements[i].magnitude);
+                    if (!(worlddata.jobs[this.requirements[i].conditions.name])) break;
+                    value = worlddata.jobs[this.requirements[i].conditions.name].instance.level;
+                    if (worlddata.jobs[this.requirements[i].conditions.name].GetRequirements().Done(true) == 2) req_texts.push(prefix + this.requirements[i].conditions.name.toUpperCase() + " " + value + "/" + this.requirements[i].magnitude);
 
                     break;
                 case "skill":
-                    if (!(worlddata.skills[this.requirements[i].name])) break;
-                    value = worlddata.skills[this.requirements[i].name].instance.level;
-                    req_texts.push(this.requirements[i].name.toUpperCase() + " " + worlddata.skills[this.requirements[i].name].instance.level + "/" + this.requirements[i].magnitude);
+                    if (!(worlddata.skills[this.requirements[i].conditions.name])) break;
+                    value = worlddata.skills[this.requirements[i].conditions.name].instance.level;
+                    if (worlddata.skills[this.requirements[i].conditions.name].GetRequirements().Done(true) == 2) req_texts.push(prefix + this.requirements[i].conditions.name.toUpperCase() + " " + value + "/" + this.requirements[i].magnitude);
                     
                     break;
                 case "money":
                     value = playerdata.resources.money;
-                    req_texts.push(Currency(playerdata.resources.money) + "/" + Currency(this.requirements[i].magnitude));
+                    req_texts.push("<span>" + Currency(value) + "/" + Currency(this.requirements[i].magnitude));
                     
                     break;
-                case "default":
-                    console.log("ERROR: invalid requirement type REQ."+type.toUpperCase());
+                case "age":
+                    value = playerdata.resources.time;
+                    req_texts.push(prefix + Time.format(this.requirements[i].magnitude - value));
+                    
+                    break;
+                default:
+                    if (!RequirementTypes.includes(this.requirements[i].type)) console.log("ERROR: invalid requirement type REQ."+this.requirements[i].type.toUpperCase());
                     break;
             }
         }
-        return "Required: "+ req_texts.join(", ");
+        let final_req_text = req_texts.join("</span>, ") + "</span>";
+        if (!flag_only_reverse) final_req_text = "Required: "+ final_req_text;
+        return final_req_text;
     }
 
     Reset() {
@@ -166,9 +197,14 @@ export class Requirements {
         }
     }
 
-    Add(type, magnitude, name="") {
+    Add(type, magnitude, conditions={}) {
         if (RequirementTypes.includes(type)) {
-            this.requirements.push({type: type, magnitude:magnitude, name:name, done:false});
+            if (!conditions.name) conditions.name = "";
+            if (!conditions.reverse) conditions.reverse = false;
+            if (!conditions.finishable) conditions.finishable = false;
+            this.requirements.push({type: type, magnitude:magnitude, done:false, conditions:conditions});
+
+            if (conditions.reverse) this.has_reverse_requirements = true;
         }
         else {
             console.log("ERROR: invalid requirement type REQ."+type.toUpperCase());
@@ -178,6 +214,10 @@ export class Requirements {
 
     SetThreshold(threshold) {
         this.threshold = threshold;
+    }
+
+    HasReverse() {
+        return this.has_reverse_requirements;
     }
 }
 
@@ -226,6 +266,10 @@ export class Listable {
 
     GetCategory() { return this.category; }
     SetCategory(category) { this.category = category; }
+
+    UpdateUI() {
+        if (this.GetRequirements().HasReverse()) document.getElementById(this.name + "_req_reverse_warn").children[0].innerHTML = this.GetRequirements().Text(true);
+    }
 }
 
 export class Levelable extends Listable {
@@ -264,6 +308,8 @@ export class Levelable extends Listable {
     }
 
     UpdateUI() {
+        super.UpdateUI();
+
         let active_multiplier = 1;
         if (!this.active) {
             if (this.instance["level"] > 0) active_multiplier = Math.min(Math.max((this.GetMultiplier("xp_inactive") - 1) * (0.65 ** Math.log2(this.instance["level"])), 0), 1);
@@ -382,6 +428,7 @@ export class Buyable extends Listable {
     }
 
     Tick(days_passed) {
+        if (this.GetRequirements().Done(true) != 2) this.SetActive(true);
         if (playerdata.resources["money"] <= days_passed * (this.cost * this.GetMultiplier("cost")) && this.instance["enabled"]) this.SetActive(true);
         if (this.instance["enabled"]) {
             playerdata.resources.money -= days_passed * (this.cost * this.GetMultiplier("cost"))
@@ -395,6 +442,8 @@ export class Buyable extends Listable {
     }
 
     UpdateUI() {
+        super.UpdateUI();
+
         document.getElementById(this.name + "_cost").innerHTML = Currency(this.cost * this.GetMultiplier("cost"));
         document.getElementById(this.name + "_effect").innerHTML = "x"+ Places(this.components[0].part, 2) + " " + this.components[0].skill;
     }

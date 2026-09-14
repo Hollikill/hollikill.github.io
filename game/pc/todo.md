@@ -2,22 +2,21 @@
 
 ## quick tasks
 
-- [ ] move all data to gamedata
 - [ ] add settings: framerate control
-- [ ] add game saving
-  - [ ] import/export from textbox
-  - [ ] autosave to localstorage
-  - [ ] add hard reset without reloading page
 - [ ] figure out how to display effect multiplier for skills (and for nonlinear skills)
-- [x] add scaling softcap
+  - save total effect values per class, along with part total, and divide class-effect multiplier by self-part/total-part
+- [x] add exclusive requirements type
+  - [x] exclusive job restriction
+  - [x] less than age restriction
+- [ ] add display names
+  - [ ] listable classes
+  - [ ] master-skills
+- [ ] fix reverse requirement warning still showing empty when it is impossible to violate
 
 ---
 
 ## larger tasks
 
-- [x] add job/skill category header colors
-- [x] automatically hide job/skill category headers if none of their listings are visible
-  - note: this does not include requirement listings, those can appear without the header
 - [ ] add death
   - [ ] add combat and dangerous jobs
     - [ ] add health & damage
@@ -28,8 +27,42 @@
 - [ ] event log
   - random events with rewards such as:
     - extra money
-    - heal a random wound (if applicable)
+    - antomy improvement
+      - heal a random wound (if applicable)
+      - improve the level of an organ
+    - special items (extra chance to encounter based on certain tasks)
+      - unlocks awakening feature
+        - ie: spirit lotus (gives lvl1 spirit root organ), mana pill (gives 1000 mana control XP), etc.
+      - loyalty/tax items
+        - ie: ancient scripture as historian job requirement, rare herbs as alchemy job additional cost, necromancy tome pages for NECROMANCY MAGIC skill, etc.
+      - classic energy cultivation method
+        - might recieve this at birth if born with as spirit-root type organ and in a high background
+        - these are stored between lives
+        - automatic sorting and merging system, manual selection by player for actual use
+        - later creation system
   - logs combat damage
+- [ ] move all data to gamedata
+  - [ ] add game saving
+    - [ ] import/export from textbox
+    - [ ] autosave to localstorage
+    - [ ] add hard reset without reloading page
+- [ ] anatomy page
+  - organs start at level 0, with increasing levels improving lifespan and other effects based on class
+    - organ classes:
+      - functional (limbs): major job pay boost, minor job xp boost
+      - health (heart, spleen, etc.): additional lifespan boost, minor combat damage reduction
+      - strength (muscles): major combat threat boost, minor traveling speed boost
+      - mental (brain, nervous system): major skill xp boost, minor all xp boost
+    - damage to organs reduces lifespan and other effects
+      - lifespan effect formula: 1-({%integrity}-1)^6 // {0 ≤ %integrity ≤ 1}
+      - other effects reduce linearly
+  - each life may be born with random special organs according to major {meta:talent}, minor {meta:background}
+    - special organs are (usually) more resistant to damage, but stop providing their special function when too damaged
+  - organ improvement focus (from any source) can be directed by the player by toggling organ category buttons.
+    - Some organ changes may not change focus, but where possible positive effects will be directed toward enabled organs and negative toward disabled organs
+  - viewing non-special organs, changing the organ improvement focus, and viewing organ improvement in the event log will not be visible until a meta-unlock
+    - health and damage will only be visible as the shorthand in the player UI
+    - some rare organ improvement events still occur, but most require the meta-unlock
 
 ---
 
