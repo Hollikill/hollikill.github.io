@@ -6,11 +6,12 @@ import { Units, Requirements, Listable, Levelable, Job, Skill, Buyable } from '.
 // variable declaration
 
 // core loop control
-const frames_per_second = 50; // number of ms per game tick
+const frames_per_second = (1000/20); // number of ms per game tick
 var last_frame_ms = Date.now(); // last computed frame in ms
 
 // game loop control
 const gain_base_time = 4; // base number of days per second
+window.gain_base_time = gain_base_time;
 const gain_base_xp = 10; // base number of xp per day
 window.gain_base_xp = gain_base_xp;
 var is_time_stepping = false; // is time proceeding
@@ -77,6 +78,7 @@ var master_skills_data = {
         ]
     },
 }
+window.master_skills_data = master_skills_data;
 
 //////////////////
 // placeholder generated world data
