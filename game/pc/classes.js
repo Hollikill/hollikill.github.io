@@ -476,3 +476,9 @@ export class Buyable extends Listable {
         return (this.instance["last_selected"] >= buyable_other.instance["last_selected"] || this.name == buyable_other.name);
     }
 }
+
+export class World {
+    constructor(categories, jobs_data, skills_data, items_data) {
+
+    }
+}
