@@ -3,7 +3,7 @@ import re
 import sys
 
 # set to true or false for addtional program information or commands
-richoutput = True
+richoutput = False
 dooutput = True
 outputdir = "../html/"
 
