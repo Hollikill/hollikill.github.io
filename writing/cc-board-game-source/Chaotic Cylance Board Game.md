@@ -1,9 +1,3 @@
-basic pattern:
-1. candyland board progression
-2. charades style questions at spaces to move forward more (adds 6 spaces)
-3. each player has a character ability that lets them move forward in the game
-
-Spaces each have a color, which does not correlate to their action
 
 # Tools
 tools to use for players who do not have physical props
@@ -17,11 +11,9 @@ tools to use for players who do not have physical props
 # Rules
 
 ## Setup
-Players each take one of the four tokens and place them at the start space, marked "Start". Players choose among themselves to assign each of themselves one of the 4 character roles.
+Players each take one of the four tokens and place them at the start space, marked "Start". Players choose among themselves to assign each of themselves one of the 4 character roles (listed below).
 
-Each player rolls a six-sided dice. They player with the least number takes their turn first. If there is a tie, tied players roll again.
-
-The player sitting opposite this player is designated the "Charade Leader" for the rest of the game. They are tasked with keeping track of the teams for charades.
+Each player rolls a six-sided die. They player with the least number takes their turn first. If there is a tie, tied players roll again.
 
 ## Turns
 Players roll a six-sided dice and advance that many spaces on the board. They may land on a space with a symbol, in which case they perform the effect correlated with that symbol (listed below).
@@ -38,25 +30,18 @@ Each space is one of 7 colors, and may have a letter or symbol on it to represen
 Represented by letter "C"
 This space only has an effect if the player moves onto from the initial roll on their turn.
 
-1. the current player must do charades for 40 seconds. If their teammate can figure it out, they advance 6 spaces without doing the action on the space
+1. the current player must do charades for 40 seconds. If their teammate can figure it out, both the current player and guesser advance 6 spaces without doing the action on the space.
 2. Player randomly draws charades from the charade pile
+3. The current player cannot speak during charades (unless they are the oracle)
 
 #### Charade Teams
-The Charades teams are decided by the position of the Charade Leader, and the current team positioning.
+Players sitting opposite each other are on a charades team together. If people change spots, the teams change with the spots.
 
-The team positioning can either be LEFT, OPPOSITE, or RIGHT.
-1. if the team positioning is LEFT, the Charade Leader and the player to the left of them are on a team. The two other players are on a team.
-2. if the team positioning is OPPOSITE, the Charade Leader and the player opposite of them are on a team. The two other players are on a team.
-3. if the team positioning is RIGHT, the Charade Leader and the player to the right of them are on a team. The two other players are on a team.
-   
-After each time the charade space is played, the "Charade Leader" changes the team positioning to the next one.
-	LEFT -> OPPOSITE -> RIGHT -> LEFT
-
-### Ladder space
+### Arrow space
 Represented by letter "L"
 
-1. the player slides down the ladder to an earlier space
-2. ladder is visually drawn on the board
+1. the player slides down the arrow to an earlier space
+2. Arrow is visually drawn on the board
 
 ### Stop space
 Represented by letter "S"
@@ -82,7 +67,7 @@ This space only has an effect if the player moves onto from the initial roll on 
 ### Rotate space
 Represented by letter "R"
 
-1. the current player must stand up and exchange seats with the player across from them.
+1. the current player must stand up and exchange seats with the player to the left of them.
 
 ---
 
@@ -91,10 +76,6 @@ Each player has 1 of 4 character roles. Each character role has special rules to
 
 ### The Pedant
 1. the pedant has two six-sided dice. They can roll them as frequently as possible, but must wait for them to settle to reroll. If they roll two ones, they may perform their ability. They only start rolling again once they have tried to use their ability.
-	1. if no dice are available, the group can agree on another physical activity that should have a roughly 2% success rate (or take similar time), and can be done alone. Examples:
-		1. use google dice to roll 2 six sided dice (search "roll 2d6"), and wait 5 seconds between each roll.
-		2. attempt a water bottle flip (can adjust if player is too skilled at this)
-		3. stand up and spin left in a circle 20 times
 2. The pedant's ability is calling out a rule violation one of the other players has made before the game moves on to the next turn (or 30 seconds, if it happens at the end of the turn). If the pedant is right, they advance two spaces. If they are wrong, they go back 1 space.
 
 ### The Oracle
@@ -112,5 +93,5 @@ Each player has 1 of 4 character roles. Each character role has special rules to
 	2. they are reading out the event for an event space
 
 ### The Cylancer
-1. The Cylancer is specially in control of the Cylance. This is a physical object designated by players as the game starts. It should be small enough to fit on a space and not obstruct gameplay, but not so small it is easy to lose track of.
+1. The Cylancer is specially in control of the Cylance token.
 2. Once per turn, at the beginning or end of their turn, the Cylancer may place the Cylance on one of the board spaces. If another player lands on a space of this color or right next to the space with the Cylance, the Cylancer moves forward 4 spaces then swaps character roles with them. If the Cylancer lands on a space of this color or right next to the space with the Cylance, they may immediately move the Cylance again.
